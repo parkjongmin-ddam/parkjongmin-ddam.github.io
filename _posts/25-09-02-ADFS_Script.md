@@ -1,8 +1,8 @@
 ---
-layout: single
 title: "ADFS 관리 자동화 PowerShell 스크립트 모음집"
-categories: adfs
-tags: [ADFS, PowerShell, automation, scripts]
+date: 2025-01-21
+categories: [PowerShell, ADFS, Automation]
+tags: [powershell, adfs, automation, scripts]
 toc: true
 author_profile: false
 sidebar:
