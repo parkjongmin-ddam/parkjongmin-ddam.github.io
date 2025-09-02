@@ -1,8 +1,8 @@
 ---
 layout: single
-title: "ADFS 자동화 스크립트"
-categories: ADFS
-tags: [ADFS, Powershell]
+title: "Terraform VPC, Subnet, Gateway 및 Route Table 설정"
+categories: terraform
+tags: [AWS, terraform, vpc, subnet, gateway, route-table]
 toc: true
 author_profile: false
 sidebar:
