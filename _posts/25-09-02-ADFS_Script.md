@@ -463,5 +463,5 @@ ADFS 관리 업무의 효율성과 안정성을 크게 향상시킬 수 있는 �
 스크립트 사용 중 문제가 발생하거나 개선 사항이 있으시면 언제든지 피드백 부탁드립니다.
 
 **Created by:** Jongminpark  
-**Last Updated:** 2025-01-21  
+**Last Updated:** 2025-09-02
 **Version:** 1.0
