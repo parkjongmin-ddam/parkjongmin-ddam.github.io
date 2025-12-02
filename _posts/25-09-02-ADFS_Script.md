@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Terraform VPC, Subnet, Gateway 및 Route Table 설정"
+title: "ADFS 업무 관련 자동화 스크립트 설정"
 categories: terraform
 tags: [AWS, terraform, vpc, subnet, gateway, route-table]
 toc: true
