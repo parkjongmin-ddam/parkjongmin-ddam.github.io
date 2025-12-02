@@ -9,8 +9,6 @@ sidebar:
   nav: "docs"
 ---
 
-
-
 # Prompt Engineering 완전 가이드  
 ### Google · 2025  
 ### 한국어 전체 번역본  
