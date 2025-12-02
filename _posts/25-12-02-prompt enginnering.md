@@ -1,10 +1,15 @@
 ---
+layout: single
 title: "Prompt Engineering 완전 가이드 (Google · 2025) — 한국어 번역본"
-date: 2025-02-01
-categories: [AI, Prompt Engineering, Google]
+categories: terraform
 tags: [Prompt Engineering, Google, Gemini, LLM, AI]
-layout: post
+toc: true
+author_profile: false
+sidebar:
+  nav: "docs"
 ---
+
+
 
 # Prompt Engineering 완전 가이드  
 ### Google · 2025  
