@@ -296,9 +296,9 @@ Google 모델은 JSON 출력 시
 
 스키마를 프롬프트에 포함하면:
 
-- 구조화 출력 안정  
-- 파싱 오류 감소  
-- hallucination 감소  
+- 구조화 출력 안정
+- 파싱 오류 감소
+- hallucination 감소
 
 예:
 
@@ -308,7 +308,194 @@ Google 모델은 JSON 출력 시
   "summary": "string",
   "score": "number"
 }
+```
 
+---
+
+# 📚 22. 참고 논문 (Reference Papers)
+
+이 문서에서 소개된 프롬프트 엔지니어링 기법들은 다음의 주요 연구 논문들을 기반으로 합니다.
+
+## 🔗 Chain-of-Thought (CoT) Prompting
+
+**논문:** "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"
+**저자:** Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed Chi, Quoc Le, Denny Zhou (Google Research)
+**출판:** NeurIPS 2022 / arXiv:2201.11903
+**발표일:** 2022년 1월
+
+### 핵심 내용
+- 중간 추론 과정(intermediate reasoning steps)을 명시적으로 생성하도록 유도
+- Few-shot 예시에 추론 단계를 포함시키는 간단한 방법으로 복잡한 추론 능력 향상
+- 산술, 상식 추론, 기호 추론 등 다양한 작업에서 성능 개선 입증
+- 충분히 큰 언어 모델에서 자연스럽게 추론 능력이 발현됨을 증명
+
+**📄 논문 링크:** [arXiv:2201.11903](https://arxiv.org/abs/2201.11903)
+
+---
+
+## 🧩 Self-Consistency
+
+**논문:** "Self-Consistency Improves Chain of Thought Reasoning in Language Models"
+**저자:** Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed H. Chi, Sharan Narang, Aakanksha Chowdhery, Denny Zhou (Google Research, Brain Team)
+**출판:** ICLR 2023 / arXiv:2203.11171
+**발표일:** 2022년 3월 (최종 업데이트 2023년 3월)
+
+### 핵심 내용
+- CoT의 greedy decoding을 대체하는 새로운 디코딩 전략
+- 다양한 추론 경로를 샘플링한 후 가장 일관된(consistent) 답변 선택
+- Majority voting을 통한 최종 답변 결정
+
+### 성능 향상
+- GSM8K: +17.9%
+- SVAMP: +11.0%
+- AQuA: +12.2%
+- StrategyQA: +6.4%
+- ARC-challenge: +3.9%
+
+**📄 논문 링크:** [arXiv:2203.11171](https://arxiv.org/abs/2203.11171)
+
+---
+
+## 🌲 Tree of Thoughts (ToT)
+
+**논문:** "Tree of Thoughts: Deliberate Problem Solving with Large Language Models"
+**저자:** Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Tom Griffiths, Yuan Cao, Karthik Narasimhan (Princeton University, Google DeepMind)
+**출판:** NeurIPS 2023 / arXiv:2305.10601
+**발표일:** 2023년 5월
+
+### 핵심 내용
+- CoT를 일반화하여 여러 추론 경로를 트리 구조로 탐색
+- 중간 단계마다 자기 평가(self-evaluation)를 통해 다음 행동 결정
+- Look-ahead와 backtracking을 통한 전역적 선택 가능
+- 체계적인 문제 해결을 위한 의도적 탐색(deliberate exploration)
+
+### 실험 결과
+- Game of 24 작업에서 GPT-4 + CoT는 4% 성공률
+- GPT-4 + ToT는 74% 성공률 달성 (18.5배 향상)
+
+**📄 논문 링크:** [arXiv:2305.10601](https://arxiv.org/abs/2305.10601)
+**💻 코드:** [GitHub - Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm)
+
+---
+
+## 🤖 ReAct (Reason + Act)
+
+**논문:** "ReAct: Synergizing Reasoning and Acting in Language Models"
+**저자:** Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, Yuan Cao (Princeton University, Google Research)
+**출판:** ICLR 2023 / arXiv:2210.03629
+**발표일:** 2022년 10월
+
+### 핵심 내용
+- Reasoning trace와 task-specific action을 교차(interleave) 생성
+- 추론이 행동 계획을 유도하고, 행동이 외부 정보원과 상호작용
+- Wikipedia API 등 외부 지식 베이스 활용으로 hallucination 감소
+- 환각(hallucination)과 오류 전파 문제 해결
+
+### 실험 결과
+- **Question Answering (HotpotQA)**: CoT 대비 hallucination 대폭 감소
+- **Fact Verification (Fever)**: 외부 지식 활용으로 정확도 향상
+- **ALFWorld (Interactive Decision Making)**: 절대 성공률 +34%
+- **WebShop**: 절대 성공률 +10%
+- 단 1-2개의 in-context 예시만으로 모방 학습·강화 학습 방법 능가
+
+**📄 논문 링크:** [arXiv:2210.03629](https://arxiv.org/abs/2210.03629)
+**💻 코드:** [GitHub - ReAct](https://github.com/ysymyth/ReAct)
+**🌐 프로젝트:** [ReAct Official Website](https://react-lm.github.io/)
+
+---
+
+## ♻️ Automatic Prompt Engineering (APE)
+
+**논문:** "Large Language Models Are Human-Level Prompt Engineers"
+**저자:** Yongchao Zhou, Andrei Ioan Muresanu, Ziwen Han, Keiran Paster, Silviu Pitis, Harris Chan, Jimmy Ba (University of Toronto, Vector Institute, University of Waterloo)
+**출판:** ICLR 2023 / arXiv:2211.01910
+**발표일:** 2022년 11월 (최종 업데이트 2023년 3월)
+
+### 핵심 내용
+- 프롬프트를 "프로그램"으로 취급하여 자동 생성 및 최적화
+- LLM이 후보 instruction을 제안하고, 점수 함수로 최적 선택
+- Human-in-the-loop 없이 고품질 프롬프트 자동 생성
+
+### 실험 결과
+- 24개 NLP 작업 중 19개에서 사람이 작성한 instruction과 동등하거나 더 우수한 성능
+- **획기적 발견**: "Let's think step by step" 보다 더 나은 CoT 프롬프트 자동 발견
+  - MultiArith: 78.7% → 82.0%
+  - GSM8K: 40.7% → 43.0%
+
+**📄 논문 링크:** [arXiv:2211.01910](https://arxiv.org/abs/2211.01910)
+**💻 코드:** [GitHub - Automatic Prompt Engineer](https://github.com/keirp/automatic_prompt_engineer)
+**🌐 프로젝트:** [APE Project Page](https://sites.google.com/view/automatic-prompt-engineer)
+
+---
+
+## 📖 추가 권장 자료
+
+### 공식 가이드 및 문서
+- [Prompt Engineering Guide](https://www.promptingguide.ai/) - 다양한 프롬프팅 기법의 종합 가이드
+- [Google Research Blog - Chain of Thought](https://research.google/blog/language-models-perform-reasoning-via-chain-of-thought/)
+- [Google Research Blog - ReAct](https://research.google/blog/react-synergizing-reasoning-and-acting-in-language-models/)
+
+### 연구 리소스
+- [Chain-of-Thought Papers Collection](https://github.com/Timothyxxx/Chain-of-ThoughtsPapers) - CoT 관련 논문 모음
+- [Hugging Face Papers](https://huggingface.co/papers) - 최신 논문 큐레이션
+
+---
+
+## 📊 기법별 적용 시나리오 요약
+
+| 기법 | 최적 사용 시나리오 | 성능 향상 폭 | 비용/복잡도 |
+|------|------------------|-------------|-----------|
+| **CoT** | 수학, 논리 추론, 복잡한 문제 | 중간~높음 | 낮음 |
+| **Self-Consistency** | 정확도가 중요한 추론 작업 | 높음 (+10~18%) | 중간 (다중 샘플링) |
+| **ToT** | 전략 게임, 최적화 문제 | 매우 높음 (18배) | 높음 (트리 탐색) |
+| **ReAct** | 정보 검색, 사실 확인, 에이전트 | 높음 (+34%) | 중간 (외부 도구 필요) |
+| **APE** | 프롬프트 최적화 자동화 | 중간~높음 | 높음 (초기 설정) |
+
+---
+
+## 🎓 인용 (Citations)
+
+이 문서의 논문들을 인용하실 경우 아래 형식을 사용하시기 바랍니다:
+
+```bibtex
+@article{wei2022chain,
+  title={Chain-of-thought prompting elicits reasoning in large language models},
+  author={Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and Ichter, Brian and Xia, Fei and Chi, Ed and Le, Quoc and Zhou, Denny},
+  journal={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={24824--24837},
+  year={2022}
+}
+
+@article{wang2023self,
+  title={Self-consistency improves chain of thought reasoning in language models},
+  author={Wang, Xuezhi and Wei, Jason and Schuurmans, Dale and Le, Quoc and Chi, Ed and Narang, Sharan and Chowdhery, Aakanksha and Zhou, Denny},
+  journal={International Conference on Learning Representations (ICLR)},
+  year={2023}
+}
+
+@article{yao2023tree,
+  title={Tree of thoughts: Deliberate problem solving with large language models},
+  author={Yao, Shunyu and Yu, Dian and Zhao, Jeffrey and Shafran, Izhak and Griffiths, Tom and Cao, Yuan and Narasimhan, Karthik},
+  journal={Advances in Neural Information Processing Systems},
+  volume={36},
+  year={2023}
+}
+
+@article{yao2022react,
+  title={React: Synergizing reasoning and acting in language models},
+  author={Yao, Shunyu and Zhao, Jeffrey and Yu, Dian and Du, Nan and Shafran, Izhak and Narasimhan, Karthik and Cao, Yuan},
+  journal={International Conference on Learning Representations (ICLR)},
+  year={2023}
+}
+
+@article{zhou2022large,
+  title={Large language models are human-level prompt engineers},
+  author={Zhou, Yongchao and Muresanu, Andrei Ioan and Han, Ziwen and Paster, Keiran and Pitis, Silviu and Chan, Harris and Ba, Jimmy},
+  journal={International Conference on Learning Representations (ICLR)},
+  year={2023}
+}
+```
 
 
 
