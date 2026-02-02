@@ -1,9 +1,12 @@
 ---
-layout: post
-title: "팀 프로젝트 1일차 - 주식 대시보드 기획 및 환경 설정"
-date: 2026-02-02
-categories: [Project, Team, Day1]
-tags: [python, stock-analysis, finance, project-planning, environment-setup]
+layout: single
+title: "팀 프로젝트 1일차: 주식 대시보드 기획 및 환경 설정"
+categories: python
+tag: [python, finance, project-planning, environment-setup]
+toc: true
+author_profile: false
+sidebar:
+  nav: "docs"
 ---
 
 # 📈 주식 정보 대시보드 팀 프로젝트 - 1일차
@@ -14,7 +17,7 @@ tags: [python, stock-analysis, finance, project-planning, environment-setup]
 
 ---
 
-## 📋 프로젝트 개요
+## 1. 프로젝트 개요
 
 ### 프로젝트 목표
 
@@ -30,13 +33,13 @@ tags: [python, stock-analysis, finance, project-planning, environment-setup]
 | **기술 스택** | Python, Plotly, Streamlit, FinanceDataReader, Pandas |
 | **개발 기간** | 5일 |
 
-![프로젝트 개요](../assets/img/project/project_overview.png)
+![프로젝트 개요](/assets/images/project_overview.png)
 
 ---
 
-## 🎯 선정 종목
+## 2. 선정 종목
 
-팀원별로 관심 있는 종목을 선정하여 분석하기로 결정함.
+팀원별로 관심 있는 종목을 선정하여 분석을 진행하기로 함.
 
 ### 종목 리스트
 
@@ -51,290 +54,95 @@ tags: [python, stock-analysis, finance, project-planning, environment-setup]
 
 ### 종목 선정 기준
 
-1. **성장성**: AI 및 기술 섹터 중심
-2. **다양성**: 반도체, IT, 소프트웨어 등 다양한 분야
-3. **관심도**: 팀원들의 관심사 반영
-4. **데이터 접근성**: FinanceDataReader에서 쉽게 데이터 수집 가능
+1. **성장성**: AI 및 기술 섹터 중심의 종목을 선정함.
+2. **다양성**: 반도체, IT, 소프트웨어 등 여러 분야를 포함함.
+3. **관심도**: 팀원들의 개인적 관심사를 적극 반영함.
+4. **데이터 접근성**: FinanceDataReader를 통해 수월하게 데이터를 수집할 수 있는 종목임.
 
 ---
 
-## 🛠️ 개발 환경 구축
+## 3. 개발 환경 구축
 
-### 1. Python 가상환경 생성
+### 3-1. Python 가상환경 생성
 
-프로젝트별로 독립적인 환경을 구축하기 위해 가상환경을 생성함.
+외부 패키지 충돌을 방지하고 독립적인 개발 환경을 위해 가상환경을 구축함.
 
 ```bash
-# 프로젝트 디렉토리 생성
-mkdir team_project
-cd team_project
-
-# 가상환경 생성
+# 가상환경 생성 및 활성화
 python -m venv .venv
-
-# 가상환경 활성화 (Windows)
 .venv\Scripts\activate
 ```
 
-**가상환경 사용 이유**:
-- 프로젝트별 패키지 버전 관리
-- 시스템 Python 환경과 분리
-- 협업 시 동일한 환경 구축 가능
+*   **이유**: 프로젝트별 패키지 버전 관리와 배포 일관성을 위해 필수적임.
 
-### 2. 필수 라이브러리 설치
+### 3-2. 필수 라이브러리 설치 및 기록
+
+실습에 필요한 도구들을 한 번에 설치하고 목록을 관리함.
 
 ```bash
-# 필수 라이브러리 설치
-pip install finance-datareader
-pip install plotly
-pip install streamlit
-pip install pandas
-```
-
-### 3. requirements.txt 작성
-
-협업 및 배포를 위해 사용한 패키지 목록을 기록함.
-
-```text
-finance-datareader==0.9.50
-plotly==5.18.0
-streamlit==1.31.0
-pandas==2.1.4
-```
-
-**requirements.txt 생성 명령어**:
-```bash
-# 현재 설치된 패키지 목록 저장
+pip install finance-datareader plotly streamlit pandas
 pip freeze > requirements.txt
 ```
 
-### 4. 프로젝트 폴더 구조
+### 3-3. 프로젝트 폴더 구조
 
-```
-team_project/
-├── .venv/                      # 가상환경 (Git 제외)
-├── data/                       # 데이터 저장 폴더
-│   └── raw/                    # 원본 데이터
-├── src/                        # 소스 코드
-│   ├── data_collection.py     # 데이터 수집 스크립트
-│   ├── preprocessing.py       # 데이터 전처리
-│   └── visualization.py       # 시각화 함수
-├── Front-end/                  # Streamlit 앱
-│   └── app.py                 # 메인 앱
-├── requirements.txt           # 패키지 목록
-├── .gitignore                 # Git 제외 파일
-└── README.md                  # 프로젝트 설명
-```
+효율적인 협업을 위해 소스 코드와 데이터, 앱 파일을 분리하여 관리함.
 
-![폴더 구조](../assets/img/project/folder_structure.png)
+![폴더 구조](/assets/images/folder_structure.png)
 
 ---
 
-## 📊 데이터 수집 계획
+## 4. 데이터 수집 및 분석 계획
 
-### 데이터 소스
+### 4-1. 데이터 소스 (FinanceDataReader)
 
-**FinanceDataReader** 라이브러리를 활용하여 한국 주식 데이터를 수집함.
-
-#### FinanceDataReader란?
-
-- 한국, 미국 등 다양한 금융 데이터를 제공하는 Python 라이브러리
-- 무료로 사용 가능
-- 간단한 API로 데이터 수집 가능
-
-#### 기본 사용법
+한국 주식 데이터를 무료로 간편하게 가져올 수 있는 `FinanceDataReader` 라이브러리를 활용함. 별도의 API 키 없이도 종목 코드로 즉시 조회가 가능하여 생산성이 높음.
 
 ```python
 import FinanceDataReader as fdr
-
-# 종목 데이터 수집
-df = fdr.DataReader('000660', '2025-01-01', '2025-12-31')
-
-# 데이터 확인
-print(df.head())
-```
-
-### 수집 데이터 항목
-
-| 컬럼명 | 설명 | 활용 방안 |
-|--------|------|-----------|
-| **Open** | 시가 | 장 시작 가격, 캔들스틱 차트 |
-| **High** | 고가 | 당일 최고 가격, 변동성 분석 |
-| **Low** | 저가 | 당일 최저 가격, 변동성 분석 |
-| **Close** | 종가 | 장 마감 가격, 추세 분석 |
-| **Volume** | 거래량 | 거래 활발도, 매매 신호 |
-| **Change** | 변화율 | 전일 대비 변동률 |
-
-### 데이터 분석 기간
-
-- **시작일**: 2025년 1월 1일
-- **종료일**: 2025년 12월 31일
-- **기간**: 1년 (약 250 거래일)
-
-**기간 선정 이유**:
-- 충분한 데이터 양 확보
-- 단기/중기/장기 추세 분석 가능
-- 이동평균선 계산에 적합
-
----
-
-## 💡 주요 학습 내용
-
-### 1. FinanceDataReader 사용법
-
-#### 설치 및 임포트
-
-```python
-# 설치
-pip install finance-datareader
-
-# 임포트
-import FinanceDataReader as fdr
-```
-
-#### 주요 기능
-
-**1) 종목 데이터 수집**
-```python
-# 특정 기간의 주식 데이터
+# 종목 데이터 수집 기초 예시
 df = fdr.DataReader('000660', '2025-01-01', '2025-12-31')
 ```
 
-**2) 종목 리스트 조회**
-```python
-# 한국 거래소 상장 종목 리스트
-krx = fdr.StockListing('KRX')
-print(krx.head())
-```
+### 4-2. 수집 항목 및 분석 기간
 
-**3) 지수 데이터 수집**
-```python
-# KOSPI 지수
-kospi = fdr.DataReader('KS11', '2025-01-01', '2025-12-31')
-```
-
-### 2. 프로젝트 구조 설계
-
-프로젝트를 효율적으로 진행하기 위한 단계별 계획을 수립함.
-
-#### 개발 프로세스
-
-```
-1. 데이터 수집 (Day 2)
-   ↓
-2. 데이터 전처리 (Day 2)
-   ↓
-3. 데이터 시각화 (Day 3)
-   ↓
-4. 대시보드 스타일링 (Day 4)
-   ↓
-5. 웹 대시보드 구현 (Day 5)
-```
-
-![개발 프로세스](../assets/img/project/development_process.png)
-
-#### 각 단계별 목표
-
-| 단계 | 목표 | 산출물 |
-|------|------|--------|
-| **데이터 수집** | 6개 종목의 2025년 데이터 수집 | CSV 파일 |
-| **데이터 전처리** | 이동평균선, 거래량 색상 계산 | 전처리된 DataFrame |
-| **데이터 시각화** | Plotly로 캔들스틱 차트 구현 | HTML 차트 |
-| **스타일링** | 다크 모드, 인터랙티브 요소 추가 | 완성된 HTML |
-| **웹 대시보드** | Streamlit으로 웹 앱 구현 | 배포 가능한 앱 |
+*   **수집 항목**: Open(시가), High(고가), Low(저가), Close(종가), Volume(거래량) 등.
+*   **분석 기간**: 2025년 1년치 데이터를 바탕으로 중장기 추세를 분석함.
 
 ---
 
-## 📝 오늘의 체크리스트
+## 5. 학습 포인트 및 개발 로드맵
 
-- [x] 프로젝트 목표 설정
-- [x] 분석 종목 선정 (6개)
-- [x] Python 가상환경 생성
-- [x] 필수 라이브러리 설치
-- [x] requirements.txt 작성
-- [x] 프로젝트 폴더 구조 설계
-- [x] .gitignore 설정
-- [x] 데이터 수집 계획 수립
-- [x] FinanceDataReader 사용법 학습
-- [x] Git 저장소 초기화
+### 학습 내용 정리
 
----
+1.  **가상환경(venv)**: 환경 격리의 중요성과 `requirements.txt` 관리법을 익힘.
+2.  **FinanceDataReader**: 라이브러리 사용법과 KRX 종목 리스트 조회법을 학습함.
+3.  **프로젝트 구조화**: 역할별 파일 분리와 `.gitignore` 설정법을 정리함.
 
-## 🎓 배운 점
+### 개발 프로세스 (5일)
 
-### 기술적 학습
+![개발 프로세스](/assets/images/development_process.png)
 
-1. **가상환경의 중요성**
-   - 프로젝트별 독립적인 패키지 관리
-   - 버전 충돌 방지
-   - 배포 시 일관성 보장
-
-2. **FinanceDataReader의 강점**
-   - 간단한 API로 금융 데이터 수집
-   - 별도의 API 키 불필요
-   - 한국 주식 데이터에 최적화
-
-3. **프로젝트 구조화**
-   - 체계적인 폴더 구조로 유지보수 용이
-   - 역할별 파일 분리로 협업 효율 향상
-
-### 협업 인사이트
-
-1. **명확한 목표 설정**
-   - 팀원 간 공통 목표 공유
-   - 각자의 역할 분담
-
-2. **기술 스택 선정**
-   - 학습 곡선과 생산성 고려
-   - 무료 도구 우선 활용
+1.  **Day 1**: 기획 및 환경 설정 (오늘 완료함)
+2.  **Day 2**: 데이터 수집 및 이동평균선 전처리
+3.  **Day 3**: Plotly 기반 캔들스틱/거래량 시각화
+4.  **Day 4**: 대시보드 테마 및 레이아웃 최적화
+5.  **Day 5**: Streamlit 실전 웹 배포
 
 ---
 
-## 🚀 다음 단계 (2일차 예고)
-
-### 계획
-
-1. **데이터 수집 구현**
-   - 6개 종목의 2025년 데이터 수집
-   - CSV 파일로 저장
-
-2. **데이터 전처리**
-   - 이동평균선(MA 5, 20, 60) 계산
-   - 거래량 색상 구분 로직 구현
-
-3. **데이터 탐색**
-   - 기본 통계 분석
-   - 결측치 확인 및 처리
-
----
-
-## 💬 회고
+## 6. 마무리 및 회고
 
 ### 잘한 점
+*   명확한 분석 목표와 종목 선정을 빠르게 마침.
+*   표준화된 폴더 구조를 설계하여 협업 기반을 다졌음.
 
-- ✅ 명확한 프로젝트 목표 설정
-- ✅ 체계적인 환경 구축
-- ✅ 팀원 간 원활한 소통
+### 부족한 점 및 개선 사항
+*   추후 각 종목별 세부 분석 지표(RSI 등)를 추가로 논의할 필요가 있음.
+*   일정 관리를 위해 중간 점검 시간을 더 구체화해야 함.
 
-### 개선할 점
-
-- 🔄 더 구체적인 일정 계획 필요
-- 🔄 각 종목별 분석 방향 세분화
-- 🔄 중간 점검 시간 마련
-
-### 느낀 점
-
-프로젝트의 시작이 중요하다는 것을 다시 한번 느낌. 명확한 목표와 체계적인 환경 설정이 향후 개발 속도와 품질에 큰 영향을 미칠 것으로 예상됨.
+첫날 기획 단계를 꼼꼼히 진행한 만큼, 내일부터 시작될 본격적인 데이터 수집 작업도 순조로울 것으로 기대함.
 
 ---
 
-## 📚 참고 자료
-
-- [FinanceDataReader GitHub](https://github.com/FinanceData/FinanceDataReader)
-- [Pandas 공식 문서](https://pandas.pydata.org/docs/)
-- [Python 가상환경 가이드](https://docs.python.org/ko/3/tutorial/venv.html)
-
----
-
-**작성일**: 2026-02-02  
-**다음 포스트**: [2일차 - 데이터 수집 및 전처리](./26-02-03-teamproject-2day.md)
+**관련 문서**: [2일차 - 데이터 수집 및 전처리](./26-02-03-teamproject-2day.md)
