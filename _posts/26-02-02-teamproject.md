@@ -13,10 +13,14 @@ sidebar:
 
 ## 프로젝트 개요
 
+![Project Overview](/assets/images/project_overview.png)
+
 **주제**: 주식 정보 대시보드 개발  
 **기간**: 2025.01.01 ~ 2025.12.31 (데이터 분석 기간)  
 **팀원**: Generative AI 10기  
 **기술 스택**: Python, Plotly, Streamlit, FinanceDataReader, Pandas
+
+![Development Process](/assets/images/development_process.png)
 
 ---
 
@@ -424,6 +428,8 @@ streamlit run app.py
 ## 프로젝트 결과물
 
 ### 📁 프로젝트 구조
+
+![Folder Structure](/assets/images/folder_structure.png)
 
 ```
 team_project/
