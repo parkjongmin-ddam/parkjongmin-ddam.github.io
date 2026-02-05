@@ -1,3 +1,14 @@
+---
+layout: single
+title: "Plotly 통계용 차트 실습 - 데이터 시각화의 모든 것"
+categories: python
+tag: [python, plotly, visualization, statistics, data-analysis, box-plot, violin-plot]
+toc: true
+author_profile: false
+sidebar:
+  nav: "docs"
+---
+
 # Plotly 통계용 차트 실습
 
 **공식 문서**: [https://plotly.com/python/statistical-charts/](https://plotly.com/python/statistical-charts/)
