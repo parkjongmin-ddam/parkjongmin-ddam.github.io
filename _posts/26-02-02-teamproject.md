@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Generative AI 10기 팀 프로젝트 - 주식 정보 대시보드"
+title: "Generative AI 10기 팀 프로젝트 전체 개요 - 주식 정보 대시보드"
 categories: python
 tag: [python, plotly, streamlit, finance, dashboard, stock-analysis]
 toc: true
