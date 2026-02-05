@@ -30,7 +30,7 @@ Plotly 공식 문서를 기반으로 다양한 통계용 차트를 실습하는 
   - 여러 그룹 간의 분포를 비교함
   - 평균과 표준편차를 표시함 (`boxmean='sd'`)
 
-![Box Plot Visualization](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/box_plot_diagram_1770289330435.png)
+![Box Plot Visualization](/assets/images/26-02-05/box_plot_diagram_1770289330435.png)
 
 ### 2. Histogram (히스토그램)
 - **목적**: 빈도 분포 분석
@@ -46,7 +46,7 @@ Plotly 공식 문서를 기반으로 다양한 통계용 차트를 실습하는 
   - 데이터의 전체 분포 형태를 파악함
   - 박스 플롯과 평균선을 함께 표시함
 
-![Violin Plot Visualization](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/violin_plot_diagram_1770289345026.png)
+![Violin Plot Visualization](/assets/images/26-02-05/violin_plot_diagram_1770289345026.png)
 
 ### 4. Error Bars (오차 막대)
 - **목적**: 불확실성 표현
@@ -70,7 +70,7 @@ Plotly 공식 문서를 기반으로 다양한 통계용 차트를 실습하는 
   - Y축 주변에 박스 플롯을 배치함
   - Plotly Express를 활용함
 
-![Marginal Distribution Plot](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/marginal_plot_example_1770289371253.png)
+![Marginal Distribution Plot](/assets/images/26-02-05/marginal_plot_example_1770289371253.png)
 
 ### 7. 종합 대시보드
 - **목적**: 여러 통계 차트 통합
@@ -79,7 +79,7 @@ Plotly 공식 문서를 기반으로 다양한 통계용 차트를 실습하는 
   - Box Plot, Histogram, Violin Plot, Error Bars를 한 화면에 표시함
   - 데이터 분석 결과를 종합적으로 비교함
 
-![Statistical Dashboard Preview](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/statistical_dashboard_preview_1770289389492.png)
+![Statistical Dashboard Preview](/assets/images/26-02-05/statistical_dashboard_preview_1770289389492.png)
 
 ## 🔧 주요 기술 요소
 

@@ -25,7 +25,7 @@ Plotly의 `updatemenus` 기능을 활용하여 사용자와 상호작용하는 �
 
 Plotly 드롭다운은 다음 세 가지 메서드를 통해 차트를 업데이트함.
 
-![Plotly Update Methods Comparison](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/plotly_update_methods_comparison_1770289942752.png)
+![Plotly Update Methods Comparison](/assets/images/26-02-05/plotly_update_methods_comparison_1770289942752.png)
 
 ### 1. Restyle (`method="restyle"`)
 - **기능**: 데이터 속성 또는 Trace 속성을 변경함.
@@ -70,7 +70,7 @@ fig.update_layout(updatemenus=updatemenus)
 
 ### 🧬 드롭다운 구조 시각화
 
-![Plotly Dropdown Structure Diagram](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/plotly_dropdown_structure_1770289972559.png)
+![Plotly Dropdown Structure Diagram](/assets/images/26-02-05/plotly_dropdown_structure_1770289972559.png)
 
 ### 스타일링 옵션 (`pad`, `x`, `y`)
 드롭다운의 위치와 여백을 세밀하게 조정할 수 있음.
@@ -87,7 +87,7 @@ dict(
 
 ## 🚀 실행 결과
 
-![Interactive Dashboard Preview](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/interactive_dashboard_preview_1770289988380.png)
+![Interactive Dashboard Preview](/assets/images/26-02-05/interactive_dashboard_preview_1770289988380.png)
 
 스크립트를 실행하면 세 가지 예제가 순차적으로 표시됨:
 1. **데이터 선택**: 주식 데이터를 `visible` 속성으로 제어하여 선택적으로 표시함.

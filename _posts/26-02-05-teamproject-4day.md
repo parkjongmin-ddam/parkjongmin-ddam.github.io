@@ -17,7 +17,7 @@ sidebar:
 
 ### 📊 완성된 대시보드 미리보기
 
-![Dark Mode Dashboard](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/dark_mode_dashboard_1770288574903.png)
+![Dark Mode Dashboard](/assets/images/26-02-05/dark_mode_dashboard_1770288574903.png)
 
 ---
 
@@ -74,7 +74,7 @@ fig.update_layout(
 
 ### 📐 레이아웃 커스터마이징 가이드
 
-![Layout Customization Guide](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/layout_customization_guide_1770288601886.png)
+![Layout Customization Guide](/assets/images/26-02-05/layout_customization_guide_1770288601886.png)
 
 ---
 
@@ -119,7 +119,7 @@ fig.update_yaxes(**common_axis_style, tickformat=',')
 
 ### 🎯 축 스타일링 시각화
 
-![Axis Styling Features](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/axis_styling_features_1770288621929.png)
+![Axis Styling Features](/assets/images/26-02-05/axis_styling_features_1770288621929.png)
 
 ---
 
@@ -141,7 +141,7 @@ if os.name == 'nt':
 
 ### 📤 HTML 내보내기 프로세스
 
-![HTML Export Process](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/html_export_process_1770288682005.png)
+![HTML Export Process](/assets/images/26-02-05/html_export_process_1770288682005.png)
 
 ### 코드 설명
 
@@ -227,7 +227,7 @@ fig.write_html(
 
 #### 다크 모드 색상 팔레트
 
-![Color Palette Reference](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/color_palette_reference_1770288658821.png)
+![Color Palette Reference](/assets/images/26-02-05/color_palette_reference_1770288658821.png)
 
 ```python
 # 배경색
