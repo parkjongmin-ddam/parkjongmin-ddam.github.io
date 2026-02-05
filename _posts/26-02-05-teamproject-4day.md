@@ -15,6 +15,10 @@ sidebar:
 
 4일차에는 Plotly를 활용하여 대시보드의 시각적 완성도를 높이는 작업을 진행함. 다크 모드 테마 적용, 축 스타일링, 그리고 최종 결과물을 HTML 파일로 저장하는 방법을 학습함.
 
+### 📊 완성된 대시보드 미리보기
+
+![Dark Mode Dashboard](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/dark_mode_dashboard_1770288574903.png)
+
 ---
 
 ## 🎨 다크 모드 테마 적용
@@ -68,6 +72,10 @@ fig.update_layout(
 - **위치**: 차트 상단 우측
 - **색상**: 흰색 텍스트
 
+### 📐 레이아웃 커스터마이징 가이드
+
+![Layout Customization Guide](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/layout_customization_guide_1770288601886.png)
+
 ---
 
 ## 🎯 축 스타일링
@@ -109,6 +117,10 @@ fig.update_yaxes(**common_axis_style, tickformat=',')
 - **숫자 포맷**: `tickformat=','` (천 단위 구분 기호)
 - **예시**: `50000` → `50,000`
 
+### 🎯 축 스타일링 시각화
+
+![Axis Styling Features](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/axis_styling_features_1770288621929.png)
+
 ---
 
 ## 💾 HTML 파일로 저장
@@ -126,6 +138,10 @@ print(f"최종 대시보드가 '{output_file}'로 저장되었습니다.")
 if os.name == 'nt':
     os.startfile(output_file)
 ```
+
+### 📤 HTML 내보내기 프로세스
+
+![HTML Export Process](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/html_export_process_1770288682005.png)
 
 ### 코드 설명
 
@@ -210,6 +226,9 @@ fig.write_html(
 ### 색상 선택 가이드
 
 #### 다크 모드 색상 팔레트
+
+![Color Palette Reference](C:/Users/jongm/.gemini/antigravity/brain/be2e5611-0cde-4f49-acf0-ea6af78b9266/color_palette_reference_1770288658821.png)
+
 ```python
 # 배경색
 DARK_BG = 'rgba(10, 10, 10, 1)'      # 전체 배경
