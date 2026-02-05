@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "팀 프로젝트 3일차 - Plotly를 활용한 시각화"
+title: "Generative AI 10기 팀 프로젝트 3일차 - Plotly를 활용한 시각화"
 categories: python
 tag: [python, plotly, visualization, stock-analysis]
 toc: true

@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "팀 프로젝트 1일차: 주식 대시보드 기획 및 환경 설정"
+title: "Generative AI 10기 팀 프로젝트 1일차: 주식 대시보드 기획 및 환경 설정"
 categories: python
 tag: [python, plotly, streamlit, finance, dashboard, stock-analysis, project]
 toc: true

@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "팀 프로젝트 2일차 - 데이터 수집 및 전처리"
+title: "Generative AI 10기 팀 프로젝트 2일차 - 데이터 수집 및 전처리"
 categories: python
 tag: [python, pandas, finance-datareader, data-preprocessing, stock-analysis, moving-average]
 toc: true
