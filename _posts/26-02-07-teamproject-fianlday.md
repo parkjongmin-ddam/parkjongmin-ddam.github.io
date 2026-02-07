@@ -15,6 +15,10 @@ sidebar:
 
 5일차에는 Plotly로 만든 정적 HTML 대시보드를 Streamlit을 활용한 인터랙티브 웹 애플리케이션으로 전환하고, Streamlit Cloud에 배포하는 전 과정을 학습함.
 
+### 📊 완성된 대시보드 미리보기
+
+![Streamlit Dashboard Mockup](/assets/images/26-02-07/streamlit_dashboard_mockup_1770453107257.png)
+
 ---
 
 ## 🌐 Streamlit 앱 구조
@@ -105,6 +109,10 @@ def load_data(ticker, start, end):
 - 동일한 데이터 요청 시 재계산하지 않음
 - 앱 성능 대폭 향상
 - 사용자 경험 개선
+
+### 캐싱 개념 시각화
+
+![Streamlit Caching Concept](/assets/images/26-02-07/streamlit_caching_concept_1770453157867.png)
 
 ---
 
@@ -269,6 +277,14 @@ streamlit run app.py
 ### 배포 개요
 
 Streamlit Cloud를 활용하면 무료로 웹 애플리케이션을 배포할 수 있음. GitHub 저장소와 연동하여 자동으로 배포되며, 코드 변경 시 자동으로 업데이트됨.
+
+### 배포 워크플로우
+
+![Streamlit Deployment Workflow](/assets/images/26-02-07/streamlit_deployment_workflow_1770453086938.png)
+
+### 배포 단계 타임라인
+
+![Deployment Steps Timeline](/assets/images/26-02-07/deployment_steps_timeline_1770453132372.png)
 
 ### 1단계: GitHub 저장소 준비
 
@@ -530,6 +546,10 @@ def safe_load_data(ticker, start, end, max_retries=3):
 ---
 
 ## 🔍 문제 해결 (Troubleshooting)
+
+### 주요 배포 문제 및 해결 방법
+
+![Deployment Troubleshooting Guide](/assets/images/26-02-07/deployment_troubleshooting_guide_1770453181552.png)
 
 ### 문제 1: 배포 실패 - ModuleNotFoundError
 
