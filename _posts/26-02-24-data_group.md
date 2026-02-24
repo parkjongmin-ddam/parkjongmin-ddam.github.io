@@ -1,8 +1,20 @@
+---
+layout: single
+title:  "[Database] RDBMS에서 GraphDB로의 데이터 모델링 리팩토링 및 시각화"
+date:   2026-02-24
+categories: [Database, Data Science, GraphDB, Python]
+tags: [Database, Neo4j, RDBMS, 데이터베이스, 리팩토링, Python, Cypher]
+author_profile: false
+---
+
 # 🔄 RDBMS에서 GraphDB로의 데이터 모델링 리팩토링
 
-블로그에 이미 작성해두었던 `subway_population_analysis.sql` 파일의 **관계형 데이터베이스(RDBMS) 스키마**를 **GraphDB(Neo4j)** 구조로 변환(Refactoring)하는 과정을 정리해 보았음. 
+기존에 분석했던 **[서울시 지하철 승하차 및 행정동별 인구 데이터]**의 **관계형 데이터베이스(RDBMS) 스키마**를 **GraphDB(Neo4j)** 구조로 변환(Refactoring)하는 과정을 정리해 보았음. 
 
 테이블 간의 복잡한 JOIN 연산이 그래프의 '관계(Relationship)'로 어떻게 단순화되는지 직관적으로 확인할 수 있음.
+
+![RDBMS to GraphDB Transformation](/assets/images/26-02-24/rdb_to_graph_refactoring.png)
+
 
 ---
 
