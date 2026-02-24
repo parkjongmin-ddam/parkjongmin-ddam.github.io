@@ -1,0 +1,169 @@
+# 🔄 RDBMS에서 GraphDB로의 데이터 모델링 리팩토링
+
+블로그에 이미 작성해두었던 `subway_population_analysis.sql` 파일의 **관계형 데이터베이스(RDBMS) 스키마**를 **GraphDB(Neo4j)** 구조로 변환(Refactoring)하는 과정을 정리해 보았음. 
+
+테이블 간의 복잡한 JOIN 연산이 그래프의 '관계(Relationship)'로 어떻게 단순화되는지 직관적으로 확인할 수 있음.
+
+---
+
+## 1. 기존 RDB 스키마 분석 (AS-IS)
+기존 SQL 파일은 크게 3개의 테이블과 그 연관 관계로 이루어져 있었음.
+
+* **테이블 구조:**
+  1. `RegionPopulation`: 행정동을 기준(Primary Key)으로 하여 각 구 이름과 인구 정보를 담고 있음.
+  2. `SubwayRidership`: 일자별 지하철 역의 승차/하차 통계를 담고 있음.
+  3. `StationLocation`: `SubwayRidership`의 '역'과 `RegionPopulation`의 '행정동'을 이어주기 위한 **매핑(Join) 전용 테이블**이었음.
+
+**🚨 RDB의 문제점:** 
+데이터를 분석하거나 조회할 때마다 매핑 테이블을 거쳐 최소 3개 이상의 테이블을 `INNER JOIN`으로 엮어야 했기에 직관성이 떨어지고, 연결이 깊어지면 자원 소모가 기하급수적으로 늘어남.
+
+---
+
+## 2. GraphDB 모델링 설계 (TO-BE)
+GraphDB에서는 외래키(Foreign Key)나 매핑 전용 테이블이 필요 없음. 현실 세계의 개체는 **'노드(Node)'**로, 테이블 간의 JOIN은 **'관계(Relationship)'**로 물리적으로 직접 연결됨.
+
+* **노드 (Nodes) - 동그라미:**
+  * `(District)`: 자치구 노드 (예: 강남구)
+  * `(Neighborhood)`: 행정동 노드 (예: 역삼1동) - *인구수 데이터 포함*
+  * `(Station)`: 지하철역 노드 (예: 강남, 홍대입구)
+  * `(DailyRecord)`: 일일 승하차 기록 노드 (예: 2024-02-01 기록)
+
+* **관계 (Relationships) - 화살표:**
+  * `(Neighborhood)-[:BELONGS_TO]->(District)`: 행정동이 특정 구에 **[속해 있음]**
+  * `(Station)-[:LOCATED_IN]->(Neighborhood)`: 특정 지하철역이 어떤 동에 **[위치함]**
+  * `(Station)-[:HAS_RECORD]->(DailyRecord)`: 특정 지하철역이 일일 승하차 정보를 **[다수 보유함]**
+
+---
+
+## 3. Cypher를 이용한 리팩토링 (데이터 마이그레이션)
+
+기존 SQL의 `INSERT` 로직을 GraphDB의 `CREATE` 문으로 변환한 쿼리임. 노드 생성과 매핑(선 연결)이 직관적으로 이루어짐.
+
+```cypher
+// 1. 자치구(District) 및 행정동(Neighborhood) 노드 생성 & 관계 연결
+CREATE 
+  (gu1:District {name: '강남구'}),
+  (dong1:Neighborhood {name: '역삼1동', totalPop: 35000, malePop: 17000, femalePop: 18000}),
+  (dong1)-[:BELONGS_TO]->(gu1),
+  
+  (gu2:District {name: '마포구'}),
+  (dong2:Neighborhood {name: '서교동', totalPop: 24000, malePop: 11000, femalePop: 13000}),
+  (dong2)-[:BELONGS_TO]->(gu2);
+
+// 2. 지하철역(Station) 노드 생성 & 위치 관계(LOCATED_IN) 맺어주기
+MATCH (dong1:Neighborhood {name: '역삼1동'})
+CREATE (st1:Station {name: '강남', line: '2호선'})
+CREATE (st1)-[:LOCATED_IN]->(dong1);
+
+MATCH (dong2:Neighborhood {name: '서교동'})
+CREATE (st2:Station {name: '홍대입구', line: '2호선'})
+CREATE (st2)-[:LOCATED_IN]->(dong2);
+
+// 3. 역에 딸린 일일 승하차 기록(DailyRecord) 노드 연결 (HAS_RECORD)
+MATCH (st1:Station {name: '강남'})
+CREATE (rec1:DailyRecord {date: '2024-02-01', onCount: 95000, offCount: 98000})
+CREATE (st1)-[:HAS_RECORD]->(rec1);
+
+MATCH (st2:Station {name: '홍대입구'})
+CREATE (rec2:DailyRecord {date: '2024-02-01', onCount: 75000, offCount: 80000})
+CREATE (st2)-[:HAS_RECORD]->(rec2);
+```
+
+---
+
+## 4. 분석 쿼리 비교 (SQL JOIN vs Cypher Pattern)
+
+RDBMS에서 길고 무겁게 작성했던 `[분석 1]` 쿼리(거주 인구 대비 외부에서 유입되는 하차 승객 비율 파악)를 Cypher 쿼리로 리팩토링해 보면, 구조의 직관성이 극명하게 드러남!
+
+### 😱 기존 RDBMS 쿼리 (SQL)
+관계형 DB에서는 매핑 테이블(`STATIONLOCATION`)을 브릿지 삼아 지나가기 위해 JOIN을 여러 번 강제해야 했음.
+```sql
+SELECT RP.GuName, RP.DongName, SL.StationName, RP.TotalPopulation, SR.OffBoundCount,
+       (CAST(SR.OffBoundCount AS FLOAT) / RP.TotalPopulation) AS 유입비율
+FROM SubwayRidership SR
+INNER JOIN StationLocation SL ON SR.StationName = SL.StationName
+INNER JOIN RegionPopulation RP ON SL.DongName = RP.DongName
+WHERE SR.UseDate = '2024-02-01'
+ORDER BY 유입비율 DESC;
+```
+
+### 😍 리팩토링된 GraphDB 쿼리 (Cypher)
+하지만 GraphDB에서는 노드에서 노드로 이어지는 **화살표 흐름(경로)**을 아스키아트 그림 그리듯(`-[]->`) 매칭하기만 하면 단숨에 데이터가 조회됨. (빠른 속도는 덤!)
+```cypher
+// 일일기록 <- 역 -> 행정동 -> 자치구 로 뻗어나가는 관계망 패턴을 매칭함
+MATCH (rec:DailyRecord)<-[:HAS_RECORD]-(st:Station)-[:LOCATED_IN]->(dong:Neighborhood)-[:BELONGS_TO]->(gu:District)
+WHERE rec.date = '2024-02-01'
+RETURN 
+    gu.name AS 자치구, 
+    dong.name AS 행정동, 
+    st.name AS 역명, 
+    dong.totalPop AS 거주인구, 
+    rec.offCount AS 일일하차인원, 
+    (toFloat(rec.offCount) / dong.totalPop) AS 유입비율
+ORDER BY 유입비율 DESC
+```
+
+> **💡 오늘 리팩토링의 핵심:**
+> 관계형 DB에서 억지로 구성했던 **'매핑용 교차 테이블'과 수많은 'JOIN'**이라는 족쇄가 그래프 DB로 넘어오며 깔끔하게 물리적인 **'선(Edge)'**으로 대체되었음! 구조 설계가 사람의 사고 방식과 100% 일치할 뿐만 아니라 검색 알고리즘 성능의 최적화도 달성함!
+
+---
+
+## 5. 💻 실제 애플리케이션 연동 예시 (Python)
+
+GraphDB(Neo4j)를 로컬이나 클라우드에 구축한 후, 실제 백엔드(Python)에서 어떻게 데이터를 넣고 빼는지 간단한 예시 코드임.
+
+### 5-1. 환경 세팅
+파이썬 환경에서 Neo4j와 통신하기 위해 공식 드라이버를 설치해야 함.
+```bash
+pip install neo4j
+```
+
+### 5-2. 파이썬 실행 코드 (Neo4j Driver 사용)
+위 4번 항목에서 작성했던 리팩토링 쿼리(거주 인구 대비 하차 유입 비율 분석)를 파이썬에서 직접 호출하고 단숨에 결과를 받아오는 코드임.
+
+```python
+from neo4j import GraphDatabase
+
+# 1. Neo4j DB 연결 설정
+URI = "bolt://localhost:7687"   # Neo4j 기본 포트
+AUTH = ("neo4j", "password123") # 본인의 계정 정보 입력
+
+# 2. 드라이버 객체 생성
+driver = GraphDatabase.driver(URI, auth=AUTH)
+
+# 3. 데이터 조회 함수 정의 (위에서 작성한 Cypher 분석 쿼리 실행)
+def get_station_population_ratio(tx):
+    query = """
+    MATCH (rec:DailyRecord)<-[:HAS_RECORD]-(st:Station)-[:LOCATED_IN]->(dong:Neighborhood)-[:BELONGS_TO]->(gu:District)
+    WHERE rec.date = '2024-02-01'
+    RETURN gu.name AS district, 
+           dong.name AS neighborhood, 
+           st.name AS station,
+           dong.totalPop AS population, 
+           rec.offCount AS offCount,
+           (toFloat(rec.offCount) / dong.totalPop) AS ratio
+    ORDER BY ratio DESC LIMIT 5
+    """
+    
+    # 쿼리 실행 및 결과 받아오기
+    result = tx.run(query)
+    
+    # 결과 출력 (콘솔 로그)
+    print(f"{'자치구':<5} | {'행정동':<5} | {'역명':<6} | {'유입비율':<5}")
+    print("-" * 40)
+    for record in result:
+        # record는 반환된 컬럼 이름을 Key로 가지는 딕셔너리처럼 동작함
+        print(f"{record['district']:<6} | {record['neighborhood']:<6} | {record['station']:<7} | {record['ratio']:.2f}")
+
+# 4. 세션 열기 및 실행
+with driver.session() as session:
+    print("🚇 거주 인구 대비 지하철 하차 유입 비율 TOP 5 🚇")
+    # 읽기 전용 트랜잭션으로 함수 넘겨서 실행
+    session.read_transaction(get_station_population_ratio)
+
+# 5. 드라이버 사용 종료
+driver.close()
+```
+
+**✅ 최종 요약:**
+Python에서 `neo4j` 공식 드라이버를 사용하면, 마치 RDBMS의 `PyMySQL`이나 `psycopg2`를 쓰는 것과 똑같이 접속해서 쿼리를 `run()` 메서드에 던지기만 하면 됨. 반환된 결과(`record`)는 JSON 구조처럼 아주 쉽게 `record['이름']`으로 뽑아서 쓸 수 있어서 백엔드 API 서버를 만들기도 매우 쾌적함!
