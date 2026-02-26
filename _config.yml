@@ -142,6 +142,9 @@ footer:
     - label: "linkedIn"
       icon: "fab fa-fw fa-linkedin"
       url: "https://www.linkedin.com/in/jongmin-park-080b6429b/"
+    - label: "Privacy Policy"
+      icon: "fas fa-fw fa-shield-alt"
+      url: "/privacy-policy/"
 
 
 # Reading Files
