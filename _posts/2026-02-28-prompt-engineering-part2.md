@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "[상세 요약] 프롬프트 엔지니어링 Part 2. 효과적인 프롬프트 분석 기법"
-excerpt: "패스트캠퍼스 강수진 박사 강의 Part 2 상세 리뷰 및 대화 분석 메커니즘 해설"
+excerpt: "단순한 명령어 입력을 넘어, 사람과 AI의 대화 패턴을 체계적으로 분석하고 최적화하는 방법론"
 categories:
   - AI
 tags:
