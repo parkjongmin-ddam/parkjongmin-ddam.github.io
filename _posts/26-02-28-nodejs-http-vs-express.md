@@ -11,7 +11,7 @@ sidebar:
 
 # Node.js 기초 웹 서버 구축 비교
 
-![http_vs_express](C:\Users\jongm\.gemini\antigravity\brain\da645232-5b61-48d0-88be-6caf55f16bff\http_vs_express_1772270080061.png)
+![http_vs_express](/assets/images/http_vs_express_1772270080061.png)
 
 Node.js를 사용하여 웹 서버를 구축하는 두 가지 기본적인 방법인 내장 `http` 모듈을 사용하는 방법과 `express` 프레임워크를 사용하는 방법을 정리함.
 
