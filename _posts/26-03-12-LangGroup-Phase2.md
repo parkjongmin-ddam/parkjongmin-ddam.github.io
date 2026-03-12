@@ -1,14 +1,14 @@
 ---
 layout: single
-title: "[AgentForge] Phase 2 셋업 — Langfuse 3.x + LangGraph 1.x 연동 트러블슈팅 정리"
-excerpt: "Langfuse 3.x + LangGraph 1.x 환경에서 AgentForge Phase 2를 로컬에서 실행하며 겪은 API 변경, 모듈 경로 이동, 콜백 생성 방식 변경 등의 오류 해결 방법을 기록."
-categories: [Project, AgentForge]
+title: "[SmartHee] Phase 2 셋업 — Langfuse 3.x + LangGraph 1.x 연동 트러블슈팅 정리"
+excerpt: "Langfuse 3.x + LangGraph 1.x 환경에서 SmartHee Phase 2를 로컬에서 실행하며 겪은 API 변경, 모듈 경로 이동, 콜백 생성 방식 변경 등의 오류 해결 방법을 기록."
+categories: [Project, SmartHee]
 tags: [python, fastapi, langgraph, langfuse, observability, llm-tracing, 포트폴리오]
 ---
 
 ## 들어가며
 
-멀티에이전트 오케스트레이션 플랫폼 **AgentForge**의 Phase 2를 셋업하면서 겪은 시행착오를 기록한다.  
+멀티에이전트 오케스트레이션 플랫폼 **SmartHee**의 Phase 2를 셋업하면서 겪은 시행착오를 기록한다.  
 Phase 2의 핵심은 **Langfuse 기반 LLM 실행 트레이싱**이다. 에이전트가 어떤 프롬프트를 받고, 어떤 LLM을 호출했으며, 응답이 무엇인지, 비용은 얼마인지를 cloud.langfuse.com 대시보드에서 실시간으로 확인하는 것이 목표다.
 
 생각보다 많은 에러가 쏟아졌다. 특히 langfuse 3.x와 LangGraph 1.x 모두 최근에 API가 크게 바뀌었기 때문에 공식 문서보다 실제 설치된 버전이 다른 경우가 많았다.
