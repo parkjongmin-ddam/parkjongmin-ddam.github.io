@@ -325,7 +325,50 @@ Swagger UI 접속: **`http://127.0.0.1:8000/docs`**
 
 ---
 
-## 📝 전체 실행 순서 정리
+## � API 엔드포인트 상세 설명
+
+Swagger UI에서 확인할 수 있는 AgentForge API의 전체 엔드포인트 목록과 각 기능에 대한 설명이다.
+
+### 🤖 Agents — 에이전트 빌드 및 실행
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| `POST` | `/api/v1/builder/create` | **에이전트 생성** — 목적(goal), 사용할 툴, 시스템 프롬프트 등을 정의하여 새로운 에이전트 설정(`agent_config`)을 DB에 저장한다. |
+| `POST` | `/api/v1/builder/refine` | **에이전트 개선** — 기존 에이전트 설정을 바탕으로 프롬프트나 툴 구성을 개선한 새 버전을 생성한다. |
+| `POST` | `/api/v1/agents/run` | **에이전트 실행** — 저장된 에이전트 설정 ID와 입력값(input)을 받아 LangGraph를 통해 LLM을 호출하고, 결과를 `agent_runs` 테이블에 저장한다. |
+| `GET`  | `/api/v1/agents/run/{run_id}` | **실행 결과 조회** — 특정 `run_id`에 해당하는 에이전트 실행 결과(output, status, 비용 등)를 조회한다. |
+| `GET`  | `/api/v1/tools` | **사용 가능한 툴 목록 조회** — 에이전트에 연결할 수 있는 툴(예: Tavily 웹검색 등) 목록을 반환한다. |
+| `GET`  | `/api/v1/models` | **사용 가능한 모델 목록 조회** — 에이전트에 연결 가능한 LLM 모델(예: `openai/gpt-4o`) 목록을 반환한다. |
+
+### 📊 Evaluation — LLM Judge 평가
+
+> Phase 1 코드에 라우트 파일(`evaluation.py`)이 이미 포함되어 있어 Swagger UI에 표시된다. 실제 평가 로직과 Langfuse 연동은 **Phase 2에서 구현**된다.
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| `POST` | `/api/v1/eval/run/{run_id}` | **에이전트 실행 결과 평가** — 특정 run에 대해 LLM Judge가 응답 품질(정확성, 관련성 등)을 자동으로 평가하고 점수를 저장한다. |
+| `POST` | `/api/v1/eval/abtest` | **A/B 테스트** — 두 개의 에이전트 설정(또는 모델)을 동일한 입력으로 실행하고 결과를 비교 평가한다. |
+| `GET`  | `/api/v1/eval/agent/{agent_id}/stats` | **에이전트 통계 조회** — 특정 에이전트의 누적 실행 횟수, 평균 점수, 평균 비용 등의 통계를 반환한다. |
+
+### 🔧 default
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| `GET`  | `/health` | **헬스체크** — 서버가 정상적으로 실행 중인지 확인하는 엔드포인트. `{"status": "ok"}` 형태로 응답한다. |
+
+### 📐 Schemas — 요청/응답 데이터 구조
+
+| 스키마 | 설명 |
+|--------|------|
+| `BuildRequest` | 에이전트 생성 요청 바디 — goal, tools, system_prompt 등 포함 |
+| `RefineRequest` | 에이전트 개선 요청 바디 — 기존 agent_config_id 및 개선 방향 포함 |
+| `RunRequest` | 에이전트 실행 요청 바디 — agent_config_id, input 포함 |
+| `ABTestRequest` | A/B 테스트 요청 바디 — 두 개의 agent_config_id 및 공통 input 포함 |
+| `HTTPValidationError` | FastAPI 표준 유효성 검증 오류 응답 |
+| `ValidationError` | 세부 필드 유효성 검증 오류 |
+
+
+## �📝 전체 실행 순서 정리
 
 ```bash
 # 1. Docker Desktop 실행 (GUI)
@@ -358,7 +401,7 @@ uvicorn main:app --reload --port 8000
 
 ---
 
-## 💡 삽질 요약 및 교훈
+## 💡 트러블슈팅 요약
 
 | 문제 | 원인 | 해결 |
 |------|------|------|
