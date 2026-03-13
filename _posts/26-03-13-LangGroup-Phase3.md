@@ -1,15 +1,15 @@
 ---
 layout: single
-title: "[AgentForge] Phase 3 셋업 — Celery 비동기 작업 + 웹훅 + 마켓플레이스 트러블슈팅 정리"
-excerpt: "Celery + Redis + FastAPI 환경에서 AgentForge Phase 3를 로컬에서 실행하며 겪은 모듈 경로 오류, Windows PermissionError, Langfuse 인증 실패 등의 오류 해결 방법을 기록."
+title: "[SmartHee] Phase 3 셋업 — Celery 비동기 작업 + 웹훅 + 마켓플레이스 트러블슈팅 정리"
+excerpt: "Celery + Redis + FastAPI 환경에서 SmartHee Phase 3를 로컬에서 실행하며 겪은 모듈 경로 오류, Windows PermissionError, Langfuse 인증 실패 등의 오류 해결 방법을 기록."
 date: 2026-03-13
-categories: [Project, AgentForge]
+categories: [Project, SmartHee]
 tags: [python, fastapi, celery, redis, langgraph, langfuse, webhook, 비동기, 포트폴리오]
 ---Q
 
 ## 들어가며
 
-멀티에이전트 오케스트레이션 플랫폼 **AgentForge**의 Phase 3를 셋업하면서 겪은 시행착오를 기록한다.  
+멀티에이전트 오케스트레이션 플랫폼 **SmartHee**의 Phase 3를 셋업하면서 겪은 시행착오를 기록한다.  
 Phase 3의 핵심은 **Celery 기반 비동기 에이전트 실행과 웹훅 콜백**이다. 에이전트 실행 요청이 들어오면 즉시 `task_id`를 반환하고, 실행이 완료되면 지정한 `callback_url`로 결과를 POST하는 것이 목표다.
 
 Phase 2에서 해결했던 에러들이 Phase 3에도 그대로 이어졌고, 여기에 Celery 고유의 Windows 환경 이슈가 더해졌다.
