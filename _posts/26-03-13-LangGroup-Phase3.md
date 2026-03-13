@@ -152,7 +152,7 @@ REDIS_URL=redis://localhost:6379/0             # DB 0번 — 애플리케이션 
 
 Redis DB 번호를 분리해서 용도별로 데이터가 섞이지 않도록 구성했다.
 
-### AgentForge Phase 3의 Celery 활용
+### SmartHee Phase 3의 Celery 활용
 
 ```python
 # 즉시 비동기 실행 (웹훅)
