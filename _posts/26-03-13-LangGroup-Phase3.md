@@ -2,9 +2,10 @@
 layout: single
 title: "[SmartHee] Phase 3 셋업 — Celery 비동기 작업 + 웹훅 + 마켓플레이스 트러블슈팅 정리"
 excerpt: "Celery + Redis + FastAPI 환경에서 SmartHee Phase 3를 로컬에서 실행하며 겪은 모듈 경로 오류, Windows PermissionError, Langfuse 인증 실패 등의 오류 해결 방법을 기록."
+date: 2026-03-13
 categories: [Project, SmartHee]
 tags: [python, fastapi, celery, redis, langgraph, langfuse, webhook, 비동기, 포트폴리오]
----Q
+---
 
 ## 들어가며
 
