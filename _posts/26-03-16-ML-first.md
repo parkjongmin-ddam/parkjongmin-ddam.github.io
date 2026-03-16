@@ -2,6 +2,7 @@
 layout: single
 title: "[ML] 머신러닝 기초 — 지도학습 & 단변량 선형회귀분석"
 date: 2026-03-16
+excerpt: "머신러닝의 기본 개념부터 지도학습, 단변량 선형회귀(OLS), 성능평가 지표(MSE/RMSE/R²), 예외 처리까지 한 번에 정리한 입문 실습 가이드"
 categories: [Machine Learning, Data Science]
 tags: [머신러닝, 지도학습, 선형회귀, OLS, sklearn, ADP, Python]
 ---
@@ -252,6 +253,46 @@ plt.show()
 
 ---
 
+### STEP 6 — 예외 처리 (`try` / `except`) 추가
+
+실습 코드도 실제로는 입력 데이터 문제(결측치, shape 오류, 빈 데이터) 때문에 자주 실패할 수 있다.  
+아래처럼 `try` / `except`를 넣어두면 디버깅과 운영 안정성이 높아진다.
+
+```python
+from sklearn.exceptions import NotFittedError
+
+try:
+      # 1) 데이터 기본 검증
+      if X.size == 0 or y.size == 0:
+            raise ValueError("X 또는 y가 비어 있습니다.")
+
+      if np.isnan(X).any() or np.isnan(y).any():
+            raise ValueError("결측치(NaN)가 포함되어 있습니다. 전처리를 먼저 수행하세요.")
+
+      # 2) 모델 학습 및 예측
+      model = LinearRegression()
+      model.fit(X_train, y_train)
+      y_pred = model.predict(X_test)
+
+except ValueError as e:
+      print(f"[입력 데이터 오류] {e}")
+
+except NotFittedError as e:
+      print(f"[모델 상태 오류] 학습(fit) 후 예측(predict)해야 합니다: {e}")
+
+except Exception as e:
+      print(f"[기타 예외] 예상치 못한 오류가 발생했습니다: {e}")
+```
+
+자주 보는 예외 유형:
+
+- `ValueError`: shape 불일치, NaN 포함, 빈 데이터 등 입력값 문제
+- `NotFittedError`: `fit()` 전에 `predict()` 호출
+- `Exception`: 위에서 잡지 못한 기타 예외(최후 방어선)
+
+
+---
+
 ## 7. 핵심 수식 정리
 
 | 항목 | 수식 | 설명 |
@@ -270,7 +311,7 @@ plt.show()
 
 ## 8. 전체 프로세스 요약
 
-```
+```text
 ① 데이터 수집
       ↓
 ② EDA (탐색적 분석) — 산점도, 상관계수 확인
@@ -294,11 +335,12 @@ plt.show()
 
 단변량 선형회귀의 자연스러운 다음 단계는 **다변량(다중) 선형회귀**:
 
-```
+```text
 ŷ = β₀ + β₁x₁ + β₂x₂ + ... + βₚxₚ
 ```
 
 추가로 다루어야 할 개념:
+
 - **다중공선성 (Multicollinearity)** — VIF로 진단
 - **변수 선택법** — Forward / Backward / Stepwise
 - **조정 R² (Adjusted R²)** — 변수 개수에 따른 보정
@@ -306,4 +348,4 @@ plt.show()
 
 ---
 
-*참고: sklearn 공식 문서 https://scikit-learn.org/stable/modules/linear_model.html*
+*참고: sklearn 공식 문서 [https://scikit-learn.org/stable/modules/linear_model.html](https://scikit-learn.org/stable/modules/linear_model.html)*
