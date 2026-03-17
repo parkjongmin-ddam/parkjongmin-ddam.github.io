@@ -70,7 +70,7 @@ LCEL로 체인을 한 번만 정의해두면 `invoke` / `stream` / `ainvoke` / `
 
 ### 1-4. `|` 파이프 연산자의 내부 동작
 
-![LCEL 파이프 연산자 내부 동작](lcel_pipe_internal.svg)
+![LCEL 파이프 연산자 내부 동작](/assets/images/26-03-17/lcel_pipe_internal.svg)
 
 `|` 연산자는 파이썬의 `__or__` 메서드를 오버로딩한 것임.  
 `prompt | model`을 작성하는 순간 내부에서 `RunnableSequence(steps=[prompt, model])`이 생성됨.
@@ -246,7 +246,7 @@ print(result)
 
 ### 4-1. 기본 동작 원리
 
-![RunnablePassthrough 흐름](runnable_passthrough_flow.svg)
+![RunnablePassthrough 흐름](/assets/images/26-03-17/runnable_passthrough_flow.svg)
 
 `RunnablePassthrough`는 입력을 **아무런 변환 없이** 그대로 다음 단계로 전달함.  
 딕셔너리 입력의 경우 그 딕셔너리를 그대로, 문자열 입력의 경우 그 문자열을 그대로 통과시킴.
@@ -336,7 +336,7 @@ result = rag_chain.invoke({"question": "서울의 인구는?"})
 
 ### 5-1. 병렬 실행의 내부 원리
 
-![RunnableParallel 실행 흐름](runnable_parallel_flow.svg)
+![RunnableParallel 실행 흐름](/assets/images/26-03-17/runnable_parallel_flow.svg)
 
 `RunnableParallel`은 내부적으로 **Python의 `ThreadPoolExecutor`** 를 사용해서 여러 체인을 동시에 실행함.  
 각 체인은 독립적인 스레드에서 실행되므로, 가장 오래 걸리는 체인의 시간이 전체 시간이 됨.
@@ -613,7 +613,7 @@ chain_v2 = parallel | my_custom_step | refine_prompt | model | parser
 
 ### 전체 흐름
 
-![RAG 전체 파이프라인](rag_full_pipeline.svg)
+![RAG 전체 파이프라인](/assets/images/26-03-17/rag_full_pipeline.svg)
 
 ### 전체 코드 (단계별 주석 포함)
 
@@ -982,7 +982,7 @@ print(result)
 
 ## 핵심 정리
 
-![LCEL Runnable 전체 지도](lcel_complete_map.svg)
+![LCEL Runnable 전체 지도](/assets/images/26-03-17/lcel_complete_map.svg)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐

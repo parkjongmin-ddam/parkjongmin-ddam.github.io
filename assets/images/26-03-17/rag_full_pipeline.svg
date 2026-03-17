@@ -1,0 +1,79 @@
+<svg width="100%" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- 제목 -->
+  <text x="340" y="26" text-anchor="middle" style="fill:rgb(250, 249, 245);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RAG 전체 파이프라인</text>
+
+  <!-- 1단계: 사용자 질문 -->
+  <g>
+    <rect x="240" y="42" width="200" height="44" rx="8" stroke-width="0.5" style="fill:rgb(68, 68, 65);stroke:rgb(180, 178, 169);"/>
+    <text x="340" y="56" text-anchor="middle" dominant-baseline="central" style="fill:rgb(211, 209, 199);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">사용자 질문</text>
+    <text x="340" y="72" text-anchor="middle" dominant-baseline="central" style="fill:rgb(180, 178, 169);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">"서울의 인구는 얼마인가요?"</text>
+  </g>
+  <line x1="340" y1="87" x2="340" y2="110" marker-end="url(#arrow)" stroke="rgb(156, 154, 146)" stroke-width="1.5"/>
+
+  <!-- 2단계: RunnablePassthrough.assign -->
+  <g>
+    <rect x="180" y="110" width="320" height="54" rx="8" stroke-width="0.5" style="fill:rgb(99, 56, 6);stroke:rgb(239, 159, 39);"/>
+    <text x="340" y="128" text-anchor="middle" dominant-baseline="central" style="fill:rgb(250, 199, 117);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RunnablePassthrough.assign()</text>
+    <text x="340" y="148" text-anchor="middle" dominant-baseline="central" style="fill:rgb(239, 159, 39);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">question 유지 + context 키 추가 (retriever 호출)</text>
+  </g>
+
+  <!-- assign 내부: 두 갈래 -->
+  <path d="M340 164 L340 185 L220 185 L220 208" fill="none" stroke="rgb(194, 192, 182)" stroke-width="1" marker-end="url(#arrow)"/>
+  <path d="M340 164 L340 185 L460 185 L460 208" fill="none" stroke="rgb(194, 192, 182)" stroke-width="1" marker-end="url(#arrow)"/>
+  <text x="245" y="198" fill="rgb(194, 192, 182)" text-anchor="middle" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">그대로 통과</text>
+  <text x="490" y="198" fill="rgb(194, 192, 182)" text-anchor="middle" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">검색 실행</text>
+
+  <!-- question 유지 -->
+  <g>
+    <rect x="130" y="208" width="180" height="44" rx="6" stroke-width="0.5" style="fill:rgb(60, 52, 137);stroke:rgb(175, 169, 236);"/>
+    <text x="220" y="222" text-anchor="middle" dominant-baseline="central" style="fill:rgb(206, 203, 246);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RunnablePassthrough</text>
+    <text x="220" y="238" text-anchor="middle" dominant-baseline="central" style="fill:rgb(175, 169, 236);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">question 그대로 유지</text>
+  </g>
+
+  <!-- retriever -->
+  <g>
+    <rect x="370" y="208" width="180" height="44" rx="6" stroke-width="0.5" style="fill:rgb(8, 80, 65);stroke:rgb(93, 202, 165);"/>
+    <text x="460" y="222" text-anchor="middle" dominant-baseline="central" style="fill:rgb(159, 225, 203);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">Retriever</text>
+    <text x="460" y="238" text-anchor="middle" dominant-baseline="central" style="fill:rgb(93, 202, 165);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">벡터 검색 → 관련 문서</text>
+  </g>
+
+  <!-- 합류 -->
+  <path d="M220 252 L220 280 L305 280" fill="none" stroke="rgb(194, 192, 182)" stroke-width="1" marker-end="url(#arrow)"/>
+  <path d="M460 252 L460 280 L375 280" fill="none" stroke="rgb(194, 192, 182)" stroke-width="1" marker-end="url(#arrow)"/>
+
+  <!-- 합쳐진 딕셔너리 -->
+  <g>
+    <rect x="200" y="280" width="280" height="44" rx="8" stroke-width="0.5" style="fill:rgb(68, 68, 65);stroke:rgb(180, 178, 169);"/>
+    <text x="340" y="296" text-anchor="middle" dominant-baseline="central" style="fill:rgb(211, 209, 199);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">{"question": "...", "context": [문서1, 문서2]}</text>
+    <text x="340" y="312" text-anchor="middle" dominant-baseline="central" style="fill:rgb(180, 178, 169);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">합쳐진 입력값</text>
+  </g>
+  <line x1="340" y1="325" x2="340" y2="348" marker-end="url(#arrow)" stroke="rgb(156, 154, 146)" stroke-width="1.5"/>
+
+  <!-- ChatPromptTemplate -->
+  <g>
+    <rect x="185" y="348" width="310" height="44" rx="8" stroke-width="0.5" style="fill:rgb(60, 52, 137);stroke:rgb(175, 169, 236);"/>
+    <text x="340" y="362" text-anchor="middle" dominant-baseline="central" style="fill:rgb(206, 203, 246);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">ChatPromptTemplate</text>
+    <text x="340" y="378" text-anchor="middle" dominant-baseline="central" style="fill:rgb(175, 169, 236);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">system: 문서 기반 답변 / human: 질문</text>
+  </g>
+  <line x1="340" y1="393" x2="340" y2="416" marker-end="url(#arrow)" stroke="rgb(156, 154, 146)" stroke-width="1.5"/>
+
+  <!-- 모델 + 파서 -->
+  <g>
+    <rect x="220" y="416" width="240" height="44" rx="8" stroke-width="0.5" style="fill:rgb(8, 80, 65);stroke:rgb(93, 202, 165);"/>
+    <text x="340" y="430" text-anchor="middle" dominant-baseline="central" style="fill:rgb(159, 225, 203);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">ChatOpenAI | StrOutputParser</text>
+    <text x="340" y="446" text-anchor="middle" dominant-baseline="central" style="fill:rgb(93, 202, 165);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">문서 기반 최종 답변 생성</text>
+  </g>
+  <line x1="340" y1="461" x2="340" y2="484" marker-end="url(#arrow)" stroke="rgb(156, 154, 146)" stroke-width="1.5"/>
+
+  <!-- 최종 결과 -->
+  <g>
+    <rect x="220" y="484" width="240" height="26" rx="6" stroke-width="0.5" style="fill:rgb(39, 80, 10);stroke:rgb(151, 196, 89);"/>
+    <text x="340" y="497" text-anchor="middle" dominant-baseline="central" style="fill:rgb(192, 221, 151);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">"서울의 인구는 약 950만 명입니다."</text>
+  </g>
+</svg>

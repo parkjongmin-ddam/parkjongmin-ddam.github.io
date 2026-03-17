@@ -1,0 +1,72 @@
+<svg width="100%" viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- 외곽 컨테이너 -->
+  <rect x="20" y="10" width="640" height="400" rx="16" fill="none" stroke="rgba(222, 220, 209, 0.3)" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="340" y="32" text-anchor="middle" style="fill:rgb(250, 249, 245);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">LCEL Runnable 전체 지도</text>
+
+  <!-- | 파이프 -->
+  <g>
+    <rect x="260" y="44" width="160" height="46" rx="8" stroke-width="0.5" style="fill:rgb(68, 68, 65);stroke:rgb(180, 178, 169);"/>
+    <text x="340" y="59" text-anchor="middle" dominant-baseline="central" style="fill:rgb(211, 209, 199);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">| 파이프 연산자</text>
+    <text x="340" y="77" text-anchor="middle" dominant-baseline="central" style="fill:rgb(180, 178, 169);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">RunnableSequence 생성</text>
+  </g>
+
+  <line x1="340" y1="92" x2="340" y2="112" stroke="rgba(222, 220, 209, 0.3)" stroke-width="1"/>
+
+  <!-- 3개 Runnable 나열 -->
+  <g>
+    <rect x="40" y="112" width="180" height="66" rx="8" stroke-width="0.5" style="fill:rgb(60, 52, 137);stroke:rgb(175, 169, 236);"/>
+    <text x="130" y="130" text-anchor="middle" dominant-baseline="central" style="fill:rgb(206, 203, 246);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RunnablePassthrough</text>
+    <text x="130" y="150" text-anchor="middle" dominant-baseline="central" style="fill:rgb(175, 169, 236);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">입력을 그대로 통과</text>
+    <text x="130" y="166" text-anchor="middle" dominant-baseline="central" style="fill:rgb(175, 169, 236);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">.assign()으로 키 추가</text>
+  </g>
+
+  <g>
+    <rect x="250" y="112" width="180" height="66" rx="8" stroke-width="0.5" style="fill:rgb(8, 80, 65);stroke:rgb(93, 202, 165);"/>
+    <text x="340" y="130" text-anchor="middle" dominant-baseline="central" style="fill:rgb(159, 225, 203);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RunnableParallel</text>
+    <text x="340" y="150" text-anchor="middle" dominant-baseline="central" style="fill:rgb(93, 202, 165);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">여러 체인 동시 실행</text>
+    <text x="340" y="166" text-anchor="middle" dominant-baseline="central" style="fill:rgb(93, 202, 165);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">ThreadPoolExecutor</text>
+  </g>
+
+  <g>
+    <rect x="460" y="112" width="180" height="66" rx="8" stroke-width="0.5" style="fill:rgb(99, 56, 6);stroke:rgb(239, 159, 39);"/>
+    <text x="550" y="130" text-anchor="middle" dominant-baseline="central" style="fill:rgb(250, 199, 117);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">RunnableLambda</text>
+    <text x="550" y="150" text-anchor="middle" dominant-baseline="central" style="fill:rgb(239, 159, 39);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">커스텀 함수 삽입</text>
+    <text x="550" y="166" text-anchor="middle" dominant-baseline="central" style="fill:rgb(239, 159, 39);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">@chain 데코레이터</text>
+  </g>
+
+  <!-- 각 사용 예시 -->
+  <rect x="40" y="196" width="180" height="66" rx="6" fill="none" stroke="rgba(222, 220, 209, 0.15)" stroke-width="0.5"/>
+  <text x="130" y="216" text-anchor="middle" fill="rgb(194, 192, 182)" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">사용 예시</text>
+  <text x="130" y="234" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">문자열 → 딕셔너리</text>
+  <text x="130" y="250" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">RAG question 유지</text>
+
+  <rect x="250" y="196" width="180" height="66" rx="6" fill="none" stroke="rgba(222, 220, 209, 0.15)" stroke-width="0.5"/>
+  <text x="340" y="216" text-anchor="middle" fill="rgb(194, 192, 182)" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">사용 예시</text>
+  <text x="340" y="234" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">동일 입력 → 여러 결과</text>
+  <text x="340" y="250" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">자동 최적화 처리</text>
+
+  <rect x="460" y="196" width="180" height="66" rx="6" fill="none" stroke="rgba(222, 220, 209, 0.15)" stroke-width="0.5"/>
+  <text x="550" y="216" text-anchor="middle" fill="rgb(194, 192, 182)" style="font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">사용 예시</text>
+  <text x="550" y="234" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">중간 데이터 가공</text>
+  <text x="550" y="250" text-anchor="middle" style="fill:rgb(194, 192, 182);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">전처리/후처리</text>
+
+  <!-- 공통 메서드 박스 -->
+  <g>
+    <rect x="40" y="280" width="600" height="54" rx="8" stroke-width="0.5" style="fill:rgb(68, 68, 65);stroke:rgb(180, 178, 169);"/>
+    <text x="340" y="298" text-anchor="middle" dominant-baseline="central" style="fill:rgb(211, 209, 199);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">모든 Runnable 공통 메서드</text>
+    <text x="340" y="318" text-anchor="middle" dominant-baseline="central" style="fill:rgb(180, 178, 169);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">.invoke()  .stream()  .batch()  .ainvoke()  .astream()  .abatch()</text>
+  </g>
+
+  <!-- 안정성 패턴 -->
+  <g>
+    <rect x="40" y="350" width="600" height="46" rx="8" stroke-width="0.5" style="fill:rgb(8, 80, 65);stroke:rgb(93, 202, 165);"/>
+    <text x="340" y="366" text-anchor="middle" dominant-baseline="central" style="fill:rgb(159, 225, 203);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:500;">안정성 보강 패턴</text>
+    <text x="340" y="384" text-anchor="middle" dominant-baseline="central" style="fill:rgb(93, 202, 165);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;">.with_fallbacks()  .with_retry()  RunnableBranch  LangSmith 트레이싱</text>
+  </g>
+</svg>
