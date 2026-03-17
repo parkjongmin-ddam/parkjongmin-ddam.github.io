@@ -8,7 +8,7 @@ tags:
   - LangChain
   - LCEL
   - LLM
-  - 강의리뷰
+  
 
 ---
 ---
