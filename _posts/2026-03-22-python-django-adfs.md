@@ -1,7 +1,6 @@
 ---
 layout: single
 title: "[Python Django] ADFS OAuth 2.0 연동 가이드 (feat. 순수 OAuth 2.0)"
-date: 2026-03-22
 categories: [Python, Django]
 excerpt: "ADFS OAuth 2.0 인증 흐름, ADFS Application Group 등록, OAuth 2.0 핵심 로직 구현, Access Token Claims 확인 방법, HTTPS 설정, 트러블슈팅까지 한 번에 정리한 실전 가이드"
 tags: [Python, Django, ADFS, OAuth2, OpenIDConnect, SSO, 인증]
