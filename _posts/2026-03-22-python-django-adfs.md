@@ -680,6 +680,8 @@ ADFS 에서 어떤 Claim 이 발급되는지 확인하는 게 중요함.
 
 ### profile.html — Claims 표시
 
+{% raw %}
+
 ```html
 <div class="card">
     <h2>ADFS Claim 정보</h2>
@@ -697,6 +699,8 @@ ADFS 에서 어떤 Claim 이 발급되는지 확인하는 게 중요함.
     </table>
 </div>
 ```
+
+{% endraw %}
 
 로그인 후 프로필 페이지에서 아래처럼 확인할 수 있음.
 
