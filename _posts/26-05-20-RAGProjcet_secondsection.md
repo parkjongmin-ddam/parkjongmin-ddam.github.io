@@ -1,5 +1,5 @@
 ---
-title: "권한 인식 RAG 만들기 Select 2_eranker, audit log 버그, schema drift"
+title: "권한 인식 RAG 만들기 Select 2_reranker, audit log 버그, schema drift"
 categories: [RAG, IAM]
 tags: [permission-aware-rag, BGE-Reranker, RAGAS, audit-log, schema-drift, compliance]
 description: "BGE Reranker v2-m3 도입과 평가 과정에서 발견한 두 가지: audit log 정확성 버그와 policy-data schema drift."
