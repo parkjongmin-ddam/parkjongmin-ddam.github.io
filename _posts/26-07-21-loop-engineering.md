@@ -4,6 +4,7 @@ title: "랠프 위검 루프 · 하네스 엔지니어링 · 루프 엔지니어
 excerpt: "에이전틱 코딩에서 자주 엮이는 세 용어 랠프 위검 루프, 하네스 엔지니어링, 루프 엔지니어링을 정리함. 셋은 경쟁 개념이 아니라 랠프 ⊂ 하네스 ⊂ 루프 엔지니어링의 중첩 구조임. 공통점 다섯 가지와 층위별 차이, 함대(fleet)로 다시 하네스로 돌아오는 나선 구조까지 짚음. 출처와 OpenAI Codex 수치는 원문으로 교차 확인함."
 date: 2026-07-21
 categories: [AI, Agentic Coding]
+permalink: /ai/agentic-coding/loop-engineering/
 tags: [agentic-coding, harness-engineering, loop-engineering, ralph-loop, claude-code, codex, 에이전트]
 ---
 
