@@ -9,7 +9,7 @@ tags: [entra-id, azure-ad, oidc, oauth2, pkce, rfc9700, confidential-client, mic
 
 ## 들어가며
 
-앞선 글에서 온프렘 **ADFS**를 두고 하나의 질문을 실측으로 닫았다 — discovery(`.well-known/openid-configuration`)에 `code_challenge_methods_supported`가 없어도 ADFS는 PKCE를 실제로 검증하고 강제한다는 것. (→ [ADFS는 discovery에 광고하지 않아도 PKCE를 강제한다]({% post_url 27-07-14-pkce %}))
+앞선 글에서 온프렘 **ADFS**를 두고 하나의 질문을 실측으로 닫았다 — discovery(`.well-known/openid-configuration`)에 `code_challenge_methods_supported`가 없어도 ADFS는 PKCE를 실제로 검증하고 강제한다는 것. (→ [ADFS는 discovery에 광고하지 않아도 PKCE를 강제한다]({% post_url 26-07-14-pkce %}))
 
 그렇다면 같은 질문을 **클라우드 Entra ID(구 Azure AD)** 로 옮기면 어떻게 될까. 특히 이번엔 public client가 아니라 **Web(confidential) 앱**, 즉 client_secret을 가진 앱에 PKCE를 **병행**했을 때다. RFC 9700은 confidential client에 대해 PKCE를 **MUST가 아니라 RECOMMENDED**로 둔다. 그럼 Entra는 confidential 앱이 보낸 code_challenge를 무시할까, 아니면 secret이 있어도 code_verifier를 실제로 대조할까?
 
@@ -231,7 +231,7 @@ ADFS는 실패한 토큰 교환에서도 authorization code를 **소진**시켜 
 
 1. **Entra ID 앱 등록의 전 과정** — App registration → redirect URI → client secret(confidential화) → Graph application permission + 관리자 동의 — 을 밟으면, 온프렘 ADFS의 Application Group과 같은 목적지에 도달한다. 경로(포털 UX)는 다르지만 개념(confidential client + scope/permission)은 대응된다.
 2. **Client Credentials(S2S)** 는 사용자 없이 앱 권한 토큰을 발급한다 — `roles: User.Read.All`, `upn: none`, Graph `/users` 200. 관리자 동의가 토큰에 role로 반영됨을 확인.
-3. **Entra는 confidential 앱의 PKCE도 실제로 검증·강제한다** — secret이 있어도 틀린 code_verifier는 `AADSTS501481`로 거부. discovery에 광고 없어도 마찬가지. 이는 온프렘 ADFS의 결론([27-07-14 글]({% post_url 27-07-14-pkce %}))과 **동일한 패턴**이다.
+3. **Entra는 confidential 앱의 PKCE도 실제로 검증·강제한다** — secret이 있어도 틀린 code_verifier는 `AADSTS501481`로 거부. discovery에 광고 없어도 마찬가지. 이는 온프렘 ADFS의 결론([26-07-14 글]({% post_url 26-07-14-pkce %}))과 **동일한 패턴**이다.
 4. **다만 실패한 code의 소진 시점은 다르다** — ADFS는 실패 교환에서도 code를 소진(step2 거부)하지만, Entra는 소진하지 않아 올바른 verifier로 재시도가 성공(step2 200)한다. "같은 결론, 다른 구현"을 negative-first가 분리해서 보여줬다.
 
 교훈을 한 줄로 — **RFC 9700이 confidential에 PKCE를 권장(RECOMMENDED)하는 그 조합을, ADFS도 Entra도 discovery 광고 없이 실제로 강제한다. secret이 있으니 PKCE는 장식일 거라는 가정은 실측 앞에서 깨진다.**
