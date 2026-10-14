@@ -15,7 +15,19 @@ AD 보안 진단 도구 세 가지(PingCastle, Purple Knight, BloodHound CE)를 
 > - 원인은 DC01 컴퓨터 계정 비밀번호 불일치(2148074274, SEC_E_WRONG_PRINCIPAL). KDC 중지 → `netdom resetpwd` → 재부팅으로 복구했다. 재부팅 후에는 네트워크 프로필이 Private으로 잡혀 1722가 이어졌고, DNS를 상대 DC 1순위로 바꿔 해결했다.
 > - 재진단 결과 Stale Objects 51 → 26. 첫 진단은 DC02만 아는 데이터로 계산되어 사용자 10개·컴퓨터 1대가 빠져 있었다.
 
-## 1. 실습 환경
+## 1. 왜 PingCastle을 쓰는가
+
+AD는 사용자·컴퓨터·그룹·권한·정책이 수천에서 수십만 개 얽혀 있어서, 보안 상태를 사람이 눈으로 훑어 파악하기 어렵다. 어디서부터 봐야 할지 기준이 필요하다.
+
+PingCastle은 그 기준을 "점수"로 주는 도구다. AD를 한 번 읽어서 위험을 0~100점으로 표시하고, 위험을 네 영역(오래된 객체, 특권 계정, 신뢰 관계, 이상 징후)으로 나눠 보여 준다. 쓰는 이유는 다음과 같다.
+
+- **현황을 한 장으로 파악한다.** 처음 맡은 AD나 정기 점검에서, 지금 어디가 약한지 빠르게 본다. 병원 종합검진 결과지에 가깝다.
+- **추이를 비교한다.** 설치 없이 실행 파일 하나로 돌아가고 결과를 XML로 남기므로, 분기마다 같은 방식으로 실행해 점수 변화를 추적할 수 있다. 개선 전후를 숫자로 보고하기 좋다.
+- **경영진·고객 보고에 쓴다.** 점수와 네 영역 요약은 비전문가에게 설명하기 쉽다.
+
+한계도 분명하다. PingCastle은 "설정이 위험한가"를 점검하는 도구이지, "지금 공격당하고 있는가"를 탐지하지는 않는다. 그래서 침해 흔적(IOC)은 Purple Knight로, 권한이 이어지는 공격 경로는 BloodHound로 보완한다. 이 글은 그 첫 단계다.
+
+## 2. 실습 환경
 
 Hyper-V 홈랩(azlab.istn.co.kr)에서 진행했다. 진단 대상 DC 2대와 AD CS 발급 CA, 작업용 클라이언트만 켰다. 오프라인 루트 CA(ROOTCA)는 그대로 꺼 두었다.
 
@@ -38,7 +50,7 @@ Checkpoint-VM -Name ISCA01    -SnapshotName "before-ad-audit"
 
 ![체크포인트 생성 확인](/assets/images/2026-10-14-pingcastle-lab/01-checkpoints.png)
 
-## 2. 작업 VM 준비
+## 3. 작업 VM 준비
 
 작업 폴더를 만들고, Defender 예외는 도구 폴더에만 걸었다.
 
@@ -60,7 +72,7 @@ Connect-VMNetworkAdapter -VMName Win11_user -SwitchName External
 
 ![nltest sc_verify 정상](/assets/images/2026-10-14-pingcastle-lab/04-nltest.png)
 
-## 3. 다운로드: Defender가 Trojan으로 격리
+## 4. 다운로드: Defender가 Trojan으로 격리
 
 PingCastle은 GitHub 릴리스(netwrix/pingcastle)에서 받았다. 4.0.0.31 ZIP을 Host PC와 VM 양쪽 브라우저가 모두 차단했다.
 
@@ -93,7 +105,7 @@ Get-AuthenticodeSignature .\PingCastle.exe | Select Status, @{n='Signer';e={$_.S
 
 AD 점검 도구는 공격자의 정찰 도구와 기능이 겹쳐서 이런 탐지가 흔하다. 운영 환경이라면 보안팀과 해시·서명 기준으로 예외를 승인받고 점검이 끝나면 예외를 지우는 절차가 필요하다.
 
-## 4. 실행
+## 5. 실행
 
 일반 도메인 사용자 권한으로 실행했다. 보고서의 `IsPrivilegedMode`는 `false`였다.
 
@@ -107,7 +119,7 @@ AD 점검 도구는 공격자의 정찰 도구와 기능이 겹쳐서 이런 탐
 
 ![실행 완료](/assets/images/2026-10-14-pingcastle-lab/11-run-end.png)
 
-## 5. 결과 읽기
+## 6. 결과 읽기
 
 ### 전체 점수는 최댓값
 
@@ -187,11 +199,11 @@ Trusts는 0이다. azlab은 단일 포리스트·단일 도메인이고 외부 �
 
 양호하게 나온 항목도 있었다. MachineAccountQuota 0, 두 DC 모두 SMB 서명 필수·SMB1 미지원, Guest 비활성, AdminSDHolder 이상 0, GPP 비밀번호 0.
 
-## 6. 규칙 하나를 따라가다: DC 비활성
+## 7. 규칙 하나를 따라가다: DC 비활성
 
 Stale Objects에서 `S-DC-Inactive`와 `S-PwdLastSet-DC`가 같은 DC를 가리키고 있었다. XML을 열어 보니 DC01의 마지막 로그온과 컴퓨터 계정 비밀번호 변경일이 둘 다 2026-07-02에 멈춰 있었다. DC01은 오늘 켜져 있었는데도 그랬다. DC 컴퓨터 계정의 정보가 갱신되지 않는다면 복제를 의심할 만하다.
 
-### 6-1. 복제 상태 확인
+### 7-1. 복제 상태 확인
 
 ```text
 PS> repadmin /replsummary
@@ -214,7 +226,7 @@ azlab DC01은 7월에 이름을 실수로 바꿨다가 netdom으로 복구한 �
 | DC02 → DC01 | 8524 | DC01이 DC02의 `<DSA GUID>._msdcs` 레코드를 찾지 못함 |
 | DC01 → DC02 | 2148074274 (0x80090322) | DC02가 DC01용으로 받은 Kerberos 티켓을 DC01이 복호화하지 못함 |
 
-### 6-2. DNS: nslookup 결과에 속을 뻔했다
+### 7-2. DNS: nslookup 결과에 속을 뻔했다
 
 두 DC 모두 DNS 서버가 자기 자신(127.0.0.1, ::1)만 가리키고 있었다. 상대 DC의 GUID CNAME을 `nslookup`으로 조회하자 공인 IP(54.230.62.x)가 나왔다.
 
@@ -233,7 +245,7 @@ Resolve-DnsName c250bd0e-1667-4f6a-840a-072d42f19e12._msdcs.azlab.istn.co.kr. -D
 
 DNS 레코드 누락은 원인이 아니었다. 8524의 마지막 실패 시각(09:00:04)이 DC 부팅 직후라, DNS 서버가 AD 통합 영역을 로드하기 전에 시도한 것으로 보인다. 이후 재시도에서는 재현되지 않았다. 내부 AD 도메인이 와일드카드를 쓰는 공개 도메인의 하위 이름이면 `nslookup` 결과가 엉뚱하게 나올 수 있다는 점은 기록해 둔다.
 
-### 6-3. Kerberos: 컴퓨터 계정 비밀번호 비교
+### 7-3. Kerberos: 컴퓨터 계정 비밀번호 비교
 
 2148074274를 확인하려고 두 DC 각각에서 컴퓨터 계정의 `PasswordLastSet`을 조회했다.
 
@@ -249,7 +261,7 @@ Get-ADComputer DC01 -Server WIN-RFQOQTNHTS0 -Properties PasswordLastSet
 
 DC02의 KDC는 DC01의 7월 비밀번호로 서비스 티켓을 만든다. DC01은 그 사이 비밀번호를 여러 번 바꿔서 현재 값과 직전 값만 갖고 있으니 그 티켓을 풀지 못한다. 반대 방향은 DC01의 DB에 DC02의 최신 비밀번호가 있어 문제가 없다.
 
-### 6-4. 복구
+### 7-4. 복구
 
 **DC02 → DC01 방향.** DNS가 정상이니 바로 재시도했다. 처음에는 `8453 Replication access was denied`가 나왔는데, 관리자 권한이 아닌 PowerShell(UAC 필터된 토큰)에서 실행한 탓이었다. 관리자 권한 창에서는 성공했다.
 
@@ -277,7 +289,7 @@ Start-Service kdc
 
 재부팅 후 DC02에서 `repadmin /syncall WIN-RFQOQTNHTS0 /Ade`는 오류 없이 끝났다. DC01 → DC02 방향이 복구되었다.
 
-### 6-5. 재부팅 후 1722: 네트워크 프로필
+### 7-5. 재부팅 후 1722: 네트워크 프로필
 
 이번에는 DC02 → DC01 방향이 `1908`, 이어서 `1722 The RPC server is unavailable`로 실패했다. 콘솔 창 제목이 "Select ..."로 바뀌어 명령이 멈춘 것처럼 보인 일도 있었는데, 이는 창을 클릭해 빠른 편집 모드의 선택 상태가 된 것이었다(Esc로 해제).
 
@@ -311,7 +323,7 @@ Destination DSA     largest delta    fails/total %%   error
  WIN-RFQOQTNHTS0           18m:42s    0 /   5    0
 ```
 
-## 7. 재진단
+## 8. 재진단
 
 복제를 복구한 뒤 같은 조건으로 PingCastle을 다시 실행해 XML 두 개를 규칙 단위로 비교했다.
 
@@ -334,7 +346,7 @@ Destination DSA     largest delta    fails/total %%   error
 
 1차 진단은 Win11_user가 인증하던 DC02의 데이터로 계산되었다. 7월 9일 이후 DC01에서만 만들어진 사용자 10개와 컴퓨터 1대가 DC02에는 없었으니 결과에서 빠졌다. 복제가 끊긴 상태에서 돌린 진단은 조회한 DC가 아는 범위만 보여 준다. 1차 결과는 불완전한 기준점이었고, 이후 비교 기준은 2차 결과로 바꿨다.
 
-## 8. 개선 과제 후보
+## 9. 개선 과제 후보
 
 2차 결과에서 위험도와 운영 영향도를 같이 보고 고른 후보다. 다음 실습에서 적용 후 재진단할 예정이다.
 
@@ -345,7 +357,7 @@ Destination DSA     largest delta    fails/total %%   error
 | 3 | DC01 Spooler 중지 | Anomalies −10 | 낮음 |
 | 보류 | NTLMv1 차단, LDAP 서명 강제 | | 인증 영향 검토 후 |
 
-## 9. 정리
+## 10. 정리
 
 - PingCastle 전체 점수는 최댓값이라 한 지표를 크게 개선해도 전체 점수가 그대로일 수 있다. 지표별 점수와 규칙 단위로 추이를 봐야 한다.
 - 점수보다 규칙의 근거를 따라가는 것이 중요했다. `S-DC-Inactive` 5점짜리 규칙이 97일간의 복제 단절로 이어졌다.

@@ -16,7 +16,20 @@ AD 보안 진단 도구 실습의 두 번째 편이다. [PingCastle 편]({% post
 > - Critical 4개 중 DCSync 권한(Entra Connect 동기화 계정), gMSA 읽기 권한(ADFS 서버) 등은 랩 구축 때 의도한 구성이었다. 임시 관리자 IOC는 이틀 전 테스트 작업으로 확인했다.
 > - 결과물은 HTML 보고서와 XLSX가 output 폴더에 자동 생성된다.
 
-## 1. 다운로드
+## 1. 왜 Purple Knight를 쓰는가
+
+PingCastle로 "어디가 약한지" 점수와 영역을 파악했다면, 다음 질문은 "구체적으로 무엇이 위험하고, 어떻게 고치는가"다. Purple Knight는 이 질문에 답하는 도구다.
+
+AD(와 Entra ID, Okta)를 검사해 위험 항목을 지표(Indicator) 단위로 나열하고, 각 항목에 심각도·설명·조치 방법을 붙여 준다. 쓰는 이유는 다음과 같다.
+
+- **조치 중심으로 본다.** 지표마다 "왜 위험한지"와 "어떻게 고치는지"가 함께 나와서, 개선 과제로 바로 옮길 수 있다. PingCastle이 점수와 추이 중심이라면, Purple Knight는 항목별 조치 안내서에 가깝다.
+- **침해 흔적(IOC)을 함께 본다.** 아직 당하지 않은 약점(IOE)뿐 아니라, 이미 누가 손댄 흔적(IOC)까지 지표로 보여 준다. 예방과 탐지를 한 도구에서 본다.
+- **프레임워크에 매핑된다.** 각 지표가 MITRE ATT&CK·ANSSI·D3FEND에 연결되어 있어, 왜 위험한지 설명하고 우선순위를 정하기 좋다.
+- **결과를 표로 받는다.** HTML 보고서와 함께 XLSX가 나와서, 조치 담당·일정 열을 붙이면 그대로 조치 관리표가 된다.
+
+PingCastle과 기능이 겹치는 항목도 있지만, Purple Knight는 권한(ACL)과 변경 이력을 더 깊이 본다. 그래서 둘을 함께 쓰면 빈 곳이 줄어든다(9장에서 겹치는 항목과 다른 항목을 비교한다).
+
+## 2. 다운로드
 
 Purple Knight는 Semperis 사이트에서 신청서를 제출하면 다운로드 안내 메일이 온다. 신청서의 이메일·회사명은 가렸다.
 
@@ -28,7 +41,7 @@ Purple Knight는 Semperis 사이트에서 신청서를 제출하면 다운로드
 
 ![다운로드 페이지](/assets/images/2026-10-14-purpleknight-lab/03-download-page.png)
 
-## 2. 해시 확인과 VM 복사
+## 3. 해시 확인과 VM 복사
 
 Host PC에서 받은 ZIP의 해시가 페이지 값과 일치했다. VM으로 옮기려고 `Copy-VMFile`을 실행했더니 `0x80070015 장치가 준비되지 않았습니다`로 실패했다.
 
@@ -56,7 +69,7 @@ Get-AuthenticodeSignature $pk | Select Status, @{n='Signer';e={$_.SignerCertific
 
 ![압축 해제와 서명 확인](/assets/images/2026-10-14-purpleknight-lab/11-signature.png)
 
-## 3. 실행
+## 4. 실행
 
 실행하면 버전(5.1.2608.5001, Community Edition)이 표시된 시작 화면이 뜨고, 라이선스 동의 → 환경 → 지표 → 진행 → 요약 5단계로 진행된다.
 
@@ -88,7 +101,7 @@ Get-AuthenticodeSignature $pk | Select Status, @{n='Signer';e={$_.SignerCertific
 
 ![Summary 화면](/assets/images/2026-10-14-purpleknight-lab/06-summary.png)
 
-## 4. 결과물
+## 5. 결과물
 
 종료 화면의 "Report saved to output folder"대로 output 폴더에 두 파일이 생겼다.
 
@@ -99,7 +112,7 @@ Get-AuthenticodeSignature $pk | Select Status, @{n='Signer';e={$_.SignerCertific
 
 XLSX에 지표별 상세 시트가 따로 있어서, 조치 담당·일정 열을 붙이면 그대로 조치 관리표로 쓸 수 있다. 종료 화면에는 CSV로 따로 저장하는 버튼도 있다.
 
-## 5. 점수 구조
+## 6. 점수 구조
 
 ![보고서 개요](/assets/images/2026-10-14-purpleknight-lab/07-report-overview.png)
 
@@ -135,7 +148,7 @@ XLSX에 지표별 상세 시트가 따로 있어서, 조치 담당·일정 열�
 
 Hybrid가 N/A인 이유는 해당 지표들이 Entra Connect의 Seamless SSO 계정(AZUREADSSOACC)을 점검하기 때문이다. azlab은 Entra Connect를 비밀번호 해시 동기화(PHS)로만 쓰고 Seamless SSO는 켜지 않아 "해당 없음"이 되었다.
 
-## 6. Critical IOE 4개
+## 7. Critical IOE 4개
 
 ![Critical IOE](/assets/images/2026-10-14-purpleknight-lab/08-critical-ioes.png)
 
@@ -148,7 +161,7 @@ Hybrid가 N/A인 이유는 해당 지표들이 Entra Connect의 Seamless SSO 계
 
 DCSync 권한처럼 도구가 Critical로 표시해도 실제로는 설계상 필요한 권한일 수 있다. 결과는 "고치라는 명령"이 아니라 "확인하라는 신호"로 읽어야 한다.
 
-## 7. 나머지 IOE
+## 8. 나머지 IOE
 
 ![추가 IOE 목록](/assets/images/2026-10-14-purpleknight-lab/09-additional-ioes.png)
 
@@ -184,7 +197,7 @@ DCSync 권한처럼 도구가 Critical로 표시해도 실제로는 설계상 �
 
 `lab.tier0test`가 2026-10-12에 Domain Admins에 추가되었다가 바로 제거된 기록, 같은 날 `adm-backup`이 만들어진 기록이 잡혔다. 실제 환경이라면 공격자가 권한을 잠깐 얻고 흔적을 지운 패턴과 구분해야 하는 항목이다. 이 랩에서는 10월 12일에 직접 진행한 테스트 작업으로 확인해 정상으로 판정했다. 운영에서는 변경 요청 기록, 작업자, 시각을 대조해서 판정한다.
 
-## 8. PingCastle과 비교
+## 9. PingCastle과 비교
 
 같은 날 같은 도메인을 두 도구로 본 결과다.
 
@@ -205,7 +218,7 @@ DCSync 권한처럼 도구가 Critical로 표시해도 실제로는 설계상 �
 
 LAPS처럼 같은 사실을 두고 한쪽은 감점하고 한쪽은 점검 대상이 아니라고 판정하는 경우가 있다. 두 도구를 함께 쓰면 빈 곳이 줄어든다.
 
-## 9. 정리
+## 10. 정리
 
 - Purple Knight 점수는 높을수록 좋다. PingCastle과 방향이 반대라 보고할 때 단위를 함께 적어야 한다.
 - 전체 점수는 실패한 IOE의 심각도로 정해지고 카테고리 점수와는 따로 계산된다.
