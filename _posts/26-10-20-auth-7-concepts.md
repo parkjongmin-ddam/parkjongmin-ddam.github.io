@@ -9,7 +9,7 @@ tags: [authentication, authorization, session, jwt, oauth2, oidc, sso]
 
 로그인할 때 비밀번호는 한 번만 보낸다. 그 뒤 서버는 매 요청마다 사용자를 어떻게 식별할까? 이 질문을 출발점으로 인증·인가, 세션, JWT, Access/Refresh Token, SSO, OAuth 2.0, OpenID Connect가 각각 어떤 문제를 해결하는지 순서대로 정리했다.
 
-글의 구성은 Visualcoders 채널의 영상 [7 Authentication Concepts Every Senior Developer Should Know](https://www.youtube.com/watch?v=Zo4VpTSelUE)를 참고했다. 각 개념의 상세 설명과 보안 고려사항은 RFC와 OIDC 규격을 기준으로 보충했고, 다이어그램은 직접 작성했다.
+각 개념의 상세 설명과 보안 고려사항은 RFC와 OIDC 규격을 기준으로 정리했고, 다이어그램은 직접 작성했다.
 
 ---
 
@@ -831,7 +831,6 @@ ID Token을 API 호출에 보내거나 Access Token을 로그인 증거로 쓰�
 
 ## 참고
 
-- Visualcoders, [7 Authentication Concepts Every Senior Developer Should Know](https://www.youtube.com/watch?v=Zo4VpTSelUE)
 - [RFC 6749 — The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
 - [RFC 6750 — Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750)
 - [RFC 7519 — JSON Web Token (JWT)](https://datatracker.ietf.org/doc/html/rfc7519)
