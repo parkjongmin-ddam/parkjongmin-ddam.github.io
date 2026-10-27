@@ -12,6 +12,8 @@ search: false
 
 /* 사이드바 스크롤바 얇게 */
 .sidebar.sticky {
+  overflow-x: hidden;
+  padding-inline-end: 0.75rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 
