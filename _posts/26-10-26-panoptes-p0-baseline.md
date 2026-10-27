@@ -140,8 +140,6 @@ SQLi alert의 상세를 보면, 감사 로그의 트랜잭션 정보와 CRS 매�
 
 | 증상 | 원인 | 조치 |
 | --- | --- | --- |
-| `unzip`이 "filename not matched"로 아무것도 풀지 않음 | zsh 대화형 모드는 `#`을 주석으로 처리하지 않아, 줄 끝 주석 문구가 인자로 전달됨 | 명령에 줄 끝 주석을 쓰지 않음. 필요하면 `setopt interactivecomments` |
-| docker 명령이 `.orbstack/run/docker.sock` 연결 실패 | docker context가 OrbStack인데 OrbStack이 실행 중이 아님 | `open -a OrbStack` |
 | smoke 테스트에서 Connection reset | WAF 기동 직후(health: starting)에 요청 | 스크립트에 `/healthz` 200 대기(최대 30초) 추가 |
 | Wazuh 인증서 생성 중 `root-ca-manager.pem` Permission denied, 이어서 마운트 경로 mkdir 실패 | 인증서 생성기가 인증서 폴더 소유자를 바꾼 뒤 마지막 복사 단계에서 실패 | `root-ca.pem/.key`를 `root-ca-manager.pem/.key`로 직접 복사하고 소유자를 복원한 뒤 기동 |
 | 대시보드에서 admin 비밀번호 변경 시 `Resource 'admin' is reserved` | admin은 예약 계정이라 UI·API로 변경 불가 | `internal_users.yml` 해시 교체, compose의 `INDEXER_PASSWORD` 변경, `securityadmin.sh` 적용 |
