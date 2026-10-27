@@ -3,7 +3,8 @@ layout: single
 title: "[AD 보안 진단] PingCastle 홈랩 실습 — 규칙 하나를 따라가 97일간 끊긴 DC 복제를 찾기까지"
 excerpt: "AD 보안 진단 도구 3종(PingCastle·Purple Knight·BloodHound CE) 실습의 첫 편. azlab 도메인에 PingCastle 4.0.0.31을 실행해 위험 점수 85를 받았다. 결과를 읽던 중 'DC 비활성' 규칙을 따라 repadmin을 돌려 보니 두 DC 간 복제가 2026-07-09 이후 양방향으로 끊겨 있었다. DC 컴퓨터 계정 비밀번호 불일치(SEC_E_WRONG_PRINCIPAL)와 재부팅 후 네트워크 프로필 오판정(1722)을 차례로 해결하고 재진단한 결과, Stale Objects가 51에서 26으로 내려갔고 첫 진단에서 계정 10개가 빠져 있었다는 것도 확인했다."
 date: 2026-10-14
-categories: [Infra, ActiveDirectory]
+categories: ["Security", "AD 보안 진단"]
+permalink: "/infra/activedirectory/pingcastle-lab/"
 tags: [PingCastle, ActiveDirectory, AD보안, repadmin, netdom, 복제오류, Kerberos, Defender, 실측]
 ---
 

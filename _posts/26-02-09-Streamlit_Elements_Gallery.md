@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Streamlit Elements 갤러리 완전 분석: 초보자를 위한 가이드"
-categories: Streamlit
+categories: ["Dev", "Streamlit"]
+permalink: "/streamlit/Streamlit_Elements_Gallery/"
 tag: [Python, Streamlit, Streamlit-Elements, Dashboard]
 toc: true
 toc_sticky: true

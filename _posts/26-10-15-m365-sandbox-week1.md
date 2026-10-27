@@ -3,7 +3,8 @@ layout: single
 title: "M365 E5 샌드박스 1주차 실측 — Teams 저장 위치, 그룹 기반 라이선스, Azure RBAC와 Elevate access"
 excerpt: "E5 샌드박스에서 1주차 구조 개념을 직접 확인했다. 채널 유형별 파일 저장 위치(표준은 팀 사이트 폴더, 비공개·공유는 별도 사이트, 1:1 채팅은 OneDrive), 부서 속성 하나로 동적 그룹과 Entra ID P2가 자동 부여·회수되는 흐름, 구독 Owner가 리소스 그룹으로 상속되고 RG 권한은 옆으로 퍼지지 않는 RBAC 범위, Global Admin도 Elevate access 전에는 Azure 구독이 보이지 않는 것까지 실측으로 정리했다."
 date: 2026-10-15
-categories: [IAM]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/m365-sandbox-week1/"
 tags: [M365, E5, Entra, Teams, SharePoint, Azure, RBAC, Sandbox, 실측]
 ---
 

@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Streamlit Session State 완벽 가이드"
-categories: Streamlit
+categories: ["Dev", "Streamlit"]
+permalink: "/streamlit/Streamlit_Session/"
 tag: [Python, Streamlit, Session-State, Web-Development]
 toc: true
 toc_sticky: true

@@ -3,7 +3,8 @@ layout: single
 title: "[웹 탐지] panoptes-detect P0 — ModSecurity CRS 감사 로그를 Wazuh alert로 잇는 베이스라인"
 excerpt: "웹 보안 탐지 운영 실습 panoptes-detect의 첫 단계(P0). Mac mini M4의 OrbStack 위에 ModSecurity v3 + OWASP CRS 4.30.0(DetectionOnly)과 Wazuh 4.14.9 single-node를 올리고, 요청 → WAF → 감사 로그 → Wazuh agent → manager 룰 → alert까지 전 구간을 확인했다. 수집 경로는 agent 로컬 설정이 아니라 그룹 agent.conf로 배포했고, SQLi 요청이 CRS 942100으로 탐지되어 커스텀 룰 100201(level 6, MITRE T1190) alert로 남는 것을 확인했다. 구성 중 겪은 인증서 생성 실패, admin 예약 계정 비밀번호 변경, 해시 오타로 인한 401 등 트러블슈팅과 P1 이후로 넘긴 열린 항목도 정리했다."
 date: 2026-10-26
-categories: [Infra, Security]
+categories: ["Security", "웹 탐지"]
+permalink: "/infra/security/panoptes-p0-baseline/"
 tags: [ModSecurity, OWASP-CRS, Wazuh, WAF, SIEM, OrbStack, MITRE-ATTACK, 탐지룰, 실측]
 ---
 

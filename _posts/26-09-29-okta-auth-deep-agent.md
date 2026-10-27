@@ -3,7 +3,8 @@ layout: single
 title: "Okta OIDC 연동 실측 — 에이전트 빌더에 '로그인 성공 ≠ 인가' 붙이기"
 excerpt: "지금까지의 Okta 실습은 프로토콜을 관찰하는 쪽이었다. 이번에는 직접 만드는 앱(자연어로 AI 에이전트를 만들고 실행·평가하는 Streamlit 앱)에 Okta를 IdP로 붙였다. 앱에는 역할(RBAC)과 권한 경계가 먼저 있었고, OIDC는 '주체를 무엇으로 믿을 것인가'만 바꾼다. Okta 쪽에서 걸린 지점 — scope에 groups를 넣으면 invalid_scope 400, Access Policy가 없으면 MFA까지 통과하고도 no_matching_policy로 토큰 발급 거부, 그룹 이름 불일치는 로그인 후 deny-by-default 거부, 앱 미할당 그룹은 access_denied — 를 순서대로 기록했다. 로그인 성공이 곧 인가가 아니라는 것이 이 글의 전부다."
 date: 2026-09-29
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-auth-deep-agent/"
 tags: [Okta, OIDC, RBAC, Streamlit, 실측]
 ---
 

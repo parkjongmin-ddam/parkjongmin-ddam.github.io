@@ -3,7 +3,8 @@ layout: single
 title: "[ADFS] ADFS와 PKCE — 실무 관행과 RFC 9700 권고 사이의 간극"
 excerpt: "ADFS에 OIDC/OAuth 앱을 등록할 때 'OIDC=Server, OAuth=Native'가 프로토콜 규칙인지 관행인지 표준까지 추적한 기록. 앱 유형과 프로토콜이 직교한다는 점, openid가 id_token 스위치라는 점, 그리고 RFC 9700의 PKCE 권고와 ADFS 실제 구현 사이의 간극을 실측으로 닫는 방법까지 정리."
 date: 2026-07-10
-categories: [Infra, Identity]
+categories: ["IAM", "ADFS"]
+permalink: "/infra/identity/oidc-oauth/"
 tags: [adfs, oauth2, oidc, pkce, rfc9700, confidential-client, application-group, 인증, 표준]
 ---
 

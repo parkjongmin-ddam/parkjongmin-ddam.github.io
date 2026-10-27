@@ -3,7 +3,8 @@ layout: single
 title: "Okta 랩 4 — AD Agent 연동 실측, 설치부터 위임 인증까지"
 excerpt: "앞선 세 편이 Okta 단독 환경의 프로토콜 검증이었다면 이번엔 온프렘 Active Directory를 붙인다. AD Agent 설치가 Device Authorization Grant로 구현되어 MFA와 충돌하지 않는 지점, Import 스캔 요약의 카운트가 매칭 판정과 별개라는 점, PARTIAL 매칭이 표시 이름 일치만으로 생성되면서 기본값이 '기존 계정 연결'이라는 사고 시나리오, 그리고 위임 인증에 토글이 존재하지 않는다는 사실까지 화면과 명령 출력으로 확인한 기록이다."
 date: 2026-07-29
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-ad-agent/"
 tags: [Okta, Active-Directory, AD-Agent, 위임인증, Delegated-Authentication, 실측]
 ---
 

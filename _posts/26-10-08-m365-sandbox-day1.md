@@ -3,7 +3,8 @@ layout: single
 title: "M365 E5 개발자 샌드박스 환경 점검 — 서비스 플랜·Azure 구독 조회와 PowerShell 로그인 트러블슈팅"
 excerpt: "E5 인스턴트 샌드박스를 만든 뒤 실습 전에 환경을 점검했다. 관리자 MFA, 서비스 플랜, Azure 구독, PowerShell 모듈, 예산 경보 다섯 항목. 조회 과정에서 Windows PowerShell 5.1의 로그인 문제 — WAM 창 핸들 오류, 디바이스 코드 접근 거부, AADSTS50197, 어셈블리 버전 충돌 — 를 연달아 만났고, 서비스 플랜은 Graph Explorer로 대체 조회한 뒤 PowerShell 7로 옮겨서 해결했다. 지출 한도 없는 Azure Plan 구독이라 예산 경보까지 걸어 둔 기록이다."
 date: 2026-10-08
-categories: [IAM]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/m365-sandbox-day1/"
 tags: [M365, E5, Sandbox, Graph, Azure, PowerShell, WAM, 실측]
 ---
 

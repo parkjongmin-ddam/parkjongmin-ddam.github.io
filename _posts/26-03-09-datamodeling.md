@@ -2,7 +2,8 @@
 layout: single
 title: "[TIL] 도서관리시스템으로 배우는 ERD 설계 — 개념·논리·물리 모델링 완전 정리"
 excerpt: "도서관리시스템 예제를 통해 데이터베이스 설계의 핵심인 ERD의 개념적, 논리적, 물리적 모델링 3단계를 실습하고 핵심 설계 원칙을 정리함."
-categories: [Database, ERD]
+categories: ["Data", "Database"]
+permalink: "/database/erd/datamodeling/"
 tags: [ERD, Database, Modeling, 데이터베이스설계, TIL]
 
 ---

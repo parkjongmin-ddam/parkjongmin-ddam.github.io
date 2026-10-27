@@ -3,7 +3,8 @@ layout: single
 title: "[SQL Server] Hyper-V 랩으로 AlwaysOn 가용성 그룹(AG) 구축 완주기 — 설치부터 Listener·시딩까지, 9개 트러블슈팅 전부 기록"
 excerpt: "2노드 SQL Server 2022 AlwaysOn AG를 Hyper-V 랩에 직접 구축하며 겪은 설치 취소 후 model DB 경로 오류, 서비스 계정 잠김, 백업 경로 OS error 3, Listener CNO 권한, 보조 조인 skip, Automatic seeding Request Denied까지 — 실전 오류 9개의 진단·해결 과정을 순서대로 기록."
 date: 2026-07-07
-categories: [Infra, SQL Server]
+categories: ["Infra", "SQL Server"]
+permalink: "/infra/sql%20server/DBCluster/"
 tags: [sql-server, alwayson, availability-group, wsfc, hyper-v, listener, automatic-seeding, high-availability, 고가용성, 트러블슈팅]
 ---
 

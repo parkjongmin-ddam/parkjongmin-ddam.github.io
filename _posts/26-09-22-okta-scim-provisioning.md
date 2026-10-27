@@ -3,7 +3,8 @@ layout: single
 title: "Okta SCIM 프로비저닝 검증 (1) — 자체 SCIM 서버로 본 Okta의 요청"
 excerpt: "OIN 앱에 SCIM을 붙이면 Okta가 무엇을 보내는지 보이지 않는다. Flask로 SCIM 2.0 서버를 직접 만들어 cloudflared 터널로 노출하고, Okta 콘솔의 조작 하나하나가 어떤 HTTP 요청으로 번역되는지 전부 로그로 받아 확인했다. 연결 테스트는 GET /Users 하나뿐이고 ServiceProviderConfig는 읽지 않는다는 것, 할당 해제가 DELETE가 아니라 read-modify-write PUT active:false라는 것, 앱 쪽 계정이 사라지면 404에서 동기화가 멈춘다는 것, Group Push는 접근 권한을 부여하지 않는다는 것, 그리고 Import(To Okta)는 앱 호출 없이 Okta 내부 링크만 만든다는 것까지 — 요청 단위의 기록이다."
 date: 2026-09-22
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-scim-provisioning/"
 tags: [Okta, SCIM, Provisioning, Lifecycle, Group-Push, 실측]
 ---
 

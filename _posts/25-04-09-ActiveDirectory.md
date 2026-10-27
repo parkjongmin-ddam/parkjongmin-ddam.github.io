@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Active Directory 시작하기"
-categories: active-directory
+categories: ["Infra", "Active Directory"]
+permalink: "/active-directory/ActiveDirectory/"
 tag: [windows, active-directory]
 toc: true
 author_profile: false

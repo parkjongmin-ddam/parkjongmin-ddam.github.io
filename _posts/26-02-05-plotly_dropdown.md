@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Plotly 인터렉티브 드롭다운 실습 - 동적 데이터 시각화"
-categories: python
+categories: ["Dev", "Python·시각화"]
+permalink: "/python/plotly_dropdown/"
 tag: [python, plotly, interactivity, dropdown, updatemenus, dynamic-charts, visualization]
 toc: true
 author_profile: false

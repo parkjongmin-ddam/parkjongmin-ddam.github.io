@@ -1,7 +1,8 @@
 ---
 title: "Claude Code 완전 정복 — 기본기부터 고급 기능까지 꿀팁 총정리"
 date: 2026-06-02
-categories: [AI, Claude Code]
+categories: ["AI", "Claude·코딩 에이전트"]
+permalink: "/ai/claude%20code/claude-code-guide/"
 tags: [claude-code, anthropic, ai-coding, cli, productivity, claude-md, mcp]
 toc: true
 toc_sticky: true

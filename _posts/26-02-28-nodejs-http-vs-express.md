@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "[Node.js] 기초 웹 서버 구축 (http 모듈 vs Express 프레임워크)"
-categories: nodejs
+categories: ["Dev", "Backend"]
+permalink: "/nodejs/nodejs-http-vs-express/"
 tag: [nodejs, express, web-server, backend]
 toc: true
 author_profile: false

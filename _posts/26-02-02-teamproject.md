@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Generative AI 10기 팀 프로젝트 전체 개요 - 주식 정보 대시보드"
-categories: python
+categories: ["Project", "주식 대시보드(팀)"]
+permalink: "/python/teamproject/"
 tag: [python, plotly, streamlit, finance, dashboard, stock-analysis]
 toc: true
 author_profile: false

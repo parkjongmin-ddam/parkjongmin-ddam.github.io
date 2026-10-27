@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Streamlit 주요 기능 완벽 정리 - 데이터 애플리케이션 개발 가이드"
-categories: python
+categories: ["Dev", "Streamlit"]
+permalink: "/python/streamlit개념/"
 tag: [python, streamlit, plotly, dashboard, data-visualization, web-app, interactive]
 toc: true
 author_profile: false

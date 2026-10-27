@@ -3,7 +3,8 @@ layout: single
 title: "[IAM 개념 정리] 스트랭글러 피그 패턴 — 멈출 수 없는 시스템을 조금씩 교체하는 방법"
 excerpt: "레거시 시스템을 한 번에 다시 만드는 대신, 앞에 라우팅 계층(파사드)을 두고 기능 단위로 새 시스템에 옮긴 뒤 옛 시스템을 퇴역시키는 스트랭글러 피그 패턴을 정리했다. 첫 기능을 고르는 기준, 데이터 소유권과 CDC·이벤트·Anti-Corruption Layer, 기능 단위 전환과 비율 단위(카나리) 전환의 구분, 라우팅만으로 롤백할 수 있는 조건, 끝내지 못하는 위험까지 Azure 아키텍처 센터 문서를 기준으로 보강했고, AD FS에서 Entra ID로 앱 인증과 사용자 인증을 옮기는 과정(앱 단위 이전, Staged Rollout, 도메인 전환)을 IAM 실무 예시로 붙였다."
 date: 2026-10-21
-categories: [IAM]
+categories: ["Dev", "시스템 설계"]
+permalink: "/iam/strangler-fig-pattern/"
 tags: [StranglerFig, Migration, Monolith, Microservices, ADFS, EntraID, StagedRollout, SystemDesign]
 ---
 

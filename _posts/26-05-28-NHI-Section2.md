@@ -1,6 +1,7 @@
 ---
 title: "AI 에이전트를 Role 사다리에 얹기 — NHI Top 10과 OWASP Agentic Top 10이 만나는 곳"
-categories: [Security, IAM, RAG]
+categories: ["Security", "NHI·Agentic"]
+permalink: "/security/iam/rag/NHI-Section2/"
 tags: [OWASP, NHI, Agentic, IAM, least-agency, RAG, permission-aware-rag, ASI03, ABAC]
 description: "지난 편의 Role 사다리는 '자격증명을 어떻게 보관하느냐'의 축이었다. AI 에이전트는 거기에 '얼마나 스스로 판단하느냐'는 두 번째 축을 추가한다. least agency라는 새 변수, ASI 위험의 Stage별 증폭, 그리고 권한 인식 RAG가 검색 단계에서 권한을 강제해 ASI03·NHI5·ASI06 교집합을 푸는 방법."
 

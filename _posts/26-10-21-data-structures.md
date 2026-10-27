@@ -3,7 +3,8 @@ layout: single
 title: "[CS 기초] 자료구조 9가지 상세 정리 — 배열부터 트라이까지, 복잡도와 실제 쓰임"
 excerpt: "배열, 연결 리스트, 스택, 큐, 해시 테이블, 트리, 힙, 그래프, 트라이를 각각 어떤 문제를 해결하는지, 연산별 시간 복잡도, Python 예시, 실제 사용처 순서로 정리했다. 흔한 설명에서 빠지거나 부정확한 부분(동적 배열의 분할 상환 O(1), 연결 리스트 삽입이 O(1)인 조건, 해시 테이블의 최악 O(n)과 Python dict의 삽입 순서 보장, DB 인덱스는 대부분 B+ 트리라는 점, 리눅스 스케줄러는 힙이 아니라 레드-블랙 트리라는 점, 트라이 자동 완성의 실제 비용)을 보강했고, Active Directory 데이터베이스(ESE의 B+ 트리), 디렉터리·DNS 트리, 그룹 중첩과 공격 경로 그래프처럼 인프라에서 실제로 만나는 지점을 확인해 덧붙였다."
 date: 2026-10-21
-categories: [python]
+categories: ["Dev", "CS 기초"]
+permalink: "/python/data-structures/"
 tags: [DataStructure, Array, LinkedList, HashTable, Tree, BTree, Heap, Graph, Trie, BigO, Python]
 ---
 

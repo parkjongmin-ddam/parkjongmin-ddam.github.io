@@ -3,7 +3,8 @@ layout: single
 title: "Okta 랩 3 — SP-initiated SAML과 NameID format, Signed Requests 검증"
 excerpt: "전편에서 IdP-initiated로만 확인했던 SAML을 SP-initiated로 다시 세운다. AuthnRequest를 직접 만들어 InResponseTo와 RelayState가 되돌아오는지 확인하고, Name ID format을 unspecified·EmailAddress·Persistent·Transient로 바꿔가며 assertion을 매번 디코드한다. 네 형식 모두 Format URI만 바뀌고 값은 동일하게 나오는 지점이 이번 검증의 핵심이다. 이어서 자체 발행 인증서로 Signed Requests를 켜고, Apps API로 콘솔에 노출되지 않는 설정까지 대조한다."
 date: 2026-07-29
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-saml-nameid-signed-requests/"
 tags: [Okta, SAML, NameID, SP-initiated, Signed-Requests, 실측]
 ---
 

@@ -2,8 +2,8 @@
 layout: single
 title: "LangChain LCEL & Runnable 완전 정복"
 excerpt: "LangChain의 핵심인 LCEL 문법과 Runnable 인터페이스의 내부 동작 원리부터 실무 활용까지 완벽하게 정복합니다."
-categories:
-  - AI
+categories: ["AI", "RAG·LangChain"]
+permalink: "/ai/langchain-lcel-runnable/"
 tags:
   - LangChain
   - LCEL

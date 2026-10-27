@@ -2,7 +2,8 @@
 layout: single
 title: "Okta Integrator Free Plan으로 OIDC PKCE 동작 검증하기 — ADFS·Entra ID와 비교"
 date: 2026-07-28
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-oidc/"
 tags: [Okta, OIDC, OAuth2, PKCE, ADFS, EntraID]
 ---
 

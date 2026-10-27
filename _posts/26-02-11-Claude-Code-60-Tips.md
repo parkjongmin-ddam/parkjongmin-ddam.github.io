@@ -2,7 +2,8 @@
 layout: single
 title:  "Claude Code 활용 완벽 가이드: 필수 꿀팁 60가지 정리"
 date:   2026-02-11
-categories: [AI, Tool, Coding]
+categories: ["AI", "Claude·코딩 에이전트"]
+permalink: "/ai/tool/coding/Claude-Code-60-Tips/"
 tags: [Claude, Code Factory, Tips, Productivity]
 author_profile: false
 ---

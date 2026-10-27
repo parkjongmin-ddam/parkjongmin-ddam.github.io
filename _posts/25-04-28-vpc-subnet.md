@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Terraform VPC, Subnet, Gateway 및 Route Table 설정"
-categories: terraform
+categories: ["Infra", "Terraform·AWS"]
+permalink: "/terraform/vpc-subnet/"
 tags: [AWS, terraform, vpc, subnet, gateway, route-table]
 toc: true
 author_profile: false

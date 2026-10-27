@@ -3,7 +3,8 @@ layout: single
 title: "M365·Azure 테넌트 준비 상태 점검 — 체크리스트 기반 전수 점검과 증적 기록"
 excerpt: "E5 샌드박스 테넌트를 운영 전환 관점에서 번호가 있는 체크리스트(x01~x79)로 점검하고 항목별 증적 스크린샷을 남겼다. 전역 관리자 영구 할당과 게스트 역할, MFA 등록 2명뿐인 인증 체계, 전원 허용 상태의 게스트 초대와 Anyone 공유, 정책이 전부 기본값인 Teams, 디바이스 0대인 Intune, 기본 정책만 있는 Purview DLP·민감도 레이블, 꺼져 있는 서비스 상태 알림까지 — 관리 센터 6곳(Entra·M365·Teams·SharePoint·Intune·Purview)을 돌며 확인한 결과와 조치 우선순위를 정리했다."
 date: 2026-10-26
-categories: [IAM]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/m365-azure-readiness-82/"
 tags: [M365, E5, Entra, PIM, MFA, Teams, SharePoint, Intune, Purview, DLP, Sandbox, 실측]
 ---
 

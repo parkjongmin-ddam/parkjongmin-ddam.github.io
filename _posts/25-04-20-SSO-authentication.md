@@ -1,7 +1,8 @@
 ---
 layout: single
 title:  "SSO 인증 프로토콜에 대한 이해"
-categories: SSO
+categories: ["IAM", "개념 정리"]
+permalink: "/sso/SSO-authentication/"
 tags: [SAML, OIDC, OAuth, SSO]
 toc: true
 author_profile: false

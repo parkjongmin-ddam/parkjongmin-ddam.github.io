@@ -1,0 +1,30 @@
+<ul class="taxonomy__index">
+  {% for s in site.data.sections %}
+    {% assign sposts = site.categories[s.name] %}
+    <li>
+      <a href="#{{ s.name | slugify }}">
+        <strong>{{ s.name }}</strong> <span class="taxonomy__count">{{ sposts.size | default: 0 }}</span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% for s in site.data.sections %}
+  <section id="{{ s.name | slugify }}" class="taxonomy__section">
+    <h2 class="archive__subtitle">{{ s.name }}</h2>
+    {% for sub in s.children %}
+      {% assign subposts = site.categories[sub] %}
+      {% if subposts %}
+        <section id="{{ sub | slugify }}">
+          <h3>{{ sub }} <span class="taxonomy__count">{{ subposts.size }}</span></h3>
+          <div class="entries-list">
+            {% for post in subposts %}
+              {% include archive-single.html type="list" %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    {% endfor %}
+    <a href="#page-title" class="back-to-top">{{ site.data.ui-text[site.locale].back_to_top | default: 'Back to Top' }} &uarr;</a>
+  </section>
+{% endfor %}

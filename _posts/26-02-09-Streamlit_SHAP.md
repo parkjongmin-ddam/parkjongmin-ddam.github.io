@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "SHAP 분석 대시보드 - 머신러닝 모델 해석을 위한 인터랙티브 웹 애플리케이션"
-categories: python
+categories: ["Dev", "Streamlit"]
+permalink: "/python/Streamlit_SHAP/"
 tag: [python, streamlit, shap, xai, explainable-ai, machine-learning, data-visualization]
 toc: true
 author_profile: false

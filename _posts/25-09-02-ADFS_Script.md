@@ -1,8 +1,9 @@
 ---
 layout: single
 title: "ADFS 업무 관련 자동화 스크립트 설정"
-categories: terraform
-tags: [AWS, terraform, vpc, subnet, gateway, route-table]
+categories: ["IAM", "ADFS"]
+permalink: "/terraform/ADFS_Script/"
+tags: [ADFS, PowerShell, 자동화, RelyingPartyTrust, ApplicationGroup]
 toc: true
 author_profile: false
 sidebar:

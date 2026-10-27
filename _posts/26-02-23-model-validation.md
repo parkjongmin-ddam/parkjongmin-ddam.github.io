@@ -2,7 +2,8 @@
 layout: single
 title:  "[Kaggle] 모델 검증 (Model Validation) 번역 및 정리"
 date:   2026-02-23
-categories: [Machine Learning, Data Science, Kaggle]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/kaggle/model-validation/"
 tags: [Kaggle, 머신러닝, MAE, 모델검증, 데이터분석, 튜토리얼]
 author_profile: false
 ---

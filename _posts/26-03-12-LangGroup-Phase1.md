@@ -3,7 +3,8 @@ layout: single
 title: "[SmartHee] Phase 1 로컬 실행 삽질기 — Python 3.13 환경에서 FastAPI + LangGraph 세팅하기"
 excerpt: "Python 3.13 환경에서 SmartHee Phase 1을 로컬에서 실행하며 겪은 FastAPI, LangGraph, Docker, PostgreSQL 세팅 과정과 오류 해결 방법을 기록."
 date: 2026-03-12
-categories: [Project, AgentForge]
+categories: ["Project", "SmartHee"]
+permalink: "/project/agentforge/LangGroup-Phase1/"
 tags: [python, fastapi, langgraph, langchain, docker, postgresql, 포트폴리오]
 ---
 

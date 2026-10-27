@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Streamlit vs Gradio 완벽 비교 분석 - 프로젝트에 맞는 도구 선택하기"
-categories: python
+categories: ["Dev", "Streamlit"]
+permalink: "/python/Streamlit-vs-Gradio-비교분석/"
 tag: [python, streamlit, gradio, ml-demo, dashboard, comparison, huggingface, web-app]
 toc: true
 author_profile: false

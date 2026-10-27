@@ -3,7 +3,8 @@ layout: single
 title: "Entra ID 실측(3) — SAML 2.0 SP를 붙여 OIDC·OAuth와 나란히 세우기"
 excerpt: "OIDC·OAuth에 이어 세 번째 프로토콜 SAML을 Entra ID에 붙인다. 앱 등록이 아니라 엔터프라이즈 애플리케이션으로 등록하고, 직접 만든 python3-saml SP로 SP-initiated SSO를 건다. NameIDPolicy 거부(AADSTS750161)와 사용자 할당 필수 같은 SAML 특유의 벽을 넘으며, 세 프로토콜을 하나의 표로 정리한 마무리 기록."
 date: 2026-07-14
-categories: [IAM, Entra ID]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/entra%20id/azure-saml/"
 tags: [entra-id, saml, sso, python3-saml, xmlsec, oidc, oauth2, 실측]
 ---
 

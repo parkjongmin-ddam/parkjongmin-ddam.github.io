@@ -3,7 +3,8 @@ layout: single
 title: "Okta 랩 5 — Terraform import로 기존 org 코드화하기, 그리고 코드화의 한계"
 excerpt: "앞선 네 편이 콘솔과 API로 만든 구성의 프로토콜 검증이었다면, 이번엔 그렇게 만든 리소스를 Terraform으로 가져온다. 신규 생성이 아니라 운영 중인 org를 import 블록과 -generate-config-out으로 코드화하는 방향이다. 자격증명 검증이 plan이 아니라 apply에서 일어나는 지점, Sign On 탭의 EL 표현식 클레임 네 개가 okta_app_saml 스키마에 아예 대응되지 않아 IaC 재현 시 누락된다는 사실, 자동 생성 코드에 preconfigured_app이 자기 앱 이름으로 박혀 다른 org에서 생성이 거부되는 함정, 콘솔 Priority와 API priority가 다른 값이라는 점, 그리고 AD-sourced 그룹이 관리는 불가하지만 data source 참조는 되는 경계까지 명령 출력으로 확인한 기록이다."
 date: 2026-07-30
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-terraform/"
 tags: [Okta, Terraform, IaC, terraform-import, Access-Policy, Active-Directory, 실측]
 ---
 

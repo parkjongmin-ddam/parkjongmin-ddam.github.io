@@ -3,7 +3,8 @@ layout: single
 title: "[Windows Server] 2-Tier PKI 직접 구축하기 — 오프라인 루트 CA부터 발급 CA·CDP/AIA·인증서 발급까지"
 excerpt: "Hyper-V 랩에 오프라인 루트 CA(ROOTCA)와 온라인 발급 CA(ISCA01)로 구성된 2-Tier PKI를 처음부터 구축한 기록. 하위 CA 서명 절차, CRYPT_E_REVOCATION_OFFLINE 관문, CDP/AIA HTTP 배포, 인증서 발급 검증까지 실전 트러블슈팅과 함께 정리."
 date: 2026-07-09
-categories: [Infra, Windows Server, PKI]
+categories: ["Infra", "PKI"]
+permalink: "/infra/windows%20server/pki/CAServer/"
 tags: [pki, certificate-authority, adcs, root-ca, subordinate-ca, cdp, aia, crl, hyper-v, adfs, 인증서, 트러블슈팅]
 ---
 

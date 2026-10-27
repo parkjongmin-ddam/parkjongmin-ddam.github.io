@@ -2,7 +2,8 @@
 layout: single
 title:  "[Kaggle] 머신러닝 대회 (Machine Learning Competitions) 참여 가이드"
 date:   2026-02-23
-categories: [Machine Learning, Data Science, Kaggle]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/kaggle/ml-competitions/"
 tags: [Kaggle, 머신러닝, 경진대회, Random Forest, 데이터분석, 튜토리얼]
 author_profile: false
 ---

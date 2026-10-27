@@ -3,7 +3,8 @@ layout: single
 title: "Entra ID에 OIDC/OAuth 앱을 등록하고 confidential+PKCE를 실측하다 — 온프렘 ADFS와 같은 결론인가"
 excerpt: "온프렘 ADFS에서 확인한 'discovery에 광고 없어도 PKCE를 강제한다'는 결론이 클라우드 Entra ID에서도 성립하는지 검증한 기록. Entra ID 포털에서 Web(confidential) 앱을 등록하고 client secret·Graph 권한을 잡은 뒤, client credentials(S2S)와 OIDC Authorization Code+PKCE를 직접 던지고, 틀린 code_verifier를 먼저 보내는 negative-first로 Entra가 PKCE를 실제 검증(AADSTS501481)하는지 실측했다."
 date: 2026-07-14
-categories: [Infra, Identity]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/infra/identity/azure-adfs-oidc-oauth/"
 tags: [entra-id, azure-ad, oidc, oauth2, pkce, rfc9700, confidential-client, microsoft-graph, client-credentials, 실측]
 ---
 

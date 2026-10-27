@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Generative AI 10기 팀 프로젝트 - 4일차: 대시보드 스타일링 및 완성"
-categories: python
+categories: ["Project", "주식 대시보드(팀)"]
+permalink: "/python/teamproject-4day/"
 tag: [python, plotly, dashboard, visualization, dark-mode, styling]
 toc: true
 author_profile: false

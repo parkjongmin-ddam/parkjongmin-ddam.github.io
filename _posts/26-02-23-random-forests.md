@@ -2,7 +2,8 @@
 layout: single
 title:  "[Kaggle] 랜덤 포레스트 (Random Forests) 번역 및 정리"
 date:   2026-02-23
-categories: [Machine Learning, Data Science, Kaggle]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/kaggle/random-forests/"
 tags: [Kaggle, 머신러닝, 랜덤포레스트, Random Forest, 데이터분석, 튜토리얼]
 author_profile: false
 ---

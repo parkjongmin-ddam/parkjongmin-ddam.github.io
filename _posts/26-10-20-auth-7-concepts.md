@@ -3,7 +3,8 @@ layout: single
 title: "[IAM 개념 정리] 인증 개념 7가지 — 세션, JWT, 토큰, SSO, OAuth 2.0, OIDC"
 excerpt: "로그인 후 서버가 매 요청마다 사용자를 식별하는 방법을 출발점으로 인증·인가, 세션과 쿠키, JWT, Access/Refresh Token, SSO, OAuth 2.0, OpenID Connect가 각각 어떤 문제를 해결하는지 순서대로 정리했다. SSO 장에서는 SAML 2.0·OIDC·WS-Federation의 인증 결과 전달 방식을 비교했고, 마지막 장에서 일곱 개념이 한 번의 로그인 흐름 안에서 함께 동작하는 과정을 단계별로 정리했다."
 date: 2026-10-20
-categories: [IAM]
+categories: ["IAM", "개념 정리"]
+permalink: "/iam/auth-7-concepts/"
 tags: [authentication, authorization, session, jwt, oauth2, oidc, sso]
 ---
 

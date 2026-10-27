@@ -2,8 +2,8 @@
 layout: single
 title: "[구현기] LangConnect 수동 구현 (Windows + WSL2) — pgvector RAG + Claude Desktop MCP"
 excerpt: "FastAPI + PostgreSQL(pgvector) + Next.js + FastMCP 스택을 처음부터 직접 구현한 과정 정리. 벡터 DB GUI 관리 및 Claude Desktop MCP RAG 연동까지."
-categories:
-  - AI
+categories: ["AI", "RAG·LangChain"]
+permalink: "/ai/langconnect-1day/"
 tags:
   - LangConnect
   - RAG

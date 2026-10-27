@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Prompt Engineering 완전 가이드 (Google · 2025) — 한국어 번역본"
-categories: LLM
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/llm/prompt-enginnering/"
 tags: [Prompt Engineering, Google, Gemini, LLM, AI]
 toc: true
 author_profile: false

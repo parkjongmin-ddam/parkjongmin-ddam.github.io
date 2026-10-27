@@ -3,7 +3,8 @@ layout: single
 title: "M365 E5 샌드박스 비상 접근 계정(Break Glass) 구성 — 적격 할당과 활성 할당 차이"
 excerpt: "E5 샌드박스 환경 점검을 마친 뒤 비상 접근 계정(Break Glass)을 만들었다. Entra ID P2 테넌트라 역할 할당이 PIM 화면으로 이어지는데, 할당 유형 기본값이 적격(Eligible)이라 그대로 진행해 전역 관리자가 적격으로 할당되는 착오가 있었다. 활성 할당을 먼저 만들어 권한 공백 없이 바로잡은 과정과, 적격 할당·활성 할당의 차이를 항목별로 비교해 정리했다."
 date: 2026-10-08
-categories: [IAM]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/sandbox-break/"
 tags: [M365, E5, Entra, PIM, Sandbox, BreakGlass, 실측]
 ---
 

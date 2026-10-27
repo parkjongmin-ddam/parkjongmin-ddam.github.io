@@ -2,7 +2,8 @@
 layout: single
 title: "FastAPI + React 챗봇 Railway & Vercel 배포 완전 가이드 (SmartHee Chatbot)"
 date: 2026-03-16
-categories: [Dev, Deploy]
+categories: ["Project", "SmartHee"]
+permalink: "/dev/deploy/chatbot/"
 tags: [FastAPI, React, TypeScript, Railway, Vercel, Claude API, 배포, 보안]
 ---
 

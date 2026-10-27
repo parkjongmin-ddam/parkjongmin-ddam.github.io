@@ -3,7 +3,8 @@ layout: single
 title: "[AD 보안 진단] BloodHound CE 홈랩 실습 — 공격 경로를 그래프로 보는 이유와 Pathfinding 판독"
 excerpt: "AD 보안 진단 도구 실습 세 번째 편. PingCastle·Purple Knight가 '어떤 설정이 위험한가'를 점검한다면, BloodHound는 그 설정들이 이어져서 '일반 계정이 어떤 길로 Domain Admins까지 가는가'를 그래프로 보여 준다. 왜 이런 도구가 필요한지부터, BloodHound CE를 Docker로 설치하고 공식 샘플 데이터로 Pathfinding을 돌려 경로를 읽는 과정, 그리고 azlab 실데이터 수집이 Defender AMSI에 막힌 과정까지 정리했다."
 date: 2026-10-14
-categories: [Infra, ActiveDirectory]
+categories: ["Security", "AD 보안 진단"]
+permalink: "/infra/activedirectory/bloodhound-lab/"
 tags: [BloodHound, SharpHound, ActiveDirectory, AD보안, 공격경로, AttackPath, AMSI, Pathfinding, 실측]
 ---
 

@@ -3,7 +3,8 @@ layout: single
 title: "홈랩 ADFS를 Kubernetes OIDC Provider로 연동하기 — kubeadm 클러스터 구축부터 group 클레임 트러블슈팅까지"
 excerpt: "홈랩 ADFS 팜을 Kubernetes API 서버의 OIDC Provider로 붙여 AD 그룹 기반 kubectl 인가를 검증한 기록. kubeadm 싱글노드 클러스터 구축과 Application Group 등록까지는 순조로웠지만, 발급된 ID Token에 group 클레임이 계속 빠지는 문제에 부딪혔다. response_mode 등 여러 가설을 좁혀가다 ADFS Trace 로그로 resource 파라미터 누락이 근본 원인임을 확인하고, RBAC까지 붙여 마무리한다."
 date: 2026-07-23
-categories: [IAM, Kubernetes]
+categories: ["Infra", "Kubernetes"]
+permalink: "/iam/kubernetes/adfs-kubectl/"
 tags: [adfs, oidc, kubernetes, kubeadm, rbac, kubelogin, group-claim, 트러블슈팅]
 ---
 

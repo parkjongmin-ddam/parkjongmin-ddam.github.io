@@ -3,7 +3,8 @@ layout: single
 title: "[AD 보안 진단] Purple Knight 5.1 홈랩 실습 — 점수 구조, IOE 23개 판독, PingCastle과 비교"
 excerpt: "AD 보안 진단 도구 실습 두 번째 편. PingCastle 실습으로 복제를 복구한 azlab 도메인에 Purple Knight 5.1 Community를 실행해 보안 점수 64%(D), IOE 23개를 받았다. 전체 점수가 모든 카테고리 점수보다 낮은 이유, Critical IOE 4개와 의도된 구성을 구분한 과정, 테스트로 만든 임시 관리자를 IOC로 확인한 과정, 결과물(HTML·XLSX) 형식, PingCastle과 겹치는 항목과 다른 항목을 정리했다."
 date: 2026-10-14
-categories: [Infra, ActiveDirectory]
+categories: ["Security", "AD 보안 진단"]
+permalink: "/infra/activedirectory/purpleknight-lab/"
 tags: [PurpleKnight, Semperis, ActiveDirectory, AD보안, IOE, IOC, ADCS, PingCastle, 실측]
 ---
 

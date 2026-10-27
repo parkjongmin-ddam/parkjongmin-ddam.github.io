@@ -2,7 +2,8 @@
 layout: single
 title: "[LangChain] RAG 완전 정복 — 초보자도 이해하는 심화 가이드"
 date: 2026-03-17
-categories: [LangChain, RAG]
+categories: ["AI", "RAG·LangChain"]
+permalink: "/langchain/rag/langchain-rag-study/"
 tags: [LangChain, RAG, AI에이전트, LLM, 벡터DB, Python]
 ---
 

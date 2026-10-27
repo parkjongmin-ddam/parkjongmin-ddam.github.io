@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Plotly 인터렉티브 버튼 실습 - 사용자 제어 차트"
-categories: python
+categories: ["Dev", "Python·시각화"]
+permalink: "/python/plotly_button/"
 tag: [python, plotly, interactivity, buttons, updatemenus, animation, custom-buttons, visualization]
 toc: true
 author_profile: false

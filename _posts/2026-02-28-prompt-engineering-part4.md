@@ -2,8 +2,8 @@
 layout: single
 title: "[상세 요약] 프롬프트 엔지니어링 Part 4. 프롬프트 제작 기초 및 방법론"
 excerpt: "Zero-shot부터 RAG까지, 실무에 당장 써먹는 프롬프트 엔지니어링의 핵심 기술 총망라"
-categories:
-  - AI
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/ai/prompt-engineering-part4/"
 tags:
   - PromptEngineering
   - ChatGPT

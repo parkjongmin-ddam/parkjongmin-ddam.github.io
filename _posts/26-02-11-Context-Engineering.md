@@ -2,7 +2,8 @@
 layout: single
 title:  "프롬프트 엔지니어링 vs 컨텍스트 엔지니어링: AI 설계의 진화"
 date:   2026-02-11
-categories: [AI, Engineering]
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/ai/engineering/Context-Engineering/"
 tags: [Prompt Engineering, Context Engineering, LLM, System Design]
 author_profile: false
 ---

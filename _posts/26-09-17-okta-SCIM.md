@@ -3,7 +3,8 @@ layout: single
 title: "Okta 랩 6 — 자체 SCIM 서버로 실측한 Okta 프로비저닝의 실제 요청들"
 excerpt: "앞선 다섯 편이 인증(OIDC·SAML·AD 위임 인증)과 코드화(Terraform)였다면, 이번엔 프로비저닝이다. Flask로 SCIM 2.0 서버를 직접 만들어 cloudflared 터널로 노출하고, Okta가 언제 어떤 요청을 보내는지 전부 로그로 받아 확인했다. 할당 해제가 DELETE가 아니라 PUT active:false라는 점, Okta의 쓰기가 전부 read-modify-write라서 서버가 writeOnly를 어기면 password가 IdP 경로로 왕복한다는 사실, 앱 쪽 계정이 사라지면 404에서 동기화가 멈추고 Retry로는 복구되지 않는다는 것, Group Push가 앱 접근 권한을 부여하지 않는다는 것, 재할당이 재생성이 아니라 재활성화라는 것까지 요청 단위로 확인한 기록이다."
 date: 2026-09-17
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-SCIM/"
 tags: [Okta, SCIM, Provisioning, Group-Push, Active-Directory, Flask, 실측]
 ---
 

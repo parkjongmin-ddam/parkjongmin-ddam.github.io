@@ -2,7 +2,8 @@
 layout: single
 title:  "[Kaggle] 과소적합과 과대적합 (Underfitting and Overfitting) 번역 및 정리"
 date:   2026-02-23
-categories: [Machine Learning, Data Science, Kaggle]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/kaggle/underfitting-and-overfitting/"
 tags: [Kaggle, 머신러닝, 과대적합, 과소적합, Overfitting, Underfitting, 데이터분석, 튜토리얼]
 author_profile: false
 ---

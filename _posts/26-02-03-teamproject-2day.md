@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Generative AI 10기 팀 프로젝트 2일차 - 데이터 수집 및 전처리"
-categories: python
+categories: ["Project", "주식 대시보드(팀)"]
+permalink: "/python/teamproject-2day/"
 tag: [python, pandas, finance-datareader, data-preprocessing, stock-analysis, moving-average]
 toc: true
 author_profile: false

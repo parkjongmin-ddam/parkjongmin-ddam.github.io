@@ -2,7 +2,8 @@
 layout: single
 title:  "Claude Skill 정리 (Antigravity Agent)"
 date:   2026-02-11
-categories: [AI, Tool]
+categories: ["AI", "Claude·코딩 에이전트"]
+permalink: "/ai/tool/Claude-Skill/"
 tags: [Claude, Antigravity, Agent, Skill]
 author_profile: false
 ---

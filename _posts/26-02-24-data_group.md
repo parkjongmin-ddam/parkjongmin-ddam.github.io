@@ -2,7 +2,8 @@
 layout: single
 title:  "[Database] RDBMS에서 GraphDB로의 데이터 모델링 리팩토링 및 시각화"
 date:   2026-02-24
-categories: [Database, Data Science, GraphDB, Python]
+categories: ["Data", "GraphDB"]
+permalink: "/database/data%20science/graphdb/python/data_group/"
 tags: [Database, Neo4j, RDBMS, 데이터베이스, 리팩토링, Python, Cypher]
 author_profile: false
 ---

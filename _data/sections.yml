@@ -1,0 +1,16 @@
+# 블로그 섹션 구조 — 사이드바 목차와 /categories/ 페이지가 이 파일을 기준으로 렌더링됨
+# 글 front matter: categories: ["<name>", "<children 중 하나>"]
+- name: "IAM"
+  children: ["개념 정리", "ADFS", "Entra ID·M365", "Okta"]
+- name: "Infra"
+  children: ["Active Directory", "PKI", "SQL Server", "Network", "Kubernetes", "Windows", "Terraform·AWS"]
+- name: "Security"
+  children: ["AD 보안 진단", "웹 탐지", "NHI·Agentic"]
+- name: "AI"
+  children: ["프롬프트·컨텍스트", "Claude·코딩 에이전트", "RAG·LangChain", "MCP·자동화", "머신러닝", "AI 수학"]
+- name: "Data"
+  children: ["Database", "GraphDB", "GIS"]
+- name: "Dev"
+  children: ["Python·시각화", "Streamlit", "Backend", "시스템 설계", "CS 기초"]
+- name: "Project"
+  children: ["권한 인식 RAG", "SmartHee", "주식 대시보드(팀)"]

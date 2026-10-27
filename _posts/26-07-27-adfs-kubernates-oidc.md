@@ -1,6 +1,7 @@
 ---
 title: "홈랩 ADFS + Kubernetes 연동 — OIDC 인증부터 cert-manager PKI 자동화, Namespace RBAC까지"
-categories: [IAM, Kubernetes]
+categories: ["Infra", "Kubernetes"]
+permalink: "/iam/kubernetes/adfs-kubernates-oidc/"
 tags: [ADFS, OIDC, Kubernetes, kubeadm, RBAC, kubelogin, cert-manager, PKI]
 ---
 

@@ -2,8 +2,8 @@
 layout: single
 title: "[심화 탐구] 프롬프트 엔지니어링 Part 1. 구조와 기능 탐구 완벽 분석"
 excerpt: "생성형 AI의 뼈대를 세우는 프롬프트 엔지니어링 기초와 요소, 설계 방법"
-categories:
-  - AI
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/ai/prompt-engineering-part1/"
 tags:
   - PromptEngineering
   - ChatGPT

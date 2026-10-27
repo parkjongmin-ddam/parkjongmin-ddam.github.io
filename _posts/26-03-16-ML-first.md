@@ -3,7 +3,8 @@ layout: single
 title: "[ML] 머신러닝 기초 — 지도학습 & 단변량 선형회귀분석"
 date: 2026-03-16
 excerpt: "머신러닝의 기본 개념부터 지도학습, 단변량 선형회귀(OLS), 성능평가 지표(MSE/RMSE/R²), 예외 처리까지 한 번에 정리한 입문 실습 가이드"
-categories: [Machine Learning, Data Science]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/ML-first/"
 tags: [머신러닝, 지도학습, 선형회귀, OLS, sklearn, ADP, Python]
 ---
 

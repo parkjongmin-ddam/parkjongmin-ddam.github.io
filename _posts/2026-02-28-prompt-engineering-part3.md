@@ -2,8 +2,8 @@
 layout: single
 title: "[상세 요약] 프롬프트 엔지니어링 Part 3. 목적 중심의 프롬프트 기획 전략"
 excerpt: "타겟 사용자의 특성을 분석하고 이에 맞춘 개인화된 프롬프트 경험을 설계하는 실전 기획 전략"
-categories:
-  - AI
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/ai/prompt-engineering-part3/"
 tags:
   - PromptEngineering
   - ChatGPT

@@ -3,7 +3,8 @@ layout: single
 title: "[IAM 개념 정리] Active Directory와 Entra ID — 프로토콜, 구조, 정책, 조건부 액세스, 하이브리드"
 excerpt: "Entra ID는 클라우드에 올린 Active Directory가 아니다. 두 시스템이 전제하는 신뢰 모델(네트워크 경계 vs ID 경계)부터 인증 프로토콜(Kerberos·NTLM vs OAuth 2.0·OIDC·SAML), 디렉터리 구조(OU 계층 vs 평면 구조와 관리 단위), 정책 적용 방식(GPO vs Intune·조건부 액세스), MFA와 보안 기본값, 하이브리드 구성(동기화 방향, PHS·PTA·페더레이션, 쓰기 저장, SOA 전환)까지 Microsoft Learn 문서를 기준으로 비교했다."
 date: 2026-10-20
-categories: [IAM]
+categories: ["IAM", "개념 정리"]
+permalink: "/iam/ad-vs-entra-id/"
 tags: [ActiveDirectory, EntraID, Kerberos, ConditionalAccess, ZeroTrust, EntraConnect, HybridIdentity, MFA]
 ---
 

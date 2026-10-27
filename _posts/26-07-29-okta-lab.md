@@ -3,7 +3,8 @@ layout: single
 title: "Okta 랩 2 — client_credentials와 SAML 2.0, 그리고 refresh token rotation의 replay 탐지"
 excerpt: "전편에서 남긴 다음 단계를 이어간다. API Services 앱으로 client_credentials를 실측해 openid 스코프가 거부되는 지점과 sub=cid 구조를 확인하고, refresh token rotation을 켜서 전편의 미해결 항목이었던 토큰 무효화의 정체가 replay 탐지에 의한 체인 전체 폐기임을 재현한다. 이어 SAML 2.0 SP를 붙여 attribute statement와 group filter를 나누어 넣고, AuthnContextClassRef가 고정값으로 나오는 문제를 session.amr로 우회한다."
 date: 2026-07-29
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-lab/"
 tags: [Okta, OAuth2, OIDC, SAML, client-credentials, refresh-token, 실측]
 ---
 

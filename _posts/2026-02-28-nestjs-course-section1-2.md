@@ -2,8 +2,8 @@
 layout: single
 title: "NestJS 핵심 코어 강의 - 섹션 1 & 2 요약 및 정리"
 excerpt: "백엔드 개발의 기초와 NestJS 개발 환경 세팅 완벽 가이드"
-categories:
-  - Backend
+categories: ["Dev", "Backend"]
+permalink: "/backend/nestjs-course-section1-2/"
 tags:
   - NestJS
   - NodeJS

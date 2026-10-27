@@ -3,7 +3,8 @@ layout: single
 title: "AI 브리핑을 MCP 서버로 열었다 — aibrief-mcp"
 excerpt: "매일 만들던 한국어 AI 브리핑을 에이전트가 직접 읽게 하고 싶어서 읽기 전용 MCP 서버로 열었다. Cloudflare Workers 위에서 도는 7개 툴, 요청당 LLM 비용 0, Smithery로 원클릭 연결. 어떻게 만들었고 어떻게 붙이는지 정리한다."
 date: 2026-07-16
-categories: [AI, MCP]
+categories: ["AI", "MCP·자동화"]
+permalink: "/ai/mcp/aibrief-mcp/"
 tags: [mcp, cloudflare-workers, smithery, ai-news, 오픈소스, 에이전트]
 ---
 

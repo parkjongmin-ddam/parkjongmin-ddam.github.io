@@ -1,6 +1,7 @@
 ---
 title: "권한 인식 RAG 만들기 Section 3 — 마이그레이션, 배포, 그리고 권한 인식 생성"
-categories: [RAG, IAM]
+categories: ["Project", "권한 인식 RAG"]
+permalink: "/rag/iam/RAGthrid/"
 tags: [permission-aware-rag, schema-migration, Hugging-Face-Spaces, Supabase, GitOps, LLM, attorney-client-privilege]
 description: "M4 전체 회고. Blog 2에서 미뤄둔 schema drift를 sensitivity 마이그레이션으로 해결하고, 클라우드에 배포하고, LLM 답변 생성을 권한 필터 뒤에 붙였다. 같은 질문에 사람마다 다른 답이 나오는 시스템."
 ---

@@ -3,7 +3,8 @@ layout: single
 title: "API 설계 패턴 8가지 정리 — 리소스, 페이지네이션, 멱등성, BFF, 게이트웨이, 비동기, 버전 관리"
 excerpt: "엔드포인트를 만드는 것과 수년간 여러 클라이언트가 의존하는 API를 설계하는 것은 다른 문제다. 리소스 중심 설계, 페이지네이션(offset vs cursor), 필터링·필드 선택, 멱등성 키, BFF, API Gateway, 비동기 API, 버전 관리를 각각 어떤 문제를 해결하는지부터 정리했다. HTTP 메서드 의미는 RFC 9110, 멱등성 키는 IETF Idempotency-Key 초안, 폐기 안내는 RFC 9745·8594를 기준으로 보충했고, 마지막 장에서 여덟 패턴이 주문 한 건의 흐름에서 함께 동작하는 과정을 단계별로 정리했다."
 date: 2026-10-20
-categories: [IAM]
+categories: ["Dev", "시스템 설계"]
+permalink: "/iam/api-design-8-patterns/"
 tags: [api-design, rest, pagination, idempotency, bff, api-gateway, async-api, versioning]
 ---
 

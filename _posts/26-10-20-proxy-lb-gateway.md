@@ -3,7 +3,8 @@ layout: single
 title: "[IAM 개념 정리] 리버스 프록시, 로드 밸런서, API 게이트웨이 — 같은 자리, 다른 질문"
 excerpt: "구성도에서 셋은 같은 자리에 같은 상자로 그려진다. 서버 한 대짜리 앱이 커지면서 생기는 세 가지 문제(서버 노출, 트래픽 증가, 마이크로서비스)를 따라가며 각 구성 요소가 요청에 대해 어떤 질문에 답하는지로 구분했다. L4·L7 로드 밸런서, 분산 알고리즘과 헬스 체크, TLS 처리 방식, X-Forwarded-For·Forwarded(RFC 7239)를 통한 클라이언트 IP 전달, 제품이 아니라 역할로 보는 법을 정리했고, 마지막으로 ADFS 팜(WAP·로드 밸런서·ADFS)에 세 역할이 어떻게 배치되는지와 Microsoft의 로드 밸런서 요구사항을 실무 예시로 붙였다."
 date: 2026-10-20
-categories: [IAM]
+categories: ["Dev", "시스템 설계"]
+permalink: "/iam/proxy-lb-gateway/"
 tags: [ReverseProxy, LoadBalancer, APIGateway, WAP, ADFS, X-Forwarded-For, SystemDesign]
 ---
 

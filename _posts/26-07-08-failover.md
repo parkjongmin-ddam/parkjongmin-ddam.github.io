@@ -3,7 +3,8 @@ layout: single
 title: "[SQL Server] AlwaysOn AG Failover 검증 — 수동·자동 장애조치와 노드 복구를 눈으로 확인하기"
 excerpt: "구축한 2노드 AlwaysOn AG가 실제로 작동하는지 검증한 기록. 수동 장애조치로 역할 전환·데이터 보존·Listener 이동을 확인하고, 주 노드를 강제로 죽여 자동 장애조치와 데이터 손실 0을 검증한 뒤, 죽은 노드를 되살려 자동 재동기화까지 확인함."
 date: 2026-07-08
-categories: [Infra, SQL Server]
+categories: ["Infra", "SQL Server"]
+permalink: "/infra/sql%20server/failover/"
 tags: [sql-server, alwayson, availability-group, failover, wsfc, listener, high-availability, 고가용성, 장애조치]
 ---
 

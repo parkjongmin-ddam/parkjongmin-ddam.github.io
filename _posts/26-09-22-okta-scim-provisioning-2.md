@@ -3,7 +3,8 @@ layout: single
 title: "Okta SCIM 프로비저닝 검증 (2) — 장애·퇴사·복직·그룹 전파 체인"
 excerpt: "1편이 Okta가 SCIM 서버에 보내는 요청의 형태였다면, 이번엔 그 요청이 실패했을 때다. 연결 장애 중 할당은 Retry로 복구되지만 404는 안 된다는 것, AD Disable 한 번에 Okta가 1초 안에 여섯 가지를 연쇄 처리하되 앱 비활성화 푸시가 실패하면 재시도 없이 관리자에게 수동 위임된다는 것, 복직은 자동이 아니라 Okta 수동 Activate를 포함한 4단계라는 것, 그리고 AD 기점 그룹 멤버십 변경은 앱 그룹 PUT을 촉발하지만 Unassign과 Import 링크는 다음 동기화까지 기다린다는 것까지 — 라이프사이클 이벤트에서 Okta가 자동으로 하는 것과 관리자가 해야 하는 것의 경계를 실측한 기록이다."
 date: 2026-09-22
-categories: [IAM]
+categories: ["IAM", "Okta"]
+permalink: "/iam/okta-scim-provisioning-2/"
 tags: [Okta, SCIM, Provisioning, Lifecycle, Active-Directory, Deprovisioning, 실측]
 ---
 

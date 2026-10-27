@@ -3,7 +3,8 @@ layout: single
 title: "[실무 검증] Microsoft Graph 인증서 기반 App-only 접속 구성"
 excerpt: "M365·Azure 테넌트 점검 스크립트의 기반이 되는 Microsoft Graph App-only 접속을 구성했다. 위임 방식 대신 App-only를 고른 이유, 리디렉션 URI를 비워 둔 이유, 클라이언트 암호 대신 자체 서명 인증서를 쓴 이유를 정리하고, 점검 항목별로 분리한 Read 전용 애플리케이션 권한 7개에 관리자 동의를 부여한 뒤 Connect-MgGraph 접속과 기본 조회까지 검증했다."
 date: 2026-10-20
-categories: [IAM]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/iam/m365-graph-app-only/"
 tags: [M365, Entra, Microsoft Graph, App-only, Certificate, PowerShell, 실측]
 ---
 

@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Generative AI 10기 팀 프로젝트 - 5일차: Streamlit 웹 대시보드 구현 및 배포"
-categories: python
+categories: ["Project", "주식 대시보드(팀)"]
+permalink: "/python/teamproject-fianlday/"
 tag: [python, streamlit, dashboard, deployment, streamlit-cloud, web-app]
 toc: true
 author_profile: false

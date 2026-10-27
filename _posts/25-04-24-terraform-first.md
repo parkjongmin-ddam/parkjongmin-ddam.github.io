@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Terraform 기본 가이드 (AWS 환경 설정)"
-categories: terraform
+categories: ["Infra", "Terraform·AWS"]
+permalink: "/terraform/terraform-first/"
 tags: [AWS, terraform]
 toc: true
 author_profile: false

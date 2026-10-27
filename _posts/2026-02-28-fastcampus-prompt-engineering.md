@@ -2,8 +2,8 @@
 layout: single
 title: "[강의 리뷰] 프롬프트 엔지니어링 A to Z 전반적인 마스터 클래스 요약"
 excerpt: "단순한 질문을 넘어 생성형 AI의 한계를 극복하고 실무 가치를 창출하는 프롬프트 최적화 가이드"
-categories:
-  - AI
+categories: ["AI", "프롬프트·컨텍스트"]
+permalink: "/ai/fastcampus-prompt-engineering/"
 tags:
   - PromptEngineering
   - ChatGPT

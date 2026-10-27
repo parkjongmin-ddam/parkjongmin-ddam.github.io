@@ -2,7 +2,8 @@
 layout: single
 title:  "[Kaggle] 첫 번째 머신러닝 모델 구축 (Your First ML Model) 번역 및 정리"
 date:   2026-02-23
-categories: [Machine Learning, Data Science, Kaggle]
+categories: ["AI", "머신러닝"]
+permalink: "/machine%20learning/data%20science/kaggle/your-first-ml-model/"
 tags: [Kaggle, 머신러닝, Scikit-learn, 의사결정나무, 데이터분석, 튜토리얼]
 author_profile: false
 ---

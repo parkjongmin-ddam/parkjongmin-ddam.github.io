@@ -2,7 +2,8 @@
 layout: single
 title:  "Claude Code Teams 사용 가이드"
 date:   2026-02-11
-categories: [AI, Tool]
+categories: ["AI", "Claude·코딩 에이전트"]
+permalink: "/ai/tool/Claude-team/"
 tags: [Claude, Code Teams, Agent, Collaboration]
 author_profile: false
 ---

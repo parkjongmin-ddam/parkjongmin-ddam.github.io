@@ -2,7 +2,8 @@
 layout: single
 title: "[SmartHee] Phase 2 셋업 — Langfuse 3.x + LangGraph 1.x 연동 트러블슈팅 정리"
 excerpt: "Langfuse 3.x + LangGraph 1.x 환경에서 SmartHee Phase 2를 로컬에서 실행하며 겪은 API 변경, 모듈 경로 이동, 콜백 생성 방식 변경 등의 오류 해결 방법을 기록."
-categories: [Project, SmartHee]
+categories: ["Project", "SmartHee"]
+permalink: "/project/smarthee/LangGroup-Phase2/"
 tags: [python, fastapi, langgraph, langfuse, observability, llm-tracing, 포트폴리오]
 ---
 

@@ -3,7 +3,8 @@ layout: single
 title: "[SmartHee] Phase 4 셋업 — Cost Tracker + React 프론트엔드 트러블슈팅 정리"
 excerpt: "SmartHee 마지막 Phase. pytest 테스트 자동화, 비용 추적(Cost Tracker), React + Vite 프론트엔드 연동까지. Phase 1~3에서 반복됐던 에러가 4에서도 동일하게 등장했고, 해결 방법도 동일했다."
 date: 2026-03-13
-categories: [Project, SmartHee]
+categories: ["Project", "SmartHee"]
+permalink: "/project/smarthee/LangGroup-Phase4/"
 tags: [python, fastapi, react, vite, typescript, langgraph, langfuse, celery, cost-tracker, 포트폴리오]
 ---
 

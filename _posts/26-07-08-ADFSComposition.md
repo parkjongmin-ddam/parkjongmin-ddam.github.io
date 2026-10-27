@@ -3,7 +3,8 @@ layout: single
 title: "[Windows Server] ADFS 고가용성 팜 구축 — CA 인증서 발급부터 2노드 팜, NLB까지"
 excerpt: "앞서 만든 2-Tier CA와 SQL AG를 활용해 ADFS 2노드 고가용성 팜을 구축한 기록. CA로 SAN 인증서를 발급하고, 구성 DB를 SQL AG Listener에 연결하며, gMSA와 NLB로 팜을 완성하기까지의 실전 트러블슈팅 정리."
 date: 2026-07-10
-categories: [Infra, Windows Server, ADFS]
+categories: ["IAM", "ADFS"]
+permalink: "/infra/windows%20server/adfs/ADFSComposition/"
 tags: [adfs, federation, gmsa, nlb, high-availability, sql-availabilitygroup, pki, certificate, hyper-v, 고가용성, 트러블슈팅]
 ---
 

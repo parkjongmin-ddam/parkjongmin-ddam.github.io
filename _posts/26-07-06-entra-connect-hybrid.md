@@ -1,7 +1,8 @@
 ---
 title: "온프레미스 AD를 M365에 연결하기 — Entra Connect 하이브리드 동기화(PHS) 구축 전 과정"
 date: 2026-07-06
-categories: [Infra, ActiveDirectory]
+categories: ["IAM", "Entra ID·M365"]
+permalink: "/infra/activedirectory/entra-connect-hybrid/"
 tags: [EntraConnect, AzureAD, EntraID, PHS, 하이브리드, M365, PasswordHashSync, OU필터링, HyperV, 홈랩]
 description: "홈랩 온프레미스 AD를 Microsoft 365 테넌트에 하이브리드로 연결했다. onmicrosoft.com 대체 UPN 접미사 정리, 개인 MSA(#EXT#)와 조직 계정의 차이, Entra Connect의 Custom 설치와 OU 필터링, PHS 로그인 검증까지 — 그리고 그 과정에서 밟은 함정들(IE ESC JavaScript 오류, 도메인 혼동, OU 필터가 하위까지 포함하는 동작)."
 ---

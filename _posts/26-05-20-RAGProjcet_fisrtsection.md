@@ -1,6 +1,7 @@
 ---
 title: "권한 인식 RAG 만들기_Secetion 1 — 설계와 구현"
-categories: [RAG, IAM]
+categories: ["Project", "권한 인식 RAG"]
+permalink: "/rag/iam/RAGProjcet_fisrtsection/"
 tags: [permission-aware-rag, FastAPI, pgvector, RBAC, ABAC, JWT, BGE-M3]
 description: "엔터프라이즈 RAG의 권한 차원을 메우는 사이드 프로젝트의 첫 두 단계. 가상 회사 BWCorp 설계부터 6개 권한 룰 구현까지."
 ---

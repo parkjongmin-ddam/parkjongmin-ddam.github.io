@@ -1,7 +1,8 @@
 ---
 layout: single
 title: "Keycloak ↔ ADFS 연동"
-categories: ActivcDirectoryFederationService
+categories: ["IAM", "ADFS"]
+permalink: "/activcdirectoryfederationservice/ADFS-keycloak/"
 tag: [windows, ADFS]
 toc: true
 author_profile: false
