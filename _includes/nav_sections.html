@@ -1,19 +1,22 @@
-<nav class="nav__list">
+<nav class="nav__list nav__sections">
   <input id="ac-sections" name="accordion-sections" type="checkbox" />
   <label for="ac-sections">카테고리</label>
   <ul class="nav__items">
     {% for s in site.data.sections %}
       {% assign sposts = site.categories[s.name] %}
       <li>
-        <a href="{{ '/categories/' | relative_url }}#{{ s.name | slugify }}"><span class="nav__sub-title">{{ s.name }} ({{ sposts.size | default: 0 }})</span></a>
-        <ul>
-          {% for sub in s.children %}
-            {% assign subposts = site.categories[sub] %}
-            {% if subposts %}
-              <li><a href="{{ '/categories/' | relative_url }}#{{ sub | slugify }}"{% if page.categories contains sub %} class="active"{% endif %}>{{ sub }} ({{ subposts.size }})</a></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
+        <details{% if page.categories contains s.name %} open{% endif %}>
+          <summary><span>{{ s.name }}<span class="nav__count">{{ sposts.size | default: 0 }}</span></span></summary>
+          <ul>
+            <li><a href="{{ '/categories/' | relative_url }}#{{ s.name | slugify }}">전체 보기</a></li>
+            {% for sub in s.children %}
+              {% assign subposts = site.categories[sub] %}
+              {% if subposts %}
+                <li><a href="{{ '/categories/' | relative_url }}#{{ sub | slugify }}"{% if page.categories contains sub %} class="active"{% endif %}><span>{{ sub }}</span><span class="nav__count">{{ subposts.size }}</span></a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </details>
       </li>
     {% endfor %}
   </ul>
