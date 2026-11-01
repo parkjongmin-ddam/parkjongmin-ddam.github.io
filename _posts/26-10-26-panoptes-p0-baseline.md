@@ -75,7 +75,7 @@ agent는 `macmini-waf`라는 이름으로 등록했고, `default`와 `panoptes-w
 <agent_config>
   <localfile>
     <log_format>json</log_format>
-    <location>/Users/jongminpark/lab/panoptes-detect/logs/modsec/audit.log</location>
+    <location>/Users/<user>/lab/panoptes-detect/logs/modsec/audit.log</location>
     <label key="panoptes_source">modsecurity</label>
   </localfile>
 </agent_config>

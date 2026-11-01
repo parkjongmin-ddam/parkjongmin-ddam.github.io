@@ -163,6 +163,9 @@ $pem | Out-File -Encoding ascii "$env:USERPROFILE\lab-saml-sp.pem"
 콘솔 UI에 전부 노출되지 않는 값들이 있어서, Apps API로 앱 객체를 직접 조회해 `settings.signOn`을 확인했다.
 
 ```powershell
+$org   = "https://integrator-XXXXXXX.okta.com"
+$appId = "<앱 ID>"
+$h = @{ Authorization = "SSWS $env:OKTA_API_TOKEN"; Accept = "application/json" }
 $app = Invoke-RestMethod -Uri "$org/api/v1/apps/$appId" -Headers $h
 $app.settings.signOn | ConvertTo-Json -Depth 6
 ```

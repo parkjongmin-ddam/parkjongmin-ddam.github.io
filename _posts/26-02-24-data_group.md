@@ -28,7 +28,7 @@ author_profile: false
   3. `StationLocation`: `SubwayRidership`의 '역'과 `RegionPopulation`의 '행정동'을 이어주기 위한 **매핑(Join) 전용 테이블**이었음.
 
 **🚨 RDB의 문제점:** 
-데이터를 분석하거나 조회할 때마다 매핑 테이블을 거쳐 최소 3개 이상의 테이블을 `INNER JOIN`으로 엮어야 했기에 직관성이 떨어지고, 연결이 깊어지면 자원 소모가 기하급수적으로 늘어남.
+데이터를 분석하거나 조회할 때마다 매핑 테이블을 거쳐 최소 3개 이상의 테이블을 `INNER JOIN`으로 엮어야 했기에 직관성이 떨어지고, 연결이 깊어질수록(JOIN 단계가 늘어날수록) 쿼리 비용이 커짐.
 
 ---
 
@@ -135,11 +135,12 @@ pip install neo4j
 위 4번 항목에서 작성했던 리팩토링 쿼리(거주 인구 대비 하차 유입 비율 분석)를 파이썬에서 직접 호출하고 단숨에 결과를 받아오는 코드임.
 
 ```python
+import os
 from neo4j import GraphDatabase
 
 # 1. Neo4j DB 연결 설정
 URI = "bolt://localhost:7687"   # Neo4j 기본 포트
-AUTH = ("neo4j", "password123") # 본인의 계정 정보 입력
+AUTH = ("neo4j", os.environ["NEO4J_PASSWORD"]) # 비밀번호는 코드에 쓰지 않고 환경변수로 전달
 
 # 2. 드라이버 객체 생성
 driver = GraphDatabase.driver(URI, auth=AUTH)
@@ -172,11 +173,13 @@ def get_station_population_ratio(tx):
 with driver.session() as session:
     print("🚇 거주 인구 대비 지하철 하차 유입 비율 TOP 5 🚇")
     # 읽기 전용 트랜잭션으로 함수 넘겨서 실행
-    session.read_transaction(get_station_population_ratio)
+    session.execute_read(get_station_population_ratio)
 
 # 5. 드라이버 사용 종료
 driver.close()
 ```
+
+> 참고: 처음 작성한 코드는 `session.read_transaction()`을 사용했음. 이 메서드는 neo4j Python 드라이버 5.x에서 deprecated, 6.0에서 제거되어 현재는 `session.execute_read()`를 사용함.
 
 **✅ 최종 요약:**
 Python에서 `neo4j` 공식 드라이버를 사용하면, 마치 RDBMS의 `PyMySQL`이나 `psycopg2`를 쓰는 것과 똑같이 접속해서 쿼리를 `run()` 메서드에 던지기만 하면 됨. 반환된 결과(`record`)는 JSON 구조처럼 아주 쉽게 `record['이름']`으로 뽑아서 쓸 수 있어서 백엔드 API 서버를 만들기도 매우 쾌적함!

@@ -263,6 +263,8 @@ Content-Type: application/json
 
 IETF HTTPAPI 워킹그룹의 [Idempotency-Key 헤더 초안](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/)이 이 헤더를 정의합니다. 값은 Structured Field 문자열이고, UUID 같은 무작위 값이 권장됩니다. 이 초안은 RFC로 확정되지 않았고 2026년 10월 기준 07판(2025-10)이 만료된 상태이지만, 결제 API를 비롯한 여러 서비스가 같은 이름과 방식으로 이미 사용하고 있습니다.
 
+> 2026-11 갱신: 2026-10-22에 08판이 게시되어 다시 Active 상태가 되었습니다(RFC로는 아직 미확정).
+
 ### 서버 처리 흐름
 
 1. 키로 저장소를 조회합니다. 키는 호출자(사용자 또는 클라이언트) 범위로 구분합니다. 다른 사용자가 같은 키를 보내도 서로 영향을 주지 않아야 합니다.
@@ -345,7 +347,7 @@ GET /bff/mobile/home
 
 [인증 개념 7가지]({% post_url 26-10-20-auth-7-concepts %}) 9장의 구성이 BFF입니다. 브라우저는 세션 쿠키만 갖고, OAuth Access Token과 Refresh Token은 BFF 서버가 보관합니다. BFF는 API를 호출할 때 `Authorization: Bearer` 헤더에 토큰을 붙입니다. 브라우저의 JavaScript에서 토큰을 읽을 수 없으므로 XSS로 토큰이 유출될 위험이 줄어듭니다.
 
-IETF OAuth 워킹그룹의 [OAuth 2.0 for Browser-Based Applications](https://datatracker.ietf.org/doc/draft-ietf-oauth-browser-based-apps/)(BCP 예정, 2026년 10월 기준 RFC 편집 대기)도 BFF를 브라우저 앱의 권장 구성 중 하나로 설명합니다.
+IETF OAuth 워킹그룹의 [OAuth 2.0 for Browser-Based Applications](https://www.rfc-editor.org/rfc/rfc10017)(RFC 10017, BCP 212, 2026년 8월 발행)도 BFF를 브라우저 앱의 권장 구성 중 하나로 설명합니다.
 
 ---
 
@@ -608,4 +610,4 @@ API를 설계할 때 "이 API를 어떻게 만들까"보다 "6개월 뒤 이 API
 - [RFC 8594 — The Sunset HTTP Header Field](https://www.rfc-editor.org/rfc/rfc8594)
 - [draft-ietf-httpapi-idempotency-key-header — The Idempotency-Key HTTP Header Field](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/)
 - [draft-ietf-httpapi-ratelimit-headers — RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
-- [draft-ietf-oauth-browser-based-apps — OAuth 2.0 for Browser-Based Applications](https://datatracker.ietf.org/doc/draft-ietf-oauth-browser-based-apps/)
+- [RFC 10017 (BCP 212) — OAuth 2.0 for Browser-Based Applications](https://www.rfc-editor.org/rfc/rfc10017)

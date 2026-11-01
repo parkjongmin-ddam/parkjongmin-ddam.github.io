@@ -3,7 +3,7 @@ layout: single
 title: "Generative AI 10기 팀 프로젝트 2일차 - 데이터 수집 및 전처리"
 categories: ["Project", "주식 대시보드(팀)"]
 permalink: "/python/teamproject-2day/"
-tag: [python, pandas, finance-datareader, data-preprocessing, stock-analysis, moving-average]
+tags: [python, pandas, finance-datareader, data-preprocessing, stock-analysis, moving-average]
 toc: true
 author_profile: false
 sidebar:
@@ -165,7 +165,7 @@ df_clean = df.dropna()
 df_filled = df.fillna(0)
 
 # 또는 앞의 값으로 채우기 (forward fill)
-df_ffill = df.fillna(method='ffill')
+df_ffill = df.ffill()  # fillna(method='ffill')는 pandas 2.1부터 deprecated
 ```
 
 ---

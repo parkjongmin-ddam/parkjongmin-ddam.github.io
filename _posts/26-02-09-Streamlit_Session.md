@@ -3,7 +3,7 @@ layout: single
 title: "Streamlit Session State 완벽 가이드"
 categories: ["Dev", "Streamlit"]
 permalink: "/streamlit/Streamlit_Session/"
-tag: [Python, Streamlit, Session-State, Web-Development]
+tags: [Python, Streamlit, Session-State, Web-Development]
 toc: true
 toc_sticky: true
 author_profile: false
@@ -659,9 +659,9 @@ Session/
 ## 📚 참고 자료
 
 ### 공식 문서
-- [Streamlit Session State](https://docs.streamlit.io/library/api-reference/session-state)
-- [Session State 고급 기능](https://docs.streamlit.io/library/advanced-features/session-state)
-- [Streamlit API Reference](https://docs.streamlit.io/library/api-reference)
+- [Streamlit Session State](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state)
+- [Session State 고급 기능](https://docs.streamlit.io/develop/concepts/architecture/session-state)
+- [Streamlit API Reference](https://docs.streamlit.io/develop/api-reference)
 
 ### 커뮤니티
 - [Streamlit 포럼](https://discuss.streamlit.io/)

@@ -1,5 +1,5 @@
 ---
-title: "권한 인식 RAG 만들기_Secetion 1 — 설계와 구현"
+title: "권한 인식 RAG 만들기_Section 1 — 설계와 구현"
 categories: ["Project", "권한 인식 RAG"]
 permalink: "/rag/iam/RAGProjcet_fisrtsection/"
 tags: [permission-aware-rag, FastAPI, pgvector, RBAC, ABAC, JWT, BGE-M3]
@@ -121,7 +121,7 @@ legal.contract (2), legal.regulatory (1), legal.opinion (1), legal.litigation (2
 
 순서가 의도적이다. audit이 최상단인 건 감사 시즌에 빨리 광범위 접근을 grant하기 위함이다. self_access는 자기 평가서 보는 게 manager 권한 체크 거치면 이상하니까 일찍. project/parties/incident는 ABAC. 다 끝나면 rbac_default가 catch-all이다.
 
-각 룰의 abstain(None 반환) vs explicit DENY 선택도 신중했다. `project_rule`은 "멤버 아니면 명시적 DENY"(strict closure)다. `self_access_rule`은 "본인 아니면 None"(다음 룰에 맡김)다. XACML 표준의 deny-overrides 패턴과 비슷하다.
+각 룰의 abstain(None 반환) vs explicit DENY 선택도 신중했다. `project_rule`은 "멤버 아니면 명시적 DENY"(strict closure)다. `self_access_rule`은 "본인 아니면 None"(다음 룰에 맡김)다. XACML 표준의 first-applicable 결합 알고리즘과 비슷하다.
 
 여기까지가 M1이다. 코드는 한 줄도 안 썼지만 데이터와 정책이 명확하면 구현은 기계적이다.
 
@@ -343,7 +343,7 @@ def can_read(principal, document):
 - **first-match-wins**: 한 룰이 ALLOW나 DENY 반환하면 즉시 종료
 - **closed-world default**: 모든 룰이 None이면 DENY. principle of least privilege
 
-XACML의 deny-overrides 알고리즘과 거의 같다. 룰 우선순위가 명시적이라 더 강한 보장이 있다.
+XACML의 first-applicable 결합 알고리즘(첫 Permit/Deny 결과에서 종료)에 closed-world default DENY를 더한 형태다. deny-overrides는 순서와 관계없이 DENY가 하나라도 있으면 DENY가 우선하는 방식이라 다르다. 룰 우선순위가 명시적이라 더 강한 보장이 있다.
 
 ### /query 엔드포인트
 

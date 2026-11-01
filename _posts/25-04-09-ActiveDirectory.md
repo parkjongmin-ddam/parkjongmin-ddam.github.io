@@ -3,7 +3,7 @@ layout: single
 title: "Active Directory 시작하기"
 categories: ["Infra", "Active Directory"]
 permalink: "/active-directory/ActiveDirectory/"
-tag: [windows, active-directory]
+tags: [windows, active-directory]
 toc: true
 author_profile: false
 sidebar:
@@ -45,7 +45,7 @@ Active Directory(AD)는 네트워크 리소스에 대한 접근 권한을 중앙
   **예:** 사용자가 회사 컴퓨터에 로그인할 때, 도메인 컨트롤러가 암호를 확인하고 로그인 권한을 부여합니다.
 
 - **권한 부여(Authorization)**  
-  인증된 사용자가 네트워크 리소스(파일, 프린터 등)에 접근하려고 할 때, 도메인 컨트롤러는 해당 사용자가 접근 권한이 있는지 확인합니다.  
+  도메인 컨트롤러는 인증된 사용자에게 그룹 정보(SID)가 담긴 Kerberos 티켓을 발급합니다. 사용자가 네트워크 리소스(파일, 프린터 등)에 접근하면, 리소스 서버가 이 SID를 자신의 ACL과 대조해 접근 여부를 판단합니다.  
   **예:** 특정 파일 서버에 접근하려는 사용자가 권한이 없으면 접근이 차단됩니다.
 
 - **복제(Replication)**  
@@ -76,7 +76,7 @@ Active Directory는 네트워크 리소스를 계층적으로 구성하여 쉽�
 
 - **조직 단위(OU, Organizational Unit)**  
   AD는 조직 단위를 사용하여 사용자, 그룹, 컴퓨터를 논리적으로 분류합니다.  
-  **예:** "HR 부서" OU에만 특정 파일 서버 접근 권한을 부여합니다.
+  **예:** "HR 부서" OU에 GPO를 연결하거나, OU 단위로 비밀번호 재설정 권한을 위임합니다. (OU는 보안 주체가 아니므로 파일 서버 접근 권한은 보안 그룹에 부여합니다.)
 
 - **LDAP 프로토콜 지원**  
   AD는 LDAP(Lightweight Directory Access Protocol)을 사용하여 디렉터리 데이터를 검색하고 수정할 수 있습니다.  
@@ -92,7 +92,7 @@ Active Directory는 대규모 네트워크에서도 확장 가능하며, 다양�
   **예:** 본사와 지사의 도메인을 연결하여 직원들이 서로의 리소스에 접근할 수 있도록 설정합니다.
 
 - **클라우드 통합**  
-  Azure Active Directory와 통합하여 클라우드 기반 애플리케이션과의 인증 및 권한 관리를 제공합니다.  
+  Microsoft Entra ID(구 Azure Active Directory)와 통합하여 클라우드 기반 애플리케이션과의 인증 및 권한 관리를 제공합니다.  
   **예:** Microsoft 365와 통합하여 클라우드 애플리케이션에 대한 Single Sign-On(SSO)을 구현합니다.
 
 ---

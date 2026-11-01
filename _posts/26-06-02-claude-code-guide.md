@@ -55,17 +55,23 @@ Claude Code를 쓰다 보면 결국 두 가지로 갈린다. **기능을 몰라�
 - **`/model`** — Opus/Sonnet 선택. Default 모드는 토큰 50%까지 Opus 후 Sonnet 전환($100 플랜은 20%가 한계), Opus Plan 모드는 플래닝만 Opus.
 - **`/status`** — 계정·시스템 상태. **`/doctor`** — 설치/환경 점검. **`/cost`** — (API 모드) 토큰·비용 확인.
 
+> 2026-11 갱신: 현재 공식 모델 설정 문서에는 사용량 비율(50%/20%)에 따른 Opus→Sonnet 전환 설명이 없다. `default`는 계정 유형별 기본 모델로 되돌리는 값이고, `opusplan`은 plan mode에서 Opus, 실행 시 Sonnet을 쓴다. `/cost`는 현재 `/usage`의 별칭이다.
+
 ### 프로젝트·메모리·권한
 
 - **`/init`** — 프로젝트 초기 분석 후 핵심을 CLAUDE.md에 저장. 프로젝트 시작 직후 필수.
 - **`#`** — CLAUDE.md에 빠르게 메모 추가(프로젝트/유저 메모리 선택).
 - **`/permissions`** — 도구 권한 관리.
 
+> 2026-11 갱신: 현재 공식 문서의 Quick commands 목록에는 `#` 단축 입력이 없다. CLAUDE.md 편집은 `/memory`로 하고, Claude가 스스로 메모하는 auto memory가 별도로 있다.
+
 ### 협업·Git
 
-- **`/review`** — 연동된 Git 레포의 PR을 Claude가 리뷰.
+- **`/review`** — 연동된 Git 레포의 PR을 Claude가 리뷰. (`/code-review`의 별칭)
 - **`/pr-comments`** — PR 코멘트를 전부 긁어와 개선점 분석.
 - **`/login` / `/logout`** — 계정 전환(멀티 계정 운영).
+
+> 2026-11 갱신: `/pr-comments`는 v2.1.91에서 제거됐다. PR 코멘트 확인은 Claude에게 직접 요청한다.
 
 ### 편의 기능
 
@@ -75,6 +81,8 @@ Claude Code를 쓰다 보면 결국 두 가지로 갈린다. **기능을 몰라�
 - **`/mcp`** — 연결된 MCP 상태 한눈에 확인.
 - **output-style** — 출력 스타일 변경(Explanatory, Learning 등 프리셋).
 - **statusline** — 하단 한 줄 정보 영역(예: 현재 모델명 고정 표시).
+
+> 2026-11 갱신: `/vim` 명령은 v2.1.92에서 제거됐고, vim 모드는 `/config` → Editor mode에서 전환한다.
 
 ---
 
@@ -182,7 +190,7 @@ GitHub 이슈를 분석·수정: $ARGUMENTS
 
 ### 세션 운영
 
-- **백그라운드(`bg`)** — 작업을 백그라운드로 보내고 터미널 해방. `claude agent`로 복귀, 에이전트 패널에서 세션 리뷰.
+- **백그라운드(`bg`)** — 작업을 백그라운드로 보내고 터미널 해방. `claude agents`로 복귀, 에이전트 패널에서 세션 리뷰.
 - **BTW(`/btw`)** — 세션을 더럽히지 않고 질문. 공식 문서 기준으로는 답이 **대화 이력에 들어가지 않는 별도 오버레이**로 떠 컨텍스트를 키우지 않는다(영상에서는 `F`로 포크해 기존 컨텍스트를 공유하는 흐름으로 소개됐는데, 버전에 따라 동작이 다를 수 있다).
 - **리와인드(`/rewind` 또는 `Esc Esc`)** — 특정 프롬프트로 되돌리기. `대화만`/`코드만`/`둘 다` 복원, 또는 `summarize from here`(선택 지점부터 아래로 압축)·`summarize up to here`(처음부터 선택 지점까지 압축) 선택. 매 프롬프트가 체크포인트가 되고 세션을 넘어 유지된다. **단, 체크포인트는 Claude가 만든 변경만 추적하므로 git을 대체하지 않는다.**
 - **`/copy`** — 직전 프롬프트를 그대로 복사. 드래그 선택 불필요(의외로 모르는 사람 많음).
@@ -191,6 +199,8 @@ GitHub 이슈를 분석·수정: $ARGUMENTS
 
 - **울트라 플랜(`/ultraplan`)** — 세션이 아닌 웹으로 작업을 위임. 터미널이 해방되고, 웹 실행이 플래닝에 더 최적화돼 완성도 높은 플랜 생성(토큰 소모는 큼). 슬래시 없이 입력해도 동작.
 - **울트라 리뷰** — Extra Usage 활성화가 필요한 유료 기능(1회 약 $5, 무료 5회 제공). 가치는 프로젝트 중요도에 따라 판단.
+
+> 2026-11 갱신: `/ultraplan`은 제거됐고 공식 문서는 plan mode 사용을 안내한다. 울트라 리뷰는 현재 `/code-review ultra`(별칭 `/ultrareview`, CLI는 `claude ultrareview`)로 실행하며, 공식 문서 기준 Pro·Max 계정당 무료 3회(1회성), 이후 1회 약 $5~$25가 usage credits로 과금된다.
 
 ### 프롬프트·스킬
 
@@ -221,7 +231,7 @@ GitHub 이슈를 분석·수정: $ARGUMENTS
 - **씽킹 토큰(레거시 참고)** — 예전 가이드의 `think` < `think hard` < `think harder` < `ultrathink` 매직워드로 사고 토큰을 늘리는 방식이 있었다. 여전히 동작할 수 있으나, 현재 공식 best-practices는 이 매직워드 대신 **plan mode**를 전면에 둔다. 복잡한 작업은 plan mode + 명확한 계획으로 접근하는 걸 권장.
 - **TDD** — 예상 입출력 기반 테스트를 먼저 작성 → 실패 확인 → 구현 → 통과까지 이터레이트.
 - **스크린샷 활용** — Playwright/Puppeteer로 페이지 캡처 후 주입하며 반복하면 결과물 품질이 크게 오른다.
-- **권한 인터럽트 줄이기** — 매번 승인 클릭은 결국 검토가 아니라 그냥 클릭이 된다. 공식 권장은 세 가지: **auto mode**(별도 분류 모델이 위험한 것만 차단), **permission allowlist**(`npm run lint` 등 안전한 명령만 허용), **`/sandbox`**(파일시스템·네트워크를 제한하는 OS 레벨 격리). `claude --permission-mode auto -p "fix all lint errors"`처럼 비대화 실행에도 쓴다. (구버전의 `--dangerously-skip-permissions`는 이름 그대로 위험하니 동작을 완전히 이해한 뒤에만, 가급적 sandbox/auto mode로 대체.)
+- **권한 인터럽트 줄이기** — 매번 승인 클릭은 결국 검토가 아니라 그냥 클릭이 된다. 공식 권장은 세 가지: **auto mode**(별도 분류 모델이 위험한 것만 차단), **permission allowlist**(`npm run lint` 등 안전한 명령만 허용), **`/sandbox`**(파일시스템·네트워크를 제한하는 OS 레벨 격리). `claude --permission-mode auto -p "fix all lint errors"`처럼 비대화 실행에도 쓴다. (`--dangerously-skip-permissions`는 현행 CLI에도 있는 플래그로 `--permission-mode bypassPermissions`와 같다. 이름 그대로 위험하니 동작을 완전히 이해한 뒤에만, 가급적 sandbox/auto mode로 대체.)
 - **Claude를 선생님으로** — 새 코드베이스는 전반 → 세부 순으로 top-down 질문.
 - **프롬프트는 항상 상세하게** — "테스트 작성해줘"보다 "sample 파일의 테스트 코드 작성, 로그인 상태 헤더 포함, 모킹 금지"처럼.
 - **이미지 전달** — 드래그앤드롭 또는 **`Ctrl+V`** (Mac에서도 붙여넣기는 Cmd+V가 아니라 Ctrl+V).

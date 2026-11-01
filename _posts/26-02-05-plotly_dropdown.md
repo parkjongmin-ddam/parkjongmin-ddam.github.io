@@ -3,7 +3,7 @@ layout: single
 title: "Plotly 인터렉티브 드롭다운 실습 - 동적 데이터 시각화"
 categories: ["Dev", "Python·시각화"]
 permalink: "/python/plotly_dropdown/"
-tag: [python, plotly, interactivity, dropdown, updatemenus, dynamic-charts, visualization]
+tags: [python, plotly, interactivity, dropdown, updatemenus, dynamic-charts, visualization]
 toc: true
 author_profile: false
 sidebar:
@@ -20,7 +20,7 @@ Plotly의 `updatemenus` 기능을 활용하여 사용자와 상호작용하는 �
 
 ## 📁 파일
 
-- [plotly_dropdown_practice.py](file:///d:/python/Plotly/plotly_dropdown_practice.py) - 드롭다운 실습 코드
+- `plotly_dropdown_practice.py` - 드롭다운 실습 코드
 
 ## 🔑 핵심 메서드
 

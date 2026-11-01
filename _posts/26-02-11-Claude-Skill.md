@@ -13,6 +13,8 @@ author_profile: false
 
 ![Claude Skill Concept](/assets/images/26-02-11/claude_skill_concept.png)
 
+> 참고: Skill(Agent Skills, `SKILL.md` 규격)은 Anthropic이 Claude용으로 공개한 형식이고, Antigravity는 Google의 에이전트 IDE로 같은 방식의 스킬을 지원함. 이 글의 구조·사용 방법 설명은 Antigravity 기준이며, `view_file` 같은 도구명도 Antigravity 쪽 이름임. Claude Code 기준 내용은 [Claude Skill 활용 가이드]({% post_url 26-02-11-Claude-Skill-Usage %})와 공식 문서(code.claude.com/docs/en/skills)를 참고.
+
 ## Claude Skill이란?
 Claude Skill은 AI 에이전트(Antigravity)가 복잡한 작업을 수행할 수 있도록 돕는 **전문적인 지침(Instruction)** 과 **리소스(Resource)** 의 모음임. 단순한 프롬프트를 넘어, 특정 작업을 수행하기 위한 단계별 가이드, 스크립트, 예제 코드 등을 하나의 'Skill'로 패키징하여 에이전트가 필요할 때 불러와 사용할 수 있게 함.
 
@@ -36,7 +38,7 @@ Antigravity 시스템에서 Skill은 특정 폴더 구조를 따름. 가장 핵�
 
 ```markdown
 ---
-name: deploy_to_production
+name: deploy-to-production
 description: 프로덕션 배포를 위한 워크플로우. 테스트, 빌드, 안전 점검 단계를 포함함.
 ---
 
@@ -74,6 +76,8 @@ description: 프로덕션 배포를 위한 워크플로우. 테스트, 빌드, �
 1.  `view_file` 도구를 사용하여 해당 스킬의 **SKILL.md** 파일을 읽음.
 2.  파일에 정의된 지침을 완벽하게 숙지함.
 3.  지침에 따라 단계별로 작업을 수행하거나, 포함된 스크립트를 실행함.
+
+> 참고: 처음부터 모든 SKILL.md를 읽는 것은 아님. 시작 시에는 각 스킬의 `name`·`description`만 컨텍스트에 올라가고, 요청과 관련 있다고 판단된 스킬의 본문만 그때 로드됨(점진적 공개, Progressive Disclosure). Claude Code와 Antigravity 모두 이 방식임.
 
 ## 왜 중요한가?
 Claude Skill 시스템은 AI를 단순한 코딩 어시스턴트에서 **자율적인 전문가(Autonomous Expert)** 로 진화시킴.

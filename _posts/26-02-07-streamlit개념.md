@@ -3,7 +3,7 @@ layout: single
 title: "Streamlit 주요 기능 완벽 정리 - 데이터 애플리케이션 개발 가이드"
 categories: ["Dev", "Streamlit"]
 permalink: "/python/streamlit개념/"
-tag: [python, streamlit, plotly, dashboard, data-visualization, web-app, interactive]
+tags: [python, streamlit, plotly, dashboard, data-visualization, web-app, interactive]
 toc: true
 author_profile: false
 sidebar:
@@ -505,7 +505,8 @@ import seaborn as sns
 
 # 한글 폰트 설정
 plt.rcParams['font.family'] = "AppleGothic"  # Mac
-# plt.rcParams['font.family'] = "NanumGothic"  # Windows, Linux
+# plt.rcParams['font.family'] = "Malgun Gothic"  # Windows 기본 한글 폰트
+# plt.rcParams['font.family'] = "NanumGothic"  # Linux 등 (나눔폰트 별도 설치 필요)
 plt.rcParams['axes.unicode_minus'] = False
 
 # DataFrame 생성
@@ -949,7 +950,7 @@ with st.expander('컬럼 설명'):
 ## 7️⃣ 캐싱 기능
 
 ```python
-@st.cache
+@st.cache_data  # @st.cache는 1.18부터 deprecated, 이후 제거됨
 def read_pensiondata():
     data = PensionData('https://www.dropbox.com/s/nxeo1tziv05ejz7/national-pension.csv?dl=1')
     return data
@@ -959,7 +960,7 @@ data = read_pensiondata()
 ```
 
 **특징:**
-- `@st.cache` 데코레이터를 사용하면 함수 결과를 캐싱함
+- `@st.cache_data` 데코레이터를 사용하면 함수 결과를 캐싱함 (구버전의 `@st.cache`는 제거됨)
 - 동일한 입력에 대해 함수를 다시 실행하지 않아 성능이 크게 향상됨
 - 데이터 로딩, API 호출 등 시간이 오래 걸리는 작업에 필수적임
 
@@ -1093,7 +1094,7 @@ def generate_lotto():
     lotto = set()
     
     while len(lotto) < 6:
-        number = random.randint(1, 46)
+        number = random.randint(1, 45)
         lotto.add(number)
     
     lotto = list(lotto)
@@ -1201,7 +1202,8 @@ if data and company_name:
 ```python
 # Matplotlib 한글 폰트 설정
 plt.rcParams['font.family'] = "AppleGothic"  # Mac
-# plt.rcParams['font.family'] = "NanumGothic"  # Windows, Linux
+# plt.rcParams['font.family'] = "Malgun Gothic"  # Windows 기본 한글 폰트
+# plt.rcParams['font.family'] = "NanumGothic"  # Linux 등 (나눔폰트 별도 설치 필요)
 plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 ```
 

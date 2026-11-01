@@ -3,7 +3,7 @@ layout: single
 title: "SHAP 분석 대시보드 - 머신러닝 모델 해석을 위한 인터랙티브 웹 애플리케이션"
 categories: ["Dev", "Streamlit"]
 permalink: "/python/Streamlit_SHAP/"
-tag: [python, streamlit, shap, xai, explainable-ai, machine-learning, data-visualization]
+tags: [python, streamlit, shap, xai, explainable-ai, machine-learning, data-visualization]
 toc: true
 author_profile: false
 sidebar:
@@ -90,7 +90,7 @@ sidebar:
 |------|---------------|---------|
 | **학습 방식** | 배깅 (Bagging) | 부스팅 (Boosting) |
 | **트리 생성** | 병렬 (동시에 학습) | 순차 (이전 오차 보완) |
-| **학습 속도** | 빠름 ⚡ | 매우 빠름 ⚡⚡ |
+| **학습 속도** | 빠름 ⚡ (데이터·설정에 따라 다름) | 빠름 ⚡ (히스토그램 방식 기준, 데이터·설정에 따라 다름) |
 | **예측 정확도** | 높음 📈 | 매우 높음 📈📈 |
 | **과적합 위험** | 낮음 (자연스럽게 방지) | 보통 (정규화로 제어) |
 | **튜닝 난이도** | 쉬움 😊 | 어려움 😰 |

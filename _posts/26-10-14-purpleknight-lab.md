@@ -98,7 +98,7 @@ Get-AuthenticodeSignature $pk | Select Status, @{n='Signer';e={$_.SignerCertific
 
 ![실행 진행](/assets/images/2026-10-14-purpleknight-lab/05-progress.png)
 
-전체 1분 11초가 걸렸다. 실행 계정은 도메인 관리자(adm-jmpark)였다. PingCastle은 일반 사용자 권한으로 실행했으니 두 도구의 실행 조건이 다르다. Purple Knight는 관리자 권한이 필요 없다고 안내하지만, 관리자 계정은 읽을 수 있는 정보가 더 많아 결과가 달라질 수 있다.
+전체 1분 11초가 걸렸다. 실행 계정은 도메인 관리자(`adm-<user>`)였다. PingCastle은 일반 사용자 권한으로 실행했으니 두 도구의 실행 조건이 다르다. Purple Knight는 관리자 권한이 필요 없다고 안내하지만, 관리자 계정은 읽을 수 있는 정보가 더 많아 결과가 달라질 수 있다.
 
 ![Summary 화면](/assets/images/2026-10-14-purpleknight-lab/06-summary.png)
 
@@ -138,6 +138,8 @@ XLSX에 지표별 상세 시트가 따로 있어서, 조치 담당·일정 열�
 | Hybrid | N/A |
 | **전체** | **64 (D)** |
 
+괄호 안 등급은 보고서에 표시된 값을 그대로 옮긴 것이다. 점수-등급 구간이 일반 학점 체계와 달라 보이므로 Purple Knight 자체 등급 척도로 읽어야 한다.
+
 전체 점수가 어느 카테고리 점수보다도 낮다. 보고서 부록 2(Scoring Method)에 계산 방식이 나와 있다.
 
 - 점수에는 실패한 IOE만 반영된다. 통과·미선택·실행 실패한 지표는 영향이 없다.
@@ -171,7 +173,7 @@ DCSync 권한처럼 도구가 Critical로 표시해도 실제로는 설계상 �
 | 지표 | 결과 | 판독 |
 | --- | --- | --- |
 | ADCS ESC5 - PKI object with vulnerable ACL | ISCA01 컴퓨터 계정이 자기 CA 등록 서비스 객체에 쓰기 권한 | 기본 구성인지 확인 필요 |
-| CertiGhost chase fallback enabled (CVE-2026-54121) | ISCA01 | CA 정책 모듈 EditFlags의 `EDITF_ENABLECHASECLIENTDC`가 켜져 있으면, 패치되지 않은 CA가 요청자가 지정한 호스트를 DC인지 확인하지 않고 신뢰하는 권한 상승 취약점(보고서 설명 기준). PingCastle에는 없는 지표 |
+| CertiGhost chase fallback enabled ([CVE-2026-54121](https://kudelskisecurity.com/research/certighost)) | ISCA01 | CA 정책 모듈 EditFlags의 `EDITF_ENABLECHASECLIENTDC`가 켜져 있으면, 패치되지 않은 CA가 요청자가 지정한 호스트를 DC인지 확인하지 않고 신뢰하는 권한 상승 취약점(보고서 설명 기준). PingCastle에는 없는 지표 |
 | Computer account password last set over 90 days ago | WIN10-CL01, AADC01 | 평소 꺼 두는 랩 VM |
 | DC supporting RC4 or DES | DC 2대 | 지원 암호화 유형에 RC4 포함 |
 | LDAP channel binding not required | DC01 미요구, DC02는 점검 연결 재설정 | DC02 결과는 판정 불가 상태 |
@@ -228,6 +230,8 @@ LAPS처럼 같은 사실을 두고 한쪽은 감점하고 한쪽은 점검 대�
 - 결과물은 HTML과 XLSX다. XLSX는 조치 관리표의 출발점으로 쓰기 좋다.
 
 다음 글에서는 BloodHound CE로 같은 도메인의 Tier 0 경로를 확인한다.
+
+> 참고: [BloodHound 편]({% post_url 26-10-14-bloodhound-lab %})에서는 azlab 수집이 Defender AMSI에 막혀, 같은 도메인 대신 공식 샘플 데이터로 경로 분석을 진행했다.
 
 ## 참고
 

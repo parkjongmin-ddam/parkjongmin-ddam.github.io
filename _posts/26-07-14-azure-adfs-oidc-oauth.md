@@ -22,7 +22,7 @@ tags: [entra-id, azure-ad, oidc, oauth2, pkce, rfc9700, confidential-client, mic
 - 테스트 클라이언트: Python 3.12 + Flask / requests, 자가서명 인증서 로컬 실행
 - 프로토콜: ① OAuth2 Client Credentials(S2S) → Microsoft Graph, ② OIDC Authorization Code + PKCE(S256)
 
-> 스크린샷은 `/assets/images/26-07-14-azure-adfs-oidc-oauth/` 아래에 두고 `![desc](img)` 형태로 삽입한다. 민감 값(테넌트 도메인·app id·secret·계정)은 본문에서 예시로 치환했다. **원본 스크린샷에는 실제 테넌트/계정 값이 노출되어 있으므로, 공개 배포 전 블러 처리가 필요하다.**
+> 민감 값(테넌트 도메인·app id·secret·계정)은 본문에서 예시로 치환했다.
 
 ---
 

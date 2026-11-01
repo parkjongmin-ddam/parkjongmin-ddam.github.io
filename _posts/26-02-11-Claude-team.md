@@ -45,6 +45,8 @@ export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 Claude에게 자연어로 팀 구성을 요청할 수 있음.
 > "I'm designing a CLI tool. Create an agent team to explore this from different angles: one on UX, one on technical architecture, one playing devil's advocate."
 
+> 2026-11 갱신: 현재 공식 문서에서는 팀이 세션 시작 시 자동으로 준비되고(세션당 팀 1개), "Spawn three teammates to explore this from different angles: ..."처럼 팀원 생성을 요청하면 됨. 별도의 팀 생성 단계는 안내하지 않음.
+
 ### 팀 구성 파일 및 아키텍처
 *   **팀 설정 파일**: `~/.claude/teams/{team-name}/config.json`
 *   **작업 목록 폴더**: `~/.claude/tasks/{team-name}/`
@@ -53,6 +55,8 @@ Claude에게 자연어로 팀 구성을 요청할 수 있음.
 *   **토큰 비용 증가**: 여러 에이전트가 병렬로 실행되므로 토큰 사용량이 급격히 증가할 수 있음. 복잡도가 높은 작업에만 신중하게 사용할 것.
 *   **역할 분담**: 각 에이전트에게 명확한 역할과 컨텍스트를 부여해야 충돌 없이 효율적으로 협업할 수 있음.
 *   **모니터링**: `broadcast` 기능(모두에게 메시지 보내기)은 비용이 많이 들므로 꼭 필요한 경우에만 사용하고, 주로 `message`로 특정 팀원과 소통하는 것이 좋음.
+
+> 2026-11 갱신: 현재 공식 문서에는 `broadcast` 기능 설명이 없음. 팀원 간 메시지는 이름을 지정해 한 명에게 보내고(SendMessage), 전원에게 알리려면 수신자마다 한 통씩 보내도록 안내함.
 
 ## 결론
 Claude Code Teams는 AI 에이전트를 단순한 '도구'에서 '동료'로 격상시키는 기능임. 복잡한 프로젝트나 다각도의 검토가 필요한 연구 작업에서 특히 강력한 성능을 발휘할 것으로 기대됨.

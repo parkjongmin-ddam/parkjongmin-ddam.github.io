@@ -129,7 +129,9 @@ attribute_statements {
 
 앞선 편에서 Sign On 탭의 EL 표현식으로 설정한 `email`, `firstName`, `lastName`, `amr` 네 개 클레임이 전혀 포함되지 않았다. legacy Group Attribute Statements로 만든 `groups` 항목만 남았다.
 
-이 결과는 앞서 API로 앱 객체를 조회했을 때 `settings.signOn.attributeStatements`에 legacy 항목만 있던 것과 일치한다. 신규 expression 방식 클레임은 별도 객체로 저장되며 `okta_app_saml` 스키마에 대응 인수가 없다.
+이 결과는 앞서 API로 앱 객체를 조회했을 때 `settings.signOn.attributeStatements`에 legacy 항목만 있던 것과 일치한다. Sign On 탭의 신규 claims 관리 기능으로 만든 클레임은 별도 객체로 저장되며 `okta_app_saml` 스키마에 대응 인수가 없다.
+
+참고: 코드화되지 않는 범위는 expression 클레임 일반이 아니라 신규 claims UI로 만든 항목이다. Okta 문서는 기존 Attribute Statements·Group Attribute Statements를 legacy configuration으로 분류한다. legacy 쪽(`settings.signOn.attributeStatements`)에 들어가는 항목은 위 블록처럼 `attribute_statements`의 `type`·`values` 인수로 표현되는 구조이며, expression 기반 항목도 legacy 구성으로 만들면 이 블록에 대응된다.
 
 실무 관점에서 문제가 되는 지점이다.
 
@@ -352,7 +354,7 @@ state 파일은 리소스 ID를 담고 있으며 잃으면 import로 다시 붙�
 이번 작업에서 문서만으로는 예측되지 않았던 지점은 다음과 같다.
 
 1. 자격증명 검증이 `plan`이 아니라 `apply`에서 일어난다. 신규 생성만 있는 계획은 토큰 없이 통과한다
-2. Sign On 탭의 EL 표현식 클레임은 `okta_app_saml`로 코드화되지 않는다. IaC 재현 시 누락된다
+2. Sign On 탭의 신규 claims 기능으로 만든 EL 표현식 클레임은 `okta_app_saml`로 코드화되지 않는다. IaC 재현 시 누락된다(legacy Attribute Statements 항목은 `attribute_statements`로 표현됨)
 3. 자동 생성 코드에 `preconfigured_app`이 자기 앱 이름으로 들어가며, 다른 org에서 재사용하면 생성이 거부된다
 4. 콘솔의 Priority 표시와 API의 priority 값이 다르다
 5. 인증 요구 조건이 이스케이프된 JSON 문자열로 표현되어 HCL 수준의 검증을 받지 못한다

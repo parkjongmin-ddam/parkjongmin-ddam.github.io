@@ -11,7 +11,7 @@ tags: [ADFS, OIDC, Kubernetes, kubeadm, RBAC, kubelogin, cert-manager, PKI]
 
 ## 환경
 
-- Hyper-V VM: Ubuntu 24.04 LTS, kubeadm 기반 싱글노드 클러스터
+- Hyper-V VM: Ubuntu 24.04 LTS, kubeadm 기반 싱글노드 클러스터 (7장에서 2노드로 확장)
 - ADFS: 기존 azlab 홈랩의 2노드 팜 (`sts.azlab.istn.co.kr`, PKI는 자체 ISCA01 발급)
 - 클라이언트: Windows PowerShell + kubectl + krew + kubelogin(`oidc-login` 플러그인)
 
@@ -88,15 +88,17 @@ ADFS 인증서가 자체 PKI(ISCA01)로 발급된 것이라 API 서버가 기본
 
 ```bash
 echo | openssl s_client -connect sts.azlab.istn.co.kr:443 -showcerts 2>/dev/null | \
-  sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' > /etc/kubernetes/pki/adfs-ca.pem
+  sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' | sudo tee /etc/kubernetes/pki/adfs-ca.pem >/dev/null
 ```
+
+> 참고: `/etc/kubernetes/pki`는 root 소유라 일반 사용자 셸에서는 `>` 리다이렉트가 실패하므로 `sudo tee`로 쓴다. `-showcerts` 체인에는 leaf(sts)도 포함되므로, `--oidc-ca-file`에는 ROOTCA(또는 ISCA01) 인증서만 넣는 것이 정석이다.
 
 ## 4. kubelogin(kubectl oidc-login) 설정
 
 Windows에 krew, kubelogin 플러그인을 설치하고 kubeconfig에 OIDC exec credential을 등록했다.
 
 ```powershell
-kubectl config set-credentials jongmin-oidc `
+kubectl config set-credentials <user>-oidc `
   --exec-api-version=client.authentication.k8s.io/v1beta1 `
   --exec-command=kubectl `
   --exec-arg=oidc-login `
@@ -115,7 +117,7 @@ kubectl config set-credentials jongmin-oidc `
 인증 자체는 성공했다. 로그인하면 `Authenticated` 화면이 뜨고, API 서버도 사용자를 정상적으로 식별했다.
 
 ```
-Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.co.kr/adfs#jongmin.park@azlab.istn.co.kr" cannot list resource "pods"
+Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.co.kr/adfs#<user>@azlab.istn.co.kr" cannot list resource "pods"
 ```
 
 문제는 발급된 ID Token의 payload에 `group` 필드 자체가 없었다는 것이다.
@@ -125,8 +127,8 @@ Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.c
   "aud": "f7e390fb-...",
   "iss": "https://sts.azlab.istn.co.kr/adfs",
   "sub": "...",
-  "upn": "jongmin.park@azlab.istn.co.kr",
-  "unique_name": "AZLAB\\jongmin.park"
+  "upn": "<user>@azlab.istn.co.kr",
+  "unique_name": "AZLAB\\<user>"
 }
 ```
 
@@ -172,7 +174,7 @@ kubelogin에 `resource` 파라미터를 강제로 추가했다.
 {
   "aud": "f7e390fb-...",
   "iss": "https://sts.azlab.istn.co.kr/adfs",
-  "upn": "jongmin.park",
+  "upn": "<user>",
   "group": ["Domain Users", "k8s-admins"],
   "appid": "f7e390fb-...",
   "apptype": "Public",
@@ -302,7 +304,18 @@ certutil -verifystore -GroupPolicy CA
 certutil -verifystore -GroupPolicy Root
 ```
 
-`GroupPolicy Root` 저장소가 완전히 비어 있었다. 로컬 저장소에 보이던 `azlab-ISCA01-CA`, `azlab-ROOTCA-CA`는 GPO가 아니라 다른 경로(도메인 조인 시 초기 배포 등)로 들어가 있던 것이었고, 실제 TLS 체인 검증에 쓰이는 GPO 관리 저장소 기준으로는 `k8s-issuing-ca`보다 상위 체인이 전혀 등록되어 있지 않았다. 즉 GPO가 재적용될 때마다 "GPO가 관리하지 않는" 상위 인증서가 함께 정리되는 것으로 보였다.
+`GroupPolicy Root` 저장소가 완전히 비어 있었다. 로컬 저장소에 보이던 `azlab-ISCA01-CA`, `azlab-ROOTCA-CA`는 GPO가 아니라 다른 경로(도메인 조인 시 초기 배포 등)로 들어가 있던 것이었다.
+
+당시에는 이를 "GPO 관리 저장소 기준으로 상위 체인이 없어서 실패했고, GPO 재적용 때 GPO가 관리하지 않는 상위 인증서가 정리된다"고 해석했지만, Windows 동작과는 맞지 않는 해석이었다. 신뢰 루트(`LocalMachine\Root`)는 Registry(.Default)·GroupPolicy·Enterprise 등 여러 물리 저장소를 합친 논리 저장소라, GPO 저장소가 비어 있다는 사실만으로 체인 검증이 실패하지는 않는다. 또 GPO는 자신이 배포하지 않은 로컬 Root 인증서를 지우지 않는다.
+
+앞에서 확인한 `Cert:\LocalMachine\CA`는 중간 CA 저장소이고, 문제의 핵심인 ROOTCA가 `LocalMachine\Root`(신뢰 루트)에 있었는지는 이때 확인하지 않았다. CAServer 글에서 루트 인증서를 AD에 게시(`certutil -dspublish ... RootCA`)하지 않았으므로, 클라이언트 신뢰 루트에 ROOTCA가 없었고 아래 GPO 배포로 처음 들어가면서 해결됐을 가능성이 크다. 같은 상황이 재현되면 GPO 적용 전에 다음으로 확인할 수 있다.
+
+```powershell
+certutil -verifystore Root                # 논리 Root 저장소(전체 물리 저장소 합산)에 ROOTCA가 있는지
+certutil -enterprise -verifystore Root    # AD에서 내려받는 Enterprise Root 저장소
+Get-ChildItem Cert:\LocalMachine\Root | Where-Object Subject -like "*ROOTCA*"
+certutil -verify -urlfetch C:\temp\leaf.cer   # 체인이 어느 단계에서 끊기는지
+```
 
 해결은 ROOTCA, ISCA01, k8s-issuing-ca 세 인증서 전부를 하나의 GPO에 명시적으로 등록하는 것이었다.
 
@@ -393,10 +406,10 @@ kubectl get pods -A       → Forbidden
 | TLS 인증서 거부 (API 서버) | 자체 PKI 인증서 미신뢰 | `--oidc-ca-file`로 CA 체인 지정 |
 | group 클레임 누락 | `resource` 파라미터 미지정 → 기본 폴백 리소스로 발급 | `--oidc-auth-request-extra-params=resource=<Web API Identifier>` 명시 |
 | etcd/apiserver 재시작 실패 | DHCP IP 변경으로 매니페스트의 정적 바인딩 주소와 불일치 | 클러스터 노드 고정 IP로 전환 |
-| Ingress TLS 브라우저 경고 | GPO가 관리하지 않는 상위 CA가 gpupdate 시 정리됨 | ROOTCA·중간 CA·발급 CA 전체를 하나의 GPO에 명시적으로 등록 |
+| Ingress TLS 브라우저 경고 | 클라이언트 신뢰 루트에 ROOTCA가 없었을 가능성(추정, 미확인) | ROOTCA·중간 CA·발급 CA 전체를 하나의 GPO에 명시적으로 등록 |
 
 가장 시간이 오래 걸린 부분은 두 군데였다. 하나는 `resource` 파라미터 문제로, `response_mode`까지 확인해봐도 안 됐던 이유가 Application Group에서 설정한 건 클라이언트-리소스 권한 관계였을 뿐 실제 인증 요청에 그 리소스를 지목하는 `resource` 파라미터가 빠져 있었기 때문이다. Postman으로 사내 ADFS 연동을 테스트해본 경험상 `resource`는 항상 명시해야 하는 파라미터였는데, 이번 kubelogin 연동에서는 그 파라미터가 기본값으로 빠져 있다는 걸 놓치고 있었다. ADFS Trace 로그로 실제 발급 대상 리소스를 직접 확인하고 나서야 원인이 명확해졌다.
 
-다른 하나는 cert-manager 신뢰 체인 문제로, 로컬 인증서 저장소에 상위 CA가 보이는 것과 GPO가 실제로 관리하는 저장소는 별개라는 점을 놓치고 있었다. `certutil -verifystore -GroupPolicy`로 GPO 관리 저장소를 직접 들여다보고 나서야 상위 체인이 통째로 비어 있다는 걸 확인할 수 있었다.
+다른 하나는 cert-manager 신뢰 체인 문제로, 로컬 인증서 저장소에 상위 CA가 보이는 것과 그 인증서가 신뢰 루트(Root)에 들어 있는 것은 별개라는 점을 놓치고 있었다. `certutil -verifystore -GroupPolicy`로 GPO 관리 저장소가 비어 있는 것을 확인했고, GPO로 ROOTCA를 신뢰 루트에 배포한 뒤 해결됐다.
 
 두 사례 모두 공통적으로, 겉으로 보이는 설정(클레임 매핑 규칙, 로컬 인증서 존재 여부)보다 먼저 **실제로 서버가 무엇을 대상으로 처리하고 있는지, 어느 저장소를 기준으로 검증하는지**부터 확인하는 게 우선이라는 걸 이번에 다시 확인했다.

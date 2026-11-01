@@ -3,7 +3,7 @@ layout: single
 title: "Generative AI 10기 팀 프로젝트 3일차 - Plotly를 활용한 시각화"
 categories: ["Project", "주식 대시보드(팀)"]
 permalink: "/python/teamproject-3day/"
-tag: [python, plotly, visualization, stock-analysis]
+tags: [python, plotly, visualization, stock-analysis]
 toc: true
 author_profile: false
 sidebar:
@@ -96,7 +96,7 @@ fig.add_trace(go.Candlestick(
 fig.add_trace(go.Bar(
     x=df.index, 
     y=df['Volume'],
-    marker_color=colors,
+    marker_color=colors,  # colors: 2일차 글에서 만든 상승/하락 색상 리스트
     name='Volume',
     opacity=0.8
 ), row=2, col=1)

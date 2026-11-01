@@ -25,17 +25,21 @@ sidebar:
 5. **네트워크 설정**에서 SSH 포트(22번)가 열려 있는 보안 그룹을 설정합니다.
 6. **인스턴스를 시작**하고, 접속을 위해 `.pem` 키 파일을 안전하게 저장합니다.
 
+> 2026-11 갱신: Amazon Linux 2는 2026-06-30에 지원이 종료되었습니다. 새로 구성할 때는 Amazon Linux 2023 AMI를 선택합니다.
+
 ---
 
 ## 2️⃣ IAM 계정 생성 및 Access Key 발급
 
 1. **AWS Management Console**에서 **IAM 서비스**로 이동합니다.
 2. **사용자 메뉴**에서 **"사용자 추가"**를 클릭합니다.
-3. 사용자 이름을 입력하고, **프로그래밍 방식 액세스**를 선택합니다.
+3. 사용자 이름을 입력합니다. (현재 IAM 콘솔의 사용자 생성 화면에는 "프로그래밍 방식 액세스" 선택 항목이 없습니다.)
 4. 적절한 권한 정책(예: `AdministratorAccess`)을 연결합니다.
-5. 사용자 생성 후 **Access Key ID**와 **Secret Access Key**를 다운로드하거나 기록합니다.
+5. 사용자 생성 후 사용자 상세 화면의 **보안 자격 증명** 탭 → **액세스 키 만들기**에서 **Access Key ID**와 **Secret Access Key**를 발급하고 .csv로 다운로드하거나 기록합니다.
 
 > **⚠️ 주의:** 이 키는 한 번만 표시되므로 안전하게 저장하세요.
+
+> 참고: 관리자 권한 장기 액세스 키를 EC2 안에 `aws configure`로 저장하는 방식은 실습용 구성입니다. 운영 환경에서는 액세스 키 대신 EC2에 IAM 역할(인스턴스 프로파일)을 연결하고 필요한 권한만 부여하는 방식이 AWS 권장 사항입니다.
 
 ---
 
@@ -46,6 +50,7 @@ sidebar:
 1. AWS EC2 인스턴스에 SSH로 접속합니다 (MobaXterm 사용).
    ```bash
    ssh -i <your-key.pem> ec2-user@<EC2-Public-IP>
+   ```
 
 2. zsh 및 관련 유틸리티 설치
     ```
@@ -63,7 +68,7 @@ sidebar:
 
 1. oh-my-zsh 설치 스크립트 실행
     ```
-    curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     ```
 
 2. oh-my-zsh 테마 설정
@@ -139,18 +144,31 @@ sidebar:
 2. 예시 main.tf 파일
     ```
     provider "aws" {
-    region = "ap-northeast-2"
-}
+      region = "ap-northeast-2"
+    }
+
+    # 서울 리전의 최신 Amazon Linux 2023 AMI 조회
+    data "aws_ami" "al2023" {
+      most_recent = true
+      owners      = ["amazon"]
+
+      filter {
+        name   = "name"
+        values = ["al2023-ami-2023.*-x86_64"]
+      }
+    }
 
     resource "aws_instance" "example" {
-    ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI
-    instance_type = "t2.micro"
+      ami           = data.aws_ami.al2023.id
+      instance_type = "t2.micro"
 
-    tags = {
-    Name = "Terraform-Example"
-    } 
-}
+      tags = {
+        Name = "Terraform-Example"
+      }
+    }
     ```
+
+    > 참고: 처음 작성한 예시는 `ami = "ami-0c55b159cbfafe1f0"`였습니다. AMI ID는 리전마다 다르고 이 ID는 서울 리전 이미지가 아니어서 ap-northeast-2에서는 `InvalidAMIID.NotFound`로 실패하므로 `data "aws_ami"` 조회 방식으로 바꿨습니다.
 
 ### 6.2 Terraform 초기화 및 적용
 

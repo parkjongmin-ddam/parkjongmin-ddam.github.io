@@ -16,7 +16,7 @@ ADFS 환경에서는 계정이 이미 AD에 있어 이 층이 필요 없었다. 
 
 OIN 앱(Slack 등)에 붙이면 Okta가 무엇을 보내는지 보이지 않는다. SCIM 서버를 직접 만들어 Okta를 클라이언트로 붙이면 요청 전부를 로그로 볼 수 있다.
 
-학습 로드맵은 베스핀글로벌 Okta 가이드의 앱 연동·프로비저닝 항목을 참고했고, 본문은 전부 자체 org 실측이다. 이 글은 프로토콜 관찰(요청 형태)이고, 장애·퇴사·복직 체인은 [2편]({% post_url 26-09-22-okta-scim-provisioning-2 %})에서 다룬다.
+학습 로드맵은 베스핀글로벌 Okta 가이드의 앱 연동·프로비저닝 항목을 참고했고, 본문은 전부 자체 org 실측이다. 이 글은 프로토콜 관찰(요청 형태)이고, 장애·퇴사·복직 체인은 [2편]({% post_url 26-09-22-okta-scim-provisioning-2 %})에서 다룬다. [랩 6]({% post_url 26-09-17-okta-SCIM %})의 실측을 주제별로 재정리하고 Import(To Okta)·Push now 관찰을 더한 글이다.
 
 ## 2. 구성
 
@@ -216,7 +216,7 @@ GET /scim/v2/Groups?startIndex=1&count=100
 | Import | GET /Users + GET /Groups (100건 페이지) | 링크만, 앱 호출 없음 |
 | Push now | 그룹 GET/PUT×2 | 전체 재동기화 |
 
-- Okta는 서버 capability를 읽지 않고, 수정은 전부 read-modify-write PUT이다
+- Okta는 서버 capability를 읽지 않고, 수정은 전부 read-modify-write PUT이다(AIW로 만든 커스텀 앱 기준. Okta KB상 OIN 앱은 활성/비활성·그룹 갱신에 PATCH를 쓴다)
 - 할당·해제·Import·Push는 서로 다른 경로이고 그룹 동기화가 따라오는 조건이 제각각이다. "앱 쪽 상태가 왜 이런가"는 어느 경로로 만들어졌는지를 먼저 봐야 한다
 - SCIM 서버 구현 쪽 교훈: writeOnly 속성을 응답에 내보내면 IdP의 read-modify-write 경로로 그 값이 왕복한다
 

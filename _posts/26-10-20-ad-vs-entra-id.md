@@ -61,7 +61,7 @@ Entra ID는 다른 전제에서 출발했다.
 | 구분 | Active Directory | Entra ID |
 |---|---|---|
 | 주 인증 프로토콜 | Kerberos | OAuth 2.0, OpenID Connect |
-| 보조·레거시 | NTLM | SAML 2.0, WS-Federation |
+| 그 밖의 연동 프로토콜 | NTLM(레거시) | SAML 2.0, WS-Federation(레거시) |
 | 디렉터리 조회 | LDAP | Microsoft Graph API (HTTPS REST) |
 | 전송 | 사내망의 Kerberos(88), LDAP(389/636), SMB 등 | HTTPS(443) |
 | 인증 결과물 | Kerberos 티켓(TGT, 서비스 티켓) | 토큰(ID Token, Access Token, SAML Assertion) |
@@ -188,7 +188,7 @@ Intune 규정 준수 기기로 사내에서 접속한 사용자는 추가 프롬
 
 ### 라이선스와 운영 시 주의사항
 
-- 조건부 액세스에는 Entra ID P1(또는 이를 포함한 Microsoft 365 Business Premium, E3/E5 등)이 필요하다. 로그인 위험·사용자 위험 조건은 Entra ID Protection 기능이라 P2가 필요하다.
+- 조건부 액세스에는 Entra ID P1(또는 이를 포함한 Microsoft 365 Business Premium, Microsoft 365 E3/E5 등. Office 365 E3는 Entra ID Free라 미포함)이 필요하다. 로그인 위험·사용자 위험 조건은 Entra ID Protection 기능이라 P2가 필요하다.
 - 새 정책은 보고 전용(report-only) 모드로 먼저 켜고, 로그인 로그에서 어떤 요청이 영향을 받는지 확인한 뒤 적용한다.
 - 비상 접근 계정(break glass)은 정책에서 제외한다. 정책을 잘못 만들어 관리자 전원이 잠기는 상황을 대비하기 위해서다. 구성 과정은 [비상 접근 계정 구성]({% post_url 26-10-08-sandbox-break %})에 정리했다.
 - 라이선스가 만료돼도 기존 정책은 삭제·비활성화되지 않는다. 조회와 삭제만 가능하고 수정은 할 수 없다.

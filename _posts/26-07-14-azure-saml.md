@@ -19,7 +19,7 @@ SAML은 앞의 두 프로토콜과 결이 완전히 다르다. JSON/JWT가 아�
 - SP: Python 3.12 + Flask + `python3-saml`(OneLogin), `https://localhost:7000`
 - 대상 사용자: 테넌트에 동기화된 계정
 
-> 스크린샷은 `/assets/images/26-07-14-azure-saml/` 아래에 두고 `![desc](img)` 형태로 삽입한다. 민감 값(테넌트 ID·도메인·app id·object id·계정 UPN)은 본문에서 예시로 치환했다. **원본 스크린샷에는 실제 테넌트/계정 값이 노출되어 있으므로, 공개 배포 전 블러 처리가 필요하다.**
+> 민감 값(테넌트 ID·도메인·app id·object id·계정 UPN)은 본문에서 예시로 치환했다.
 
 ---
 

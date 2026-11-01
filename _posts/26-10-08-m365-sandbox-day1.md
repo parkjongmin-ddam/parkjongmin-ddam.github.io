@@ -71,7 +71,8 @@ InteractiveBrowserCredential authentication failed: A window handle must be conf
 
 - Graph SDK 2.x는 Windows에서 기본적으로 WAM(Web Account Manager)으로 로그인 창을 띄운다.
 - PowerShell ISE나 관리자 콘솔처럼 부모 창 핸들을 넘기지 못하는 환경에서 이 오류가 발생한다.
-- `Set-MgGraphOption -DisableLoginByWAM $true`를 실행했지만, 같은 세션에서는 반영되지 않았다.
+- `Set-MgGraphOption -DisableLoginByWAM $true`를 실행했지만 반영되지 않았다.
+- 참고: 공식 문서상 이 옵션은 커스텀 ClientId를 쓸 때만 적용되고, 기본 ClientId에서는 설정과 관계없이 WAM이 유지된다. 세션 문제가 아니라 기본 ClientId로 접속해 설정이 적용되지 않은 것으로 보인다.
 
 ### 3-2. 디바이스 코드 로그인 후 접근 거부
 
@@ -87,7 +88,7 @@ InteractiveBrowserCredential authentication failed: A window handle must be conf
 
 ![AADSTS50197](/assets/images/2026-10-08-m365-sandbox-day1/07-aadsts50197.png)
 
-- `AADSTS50197`은 지정한 테넌트에서 사용자를 찾지 못했다는 오류다.
+- `AADSTS50197`은 공식 명칭이 `ConflictingIdentities`인 오류로, 계정 충돌로 사용자를 찾지 못했다는 의미다.
 - 로그인 창에 주소창이 없는 것으로 보아 여전히 내장 로그인 창이 사용됐다.
 - 이 PC에 연결된 회사 계정이 자동으로 선택되면서, 샌드박스 테넌트에서 사용자를 찾지 못한 것으로 판단했다.
 

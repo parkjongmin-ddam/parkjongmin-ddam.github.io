@@ -11,13 +11,12 @@ tags:
   
 
 ---
----
 
 ## Step 1. LCEL이 존재하는 이유 — 내부 동작 원리부터
 
 ### 1-1. LangChain의 버전 변화
 
-LangChain은 `v0.1.0` 이후 대규모 리팩토링을 거치면서 **LCEL(LangChain Expression Language)** 을 공식 표준 문법으로 채택함. 이전 방식인 `LLMChain`, `SequentialChain` 같은 레거시 클래스들은 점차 deprecated 방향으로 가고 있고, 현재는 LCEL 방식이 공식 권장 방식임.
+LangChain은 2023년 8월(0.0.2xx 시기) **LCEL(LangChain Expression Language)** 을 도입했고, `v0.1.0`(2024년 1월) 전후의 대규모 리팩토링을 거치면서 공식 표준 문법으로 자리잡음. 이전 방식인 `LLMChain`, `SequentialChain` 같은 레거시 클래스들은 점차 deprecated 방향으로 가고 있고, 현재는 LCEL 방식이 공식 권장 방식임.
 
 ### 1-2. 기존 방식의 문제점
 
@@ -73,7 +72,7 @@ LCEL로 체인을 한 번만 정의해두면 `invoke` / `stream` / `ainvoke` / `
 ![LCEL 파이프 연산자 내부 동작](/assets/images/26-03-17/lcel_pipe_internal.png)
 
 `|` 연산자는 파이썬의 `__or__` 메서드를 오버로딩한 것임.  
-`prompt | model`을 작성하는 순간 내부에서 `RunnableSequence(steps=[prompt, model])`이 생성됨.
+`prompt | model`을 작성하는 순간 내부에서 `RunnableSequence(prompt, model)`이 생성됨.
 
 ```python
 # 이 두 코드는 완전히 동일함
@@ -88,7 +87,7 @@ chain = RunnableSequence(first=prompt, middle=[model], last=parser)
 ```python
 chain = prompt | model | output_parser
 # 내부적으로
-# RunnableSequence(steps=[prompt, model, output_parser])
+# RunnableSequence(prompt, model, output_parser)
 ```
 
 ---
@@ -154,7 +153,7 @@ os.environ["OPENAI_API_KEY"] = "sk-..."
 ### 3-2. PromptTemplate 심화
 
 ```python
-from langchain.prompts import PromptTemplate, ChatPromptTemplate
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage
 
 # 방법 1. from_template() - 가장 간단
@@ -219,7 +218,7 @@ print(result)         # "대한민국의 수도는 서울입니다."
 
 # JsonOutputParser: 모델이 JSON으로 응답하도록 유도
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 # 응답 스키마 정의
 class CountryInfo(BaseModel):
@@ -269,7 +268,7 @@ print(result)  # {"key": "value"} - 그대로 통과
 import os
 from dotenv import load_dotenv
 from langchain_core.runnables import RunnablePassthrough
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 
@@ -350,7 +349,7 @@ result = rag_chain.invoke({"question": "서울의 인구는?"})
 
 ```python
 from langchain_core.runnables import RunnableParallel
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 
@@ -396,7 +395,7 @@ print(result)
 
 ```python
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 
@@ -504,7 +503,7 @@ print(runnable.invoke("hello"))  # "HELLO"
 ```python
 from langchain_core.runnables import RunnableLambda, RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 
 model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
@@ -626,7 +625,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_core.runnables import RunnablePassthrough
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
@@ -840,7 +839,7 @@ print(result.keys())
 
 ```python
 from langchain_core.runnables import RunnablePassthrough
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 
 # 대화 히스토리를 포함하는 프롬프트
@@ -889,10 +888,10 @@ from langchain_core.runnables import (
     RunnablePassthrough,
     RunnableLambda
 )
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 model = ChatOpenAI(model="gpt-4o", temperature=0)
 str_parser = StrOutputParser()
@@ -1009,7 +1008,7 @@ print(result)
 | 상황 | 쓸 것 | 코드 패턴 |
 |---|---|---|
 | 문자열 입력을 딕셔너리 키로 넣고 싶을 때 | `RunnablePassthrough` | `{"key": RunnablePassthrough()} \| prompt` |
-| 입력 딕셔너리에 검색 결과를 추가할 때 (RAG) | `.assign()` | `RunnablePassthrough.assign(context=retriever)` |
+| 입력 딕셔너리에 검색 결과를 추가할 때 (RAG) | `.assign()` | `RunnablePassthrough.assign(context=itemgetter("question") \| retriever)` |
 | 수도·인구·면적을 한 번에 물어볼 때 | `RunnableParallel` | `{"a": chain1, "b": chain2}` |
 | 두 결과를 하나의 문자열로 합칠 때 | `RunnableLambda` | `RunnableLambda(merge_fn)` |
 | 중간 결과를 콘솔에 찍어 디버깅할 때 | `RunnableLambda` | 체인 중간에 `debug` 함수 삽입 |

@@ -15,7 +15,7 @@ tags: [LangChain, RAG, AI에이전트, LLM, 벡터DB, Python]
 
 | 다이어그램 | 설명 |
 |---|---|
-| [① AI 에이전트 전체 구조](#1부-ai-에이전트란-무엇인가) | LLM + 툴 + 미들웨어 + 메모리의 관계 |
+| [① AI 에이전트 전체 구조](#step-1-ai-에이전트란-무엇인가) | LLM + 툴 + 미들웨어 + 메모리의 관계 |
 | [② 메시지 흐름](#3-2-에이전트-내부-동작-완전-분석) | "서울 날씨 어때요?" 처리 과정 |
 | [③ 미들웨어 레이어](#4-3-미들웨어-작성-방법-두-가지) | @before_agent → LLM → @after_agent |
 | [④ RAG 파이프라인](#5-2-rag-시스템-구축-4단계) | Load → Split → Embed → Store → Generate |
@@ -46,12 +46,12 @@ tags: [LangChain, RAG, AI에이전트, LLM, 벡터DB, Python]
 
 **한계 1: 학습 시점이 고정되어 있음**
 
-LLM은 특정 날짜까지의 데이터만 학습함. GPT-5 Nano의 경우 2025년 8월 7일까지의 데이터만 알고 있음. 마치 2025년 8월에 폐간된 백과사전처럼, 그 이후 일어난 일은 전혀 모름.
+LLM은 특정 날짜까지의 데이터만 학습함. GPT-5 Nano의 경우 2024년 5월 31일까지의 데이터만 알고 있음(OpenAI 모델 문서의 knowledge cutoff 기준. GPT-5는 2024년 9월 30일). 마치 2024년 5월에 폐간된 백과사전처럼, 그 이후 일어난 일은 전혀 모름.
 
 ```
 [비유] 
-LLM = 2025년 8월에 인쇄된 백과사전
-→ 2025년 9월 이후 뉴스? 모름
+LLM = 2024년 5월에 인쇄된 백과사전
+→ 2024년 6월 이후 뉴스? 모름
 → 오늘 날씨? 모름
 → 어제 주가? 모름
 ```
@@ -70,7 +70,7 @@ LLM = 공공 도서관의 책만 읽은 직원
 
 **한계 3: 한 번에 처리할 수 있는 정보량에 한계가 있음**
 
-GPT-5는 한 번에 약 128,000 토큰(대략 책 1권 분량)만 입력받을 수 있음. 회사 전체 문서를 한꺼번에 넣는 것은 불가능함.
+GPT-5는 API 기준 컨텍스트 윈도우가 400,000 토큰(최대 출력 128,000 토큰 포함)임. 이보다 많은 양은 한 번에 넣을 수 없음. 회사 전체 문서를 한꺼번에 넣는 것은 불가능함.
 
 ---
 
@@ -85,7 +85,7 @@ GPT-5는 한 번에 약 128,000 토큰(대략 책 1권 분량)만 입력받을 �
 ```
 [비유]
 기존 LLM = 모든 것을 머릿속에서만 해결하는 직원
-                → 2025년 8월 이후는 모름
+                → 2024년 5월 이후는 모름
 
 AI 에이전트 = 인터넷 검색도 하고, DB도 조회하고, 
               계산기도 쓰는 스마트한 직원
@@ -193,6 +193,8 @@ model = init_chat_model(
     "gpt-5-nano",
     
     # temperature: 답변의 창의성 조절 (0.0 ~ 1.0)
+    # 주의: gpt-5 계열(reasoning 모델)은 API에서 기본값 1 외의 temperature를 거부함.
+    # temperature 조절 예시는 gpt-4o 같은 비-reasoning 모델 기준임
     temperature=0.7,
     # 0에 가까울수록: "오늘 날씨" → 항상 비슷한 답변 (안정적)
     # 1에 가까울수록: "시 한 편 써줘" → 매번 다른 답변 (창의적)
@@ -332,7 +334,7 @@ AIMessage = 직원(AI)의 답변
 **실제 코드로 대화 맥락 유지하기**
 
 ```python
-from langchain.schema import SystemMessage, HumanMessage, AIMessage
+from langchain.messages import SystemMessage, HumanMessage, AIMessage
 
 messages = [
     SystemMessage("당신은 친절한 AI 비서입니다. 사용자 이름을 기억하세요."),
@@ -472,7 +474,8 @@ json_schema = {
 ```
 [왜 영어만 가능한가?]
 LangChain이 이 스키마를 OpenAI API에 직접 전달함.
-OpenAI 서버에서 키 이름을 영어/숫자/언더스코어/_/대시-만 허용함.
+스키마의 title은 함수(툴) 이름으로 쓰이는데, OpenAI는 이 이름에 영어/숫자/언더스코어(_)/대시(-)만 허용함.
+속성 키도 영어로 쓰는 것이 안전함.
 Pydantic 방식은 LangChain이 내부에서 변환해주므로 한글 설명(description)은 가능함.
 ```
 
@@ -509,15 +512,15 @@ os.environ["OPENAI_API_KEY"] = "sk-..."
 
 # 2단계: 그 다음에 모듈 임포트
 from langchain.chat_models import init_chat_model
-# ← 이 줄에서 LangChain이 환경 변수를 읽어서 LangSmith 연결 설정
-# 만약 환경 변수가 나중에 설정되면 연결이 안 됨!
+# ← 실제로는 import 시점이 아니라 처음 호출(invoke)할 때 환경 변수를 읽음
+# 이때 읽은 값이 캐시될 수 있어, 그 뒤에 바꾼 값은 반영이 안 될 수 있음
 ```
 
 ```
 [왜 순서가 중요한가?]
 식당에 입장할 때 예약 번호를 줘야 테이블을 배정받는 것처럼,
-LangChain 모듈은 임포트되는 순간 "LangSmith에 연결할까?"를 결정함.
-이미 모듈이 임포트된 후에 API 키를 넣어봤자 무시됨.
+LangSmith SDK는 환경 변수를 처음 읽은 값을 캐시하는 경우가 있음.
+이미 한 번 실행된 세션에서 API 키를 나중에 넣으면 반영이 안 될 수 있음.
 
 그래서 코랩에서 LangSmith 설정을 추가하려면:
 1. 상단 메뉴 → 런타임 → 세션 종료
@@ -972,8 +975,7 @@ agent = create_agent(
         HumanInTheLoopMiddleware(
             interrupt_on={
                 "read_email": False,
-                "send_email": True,
-                "allow_decisions": ["approve", "edit", "reject"]
+                "send_email": {"allowed_decisions": ["approve", "edit", "reject"]},
             }
         )
     ]
@@ -998,18 +1000,17 @@ PII(Personally Identifiable Information) 예시:
 
 ```python
 from langchain.agents.middleware import PIIMiddleware
-import re
 
 agent = create_agent(
     model,
     tools=[save_feedback],
     middleware=[
-        PIIMiddleware(types=["email"], strategy="redact", apply_to_input=True),
-        PIIMiddleware(types=["credit_card"], strategy="mask", apply_to_input=True),
-        # 커스텀: 한국 전화번호
+        PIIMiddleware("email", strategy="redact", apply_to_input=True),
+        PIIMiddleware("credit_card", strategy="mask", apply_to_input=True),
+        # 커스텀: 한국 전화번호 (detector는 정규식 문자열 또는 함수)
         PIIMiddleware(
-            types=["korean_phone"],
-            detector=re.compile(r"010-\d{3,4}-\d{4}"),
+            "korean_phone",
+            detector=r"010-\d{3,4}-\d{4}",
             strategy="mask",
             apply_to_input=True
         ),
@@ -1049,7 +1050,7 @@ LLM의 컨텍스트 윈도우 = AI의 "현재 작업 공간"
 
 이 "책상 위 자료 배치 최적화"가 바로 컨텍스트 엔지니어링임.
 
-GPT-5의 컨텍스트 윈도우 = 128,000 토큰
+GPT-5의 컨텍스트 윈도우 = 400,000 토큰 (API 기준, 최대 출력 128,000 토큰 포함)
 = A4 용지 약 250장 분량
 = 책 1권 정도
 
@@ -1196,7 +1197,7 @@ POV (Proof of Value, 가치 증명)
 
 ```python
 from langchain.agents.middleware import before_agent
-from langchain.schema import AIMessage, HumanMessage
+from langchain.messages import AIMessage, HumanMessage
 
 FORBIDDEN = {
     "cheating": ["정답 알려줘", "대신 써줘", "베껴줘", "답지"],
@@ -1210,7 +1211,7 @@ RESPONSES = {
     "harmful": "긍정적인 언어를 사용해요! 함께 공부해봐요 ✨"
 }
 
-@before_agent(can_jump_to="end")
+@before_agent(can_jump_to=["end"])
 def education_guard(state, runtime):
     if not state.get("messages"):
         return
@@ -1226,7 +1227,7 @@ def education_guard(state, runtime):
             if keyword in user_text:
                 return {
                     "messages": [AIMessage(content=RESPONSES[category])],
-                    "jump": "end"  # ← 반드시 필요!
+                    "jump_to": "end"  # ← 반드시 필요!
                 }
 ```
 
@@ -1234,7 +1235,7 @@ def education_guard(state, runtime):
 [작동 흐름]
 
 입력: "이 문제 정답 알려줘"
-→ "정답 알려줘" 감지 → {"jump": "end"} 반환
+→ "정답 알려줘" 감지 → {"jump_to": "end"} 반환
 → 모델 호출 건너뜀 (비용 0원!)
 → 즉각적인 응답 반환
 ```
@@ -1395,13 +1396,14 @@ AI가 스스로 "이건 저장할 만한 정보다" 판단해서 저장하게 �
 ```python
 from typing import TypedDict
 from uuid import uuid4
+from langchain.tools import ToolRuntime
 
 class UserMemory(TypedDict):
     personal_info: str
     preferences: str
 
 @tool
-def remember_user_info(memory: UserMemory, runtime) -> str:
+def remember_user_info(memory: UserMemory, runtime: ToolRuntime) -> str:
     """사용자가 알려준 개인 정보나 선호도를 기억합니다.
     사용자가 자신에 대한 정보를 말할 때 이 툴로 저장하세요."""
     namespace = (runtime.context.user_id, runtime.context.app_name)
@@ -1409,7 +1411,7 @@ def remember_user_info(memory: UserMemory, runtime) -> str:
     return f"기억했습니다: {memory}"
 
 @tool
-def recall_user_info(runtime) -> str:
+def recall_user_info(runtime: ToolRuntime) -> str:
     """저장된 사용자 정보를 불러옵니다.
     사용자 관련 질문에 답변하기 전에 이 툴로 기억을 확인하세요."""
     namespace = (runtime.context.user_id, runtime.context.app_name)
@@ -1494,11 +1496,11 @@ print(docs[0].page_content[:200])
 ```
 [로더 선택 가이드]
 
-PDFPlumberLoader: C 언어 기반 → 매우 빠름 → 대량 문서 처리에 적합
-PyMuPDFLoader: Python 기반 → 표 추출 지원 → 논문, 재무제표에 적합
+PyMuPDFLoader: C 라이브러리(MuPDF) 기반 → 매우 빠름 → 대량 문서 처리에 적합
+PDFPlumberLoader: 순수 Python(pdfminer.six 기반) → 느리지만 표 추출에 강함 → 논문, 재무제표에 적합
 
-빠르게 많이 처리? → PDFPlumberLoader
-복잡한 문서 정밀 분석? → PyMuPDFLoader
+빠르게 많이 처리? → PyMuPDFLoader
+복잡한 문서 정밀 분석? → PDFPlumberLoader
 ```
 
 ---
@@ -1521,7 +1523,7 @@ PyMuPDFLoader: Python 기반 → 표 추출 지원 → 논문, 재무제표에 �
 ```
 
 ```python
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=300,     # 한 청크의 최대 글자 수
@@ -1568,8 +1570,8 @@ chunk_overlap: chunk_size의 10~20%
 
 ```python
 from langchain_openai import OpenAIEmbeddings
-from langchain.embeddings import CacheBackedEmbeddings
-from langchain.storage import LocalFileStore
+from langchain_classic.embeddings import CacheBackedEmbeddings
+from langchain_classic.storage import LocalFileStore
 
 base_embedder = OpenAIEmbeddings(model="text-embedding-3-small")
 
@@ -1593,7 +1595,7 @@ cached_embedder = CacheBackedEmbeddings.from_bytes_store(
 
 **코사인 유사도** — 두 벡터의 방향(각도) 비교. 텍스트 검색에 가장 많이 사용됨.
 
-**유클리드 거리 (L2)** — 두 점 사이의 직선 거리. LangChain 기본값.
+**유클리드 거리 (L2)** — 두 점 사이의 직선 거리. Chroma의 기본값(`hnsw:space=l2`). LangChain 공통 기본값이 아니라 벡터 DB마다 다름.
 
 **내적 (Dot Product)** — 방향 + 크기 모두 고려.
 
@@ -1709,15 +1711,15 @@ import os
 from dataclasses import dataclass
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from langchain.tools import tool
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.tools import tool, ToolRuntime
+from langchain.messages import AIMessage, HumanMessage, SystemMessage
 from langchain.agents.middleware import before_agent, wrap_model_call, PIIMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.memory import InMemoryStore
 from langchain_chroma import Chroma
-from langchain.embeddings import CacheBackedEmbeddings
+from langchain_classic.embeddings import CacheBackedEmbeddings
 from langchain_openai import OpenAIEmbeddings
-from langchain.storage import LocalFileStore
+from langchain_classic.storage import LocalFileStore
 from uuid import uuid4
 
 os.environ["OPENAI_API_KEY"] = "sk-..."
@@ -1750,21 +1752,21 @@ def search_courses(query: str) -> str:
     return "\n\n".join([d.page_content for d in docs]) if docs else "관련 강의를 찾을 수 없습니다."
 
 @tool
-def save_student_info(info: dict, runtime) -> str:
+def save_student_info(info: dict, runtime: ToolRuntime) -> str:
     """학생 정보를 저장합니다."""
     namespace = (runtime.context.user_id, runtime.context.app_name)
     runtime.store.put(namespace, str(uuid4()), info)
     return f"저장 완료: {info}"
 
 @tool
-def get_student_info(runtime) -> str:
+def get_student_info(runtime: ToolRuntime) -> str:
     """학생 정보를 불러옵니다."""
     namespace = (runtime.context.user_id, runtime.context.app_name)
     items = runtime.store.search(namespace)
     return "\n".join([str(item.value) for item in items]) if items else "저장된 정보 없음"
 
 # 미들웨어
-@before_agent(can_jump_to="end")
+@before_agent(can_jump_to=["end"])
 def anti_cheat_guard(state, runtime):
     if not state.get("messages"):
         return
@@ -1775,7 +1777,7 @@ def anti_cheat_guard(state, runtime):
         if keyword in last_msg.content:
             return {
                 "messages": [AIMessage("스스로 생각해봐야 실력이 늡니다! 😊")],
-                "jump": "end"
+                "jump_to": "end"
             }
 
 @wrap_model_call
@@ -1798,7 +1800,7 @@ agent = create_agent(
     tools=[search_courses, save_student_info, get_student_info],
     middleware=[
         anti_cheat_guard,                                    # 레이어 1: 부정행위 차단
-        PIIMiddleware(types=["email"], strategy="redact", apply_to_input=True),  # 레이어 2: PII
+        PIIMiddleware("email", strategy="redact", apply_to_input=True),  # 레이어 2: PII
         inject_student_memory                                # 레이어 3: 장기 메모리
     ],
     checkpointer=InMemorySaver(),
@@ -1874,7 +1876,7 @@ chunk_overlap: chunk_size의 10~20% 권장
 ### Q4. LangSmith 설정 후에도 추적이 안 돼요
 
 ```
-원인: 환경변수 설정 전에 LangChain 모듈이 임포트됨
+원인(추정): 환경변수 설정 전에 이미 한 번 실행되어, 처음 읽은 환경변수 값이 캐시됨
 
 해결 순서:
 1. 코랩 런타임 재시작

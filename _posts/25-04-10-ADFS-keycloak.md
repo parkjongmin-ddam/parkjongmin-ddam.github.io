@@ -3,7 +3,7 @@ layout: single
 title: "Keycloak ↔ ADFS 연동"
 categories: ["IAM", "ADFS"]
 permalink: "/activcdirectoryfederationservice/ADFS-keycloak/"
-tag: [windows, ADFS]
+tags: [windows, ADFS]
 toc: true
 author_profile: false
 sidebar:
@@ -60,33 +60,41 @@ public class CustomOIDCIdentityProvider extends OIDCIdentityProvider {
     }
 
     @Override
-    protected URI createAuthorizationUrl(OIDCIdentityProviderConfig config, String state, String nonce) {
-        return UriBuilder.fromUri(config.getAuthorizationUrl())
-            .queryParam(OAuth2Constants.RESPONSE_TYPE, "code id_token")  // Hybrid Flow 적용
-            .queryParam(OAuth2Constants.CLIENT_ID, config.getClientId())
-            .queryParam(OAuth2Constants.REDIRECT_URI, config.getRedirectUrl())
-            .queryParam(OAuth2Constants.SCOPE, config.getDefaultScope())
-            .queryParam(OAuth2Constants.STATE, state)
-            .queryParam(OIDCLoginProtocol.NONCE_PARAM, nonce)
-            .build();
+    protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
+        // 상위 구현이 client_id, redirect_uri, scope, state, nonce를 채움
+        // response_type만 code -> code id_token으로 교체 (Hybrid Flow)
+        return super.createAuthorizationUrl(request)
+            .replaceQueryParam(OAuth2Constants.RESPONSE_TYPE, "code id_token");
     }
 }
 ```
 
+- 참고: Keycloak의 실제 시그니처는 `protected UriBuilder createAuthorizationUrl(AuthenticationRequest request)` (`AbstractOAuth2IdentityProvider`, `OIDCIdentityProvider`). 26.x 기준. 버전에 따라 다를 수 있으므로 사용하는 버전의 소스를 확인할 것.
+- 참고: 기본 브로커 콜백 엔드포인트는 GET 쿼리 파라미터(`code`, `state`)만 읽음. Hybrid Flow의 기본 response_mode는 fragment이므로, 콜백 처리까지 별도 확장이 필요할 수 있음.
+
 ### 📄 CustomOIDCIdentityProviderFactory.java
 ```java
 public class CustomOIDCIdentityProviderFactory extends OIDCIdentityProviderFactory {
+    public static final String PROVIDER_ID = "custom-oidc";
+
+    @Override
+    public String getId() {
+        return PROVIDER_ID;   // SPI 등록 ID (기본 "oidc"와 겹치지 않게)
+    }
+
     @Override
     public String getName() {
         return "CustomOIDC";
     }
 
     @Override
-    public OIDCIdentityProvider create(KeycloakSession session, OIDCIdentityProviderConfig config) {
-        return new CustomOIDCIdentityProvider(session, config);
+    public OIDCIdentityProvider create(KeycloakSession session, IdentityProviderModel model) {
+        return new CustomOIDCIdentityProvider(session, new OIDCIdentityProviderConfig(model));
     }
 }
 ```
+
+- 참고: Factory 등록을 위해 `src/main/resources/META-INF/services/org.keycloak.broker.provider.IdentityProviderFactory` 파일에 `com.example.keycloak.CustomOIDCIdentityProviderFactory`를 한 줄로 기재해야 함.
 
 ### 🧪 배포 방법
 ```
@@ -100,8 +108,6 @@ public class CustomOIDCIdentityProviderFactory extends OIDCIdentityProviderFacto
 ```
 
 ### 🔐 4. Flow 동작 방식 비교
-```
-아래는 요청하신 내용을 표로 작성한 결과입니다:
 
 | **항목**            | **Implicit Flow**                     | **Hybrid Flow**                              |
 |---------------------|---------------------------------------|---------------------------------------------|
@@ -109,6 +115,6 @@ public class CustomOIDCIdentityProviderFactory extends OIDCIdentityProviderFacto
 | **백엔드 서버 필요 여부** | ❌ 없음                                | ✅ 있음 (code 교환 필요)                     |
 | **보안 수준**       | 낮음 (token 노출)                     | 중간~높음 (access_token 서버 보관)           |
 | **리프레시 토큰**    | ❌ 지원 안 됨                          | ✅ 가능                                     |
-| **Keycloak 지원**   | ❌ 기본 미지원                         | ⚠️ 커스텀 SPI 필요                          |
+| **Keycloak 브로커 지원**   | ❌ 브로커 설정에서 code 외 response_type 미지원 | ⚠️ 커스텀 SPI 필요                          |
 
-```
+- 참고: 위 "Keycloak 브로커 지원"은 Keycloak이 외부 OP(ADFS)에 요청을 보내는 Identity Provider 설정 기준임. Keycloak이 OP(서버)로 동작할 때는 클라이언트 설정의 Implicit Flow Enabled 옵션으로 Implicit Flow를 지원함(비권장).
