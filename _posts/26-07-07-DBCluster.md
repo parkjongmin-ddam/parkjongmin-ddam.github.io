@@ -221,7 +221,7 @@ New-NetFirewallRule -DisplayName "SQL Browser 1434 UDP" -Direction Inbound -Prot
 >
 > **원인**: `error: 40` = 네트워크 연결 자체가 안 됨. SQL02의 방화벽이 1433을 막고 있어서 원격(SQL01→SQL02) 접속이 차단된 것. 로컬(SQL02 자기 자신)은 되지만 원격이 안 되는 게 시그니처.
 >
-> **해결**: 위 방화벽 규칙을 **양 노드 모두** 실행. `error: 40` + 로컬은 되고 원격만 안 됨 → **방화벽 또는 SQL 원격 접속 설정**을 제일 먼저 의심하는 게 표준 진단 루트. (드물게 SQL Configuration Manager에서 TCP/IP 프로토콜이 비활성인 경우도 있는데, SQL2022는 기본 활성)
+> **해결**: 위 방화벽 규칙을 **양 노드 모두** 실행. `error: 40` + 로컬은 되고 원격만 안 됨 → **방화벽 또는 SQL 원격 접속 설정**을 제일 먼저 의심하는 게 표준 진단 루트. (드물게 SQL Configuration Manager에서 TCP/IP 프로토콜이 비활성인 경우도 있는데, 신규 설치 기준 Enterprise/Standard/Evaluation은 기본 활성, Developer/Express는 기본 비활성. 이 랩은 Evaluation이라 활성 상태)
 
 > **[트러블슈팅 참고] 서비스 계정 잠김으로 설치 중단**
 >
@@ -269,7 +269,7 @@ Invoke-Sqlcmd -ServerInstance "SQL02" -Query "SELECT SERVERPROPERTY('IsHadrEnabl
 > Invoke-Sqlcmd : A parameter cannot be found that matches parameter name 'TrustServerCertificate'.
 > ```
 >
-> **원인**: `-TrustServerCertificate`는 최신 **SqlServer 모듈(22.x)**에만 있는 파라미터인데, PowerShell이 옛날 **SQLPS 모듈**을 먼저 로드해서 그 파라미터를 못 찾는 것. SSMS 21+ 부터는 SqlServer 모듈이 자동 포함되지 않아서 별도 설치가 필요함.
+> **원인**: `-TrustServerCertificate`는 최신 **SqlServer 모듈(22.x)**에만 있는 파라미터인데, PowerShell이 옛날 **SQLPS 모듈**을 먼저 로드해서 그 파라미터를 못 찾는 것. SqlServer 모듈은 SSMS 17 이후로 SSMS에 포함되지 않아 PowerShell Gallery에서 별도 설치해야 하고, SQLPS는 SQL Server(데이터베이스 엔진) 설치 시 함께 들어옴.
 >
 > **해결**: 파라미터를 빼면 됨. 옛 SQLPS 모듈의 `Invoke-Sqlcmd`는 암호화를 강제하지 않아서 `-TrustServerCertificate` 없이도 접속됨.
 > ```powershell

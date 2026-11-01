@@ -3,7 +3,7 @@ layout: single
 title: "Plotly 인터렉티브 버튼 실습 - 사용자 제어 차트"
 categories: ["Dev", "Python·시각화"]
 permalink: "/python/plotly_button/"
-tag: [python, plotly, interactivity, buttons, updatemenus, animation, custom-buttons, visualization]
+tags: [python, plotly, interactivity, buttons, updatemenus, animation, custom-buttons, visualization]
 toc: true
 author_profile: false
 sidebar:
@@ -20,7 +20,7 @@ Plotly의 버튼(`updatemenus` with `type="buttons"`)을 활용하여 사용자 
 
 ## 📁 파일
 
-- [plotly_button_practice.py](file:///d:/python/Plotly/plotly_button_practice.py) - 버튼 실습 코드
+- `plotly_button_practice.py` - 버튼 실습 코드
 
 ## 🔑 버튼 vs 드롭다운
 
@@ -53,10 +53,10 @@ updatemenus = [
 ```
 
 ### 2. 버튼 배치 방향
-- `direction="left"`: 왼쪽에서 오른쪽으로 배치
-- `direction="right"`: 오른쪽에서 왼쪽으로 배치
-- `direction="up"`: 아래에서 위로 배치
-- `direction="down"`: 위에서 아래로 배치
+- `direction="left"`: 앵커 기준 왼쪽으로 펼쳐짐 (버튼 표시 순서는 왼쪽→오른쪽 유지)
+- `direction="right"`: 앵커 기준 오른쪽으로 펼쳐짐
+- `direction="up"`: 앵커 기준 위쪽으로 펼쳐짐 (버튼 표시 순서는 위→아래 유지)
+- `direction="down"`: 앵커 기준 아래쪽으로 펼쳐짐
 
 ### 3. 버튼 스타일링
 ```python

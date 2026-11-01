@@ -217,6 +217,7 @@ export default function App() {
 
 > ⚠️ **보안 주의**: 비밀번호를 코드에 하드코딩하면 GitHub에 그대로 노출됩니다.
 > `import.meta.env.VITE_APP_PASSWORD`로 환경변수 처리 후 Vercel에서만 값을 입력합니다.
+> 참고: `VITE_` 접두 환경변수는 빌드 시 JS 번들에 그대로 포함되므로, GitHub에는 노출되지 않지만 브라우저 개발자 도구에서는 누구나 값을 볼 수 있습니다. 비밀값 보호 수단이 아니라 간단한 접근 차단 정도로 보는 것이 맞습니다. ([Vite 문서: Env Variables and Modes](https://vite.dev/guide/env-and-mode))
 
 ---
 
@@ -355,7 +356,7 @@ allow_origins=["https://smart-hee-chatbot.vercel.app"]
 백엔드에 토큰 검증을 추가해 해결했습니다.
 
 ```python
-# backend/api/chat.py
+# backend/api/chat.py (발췌: os, secrets, fastapi의 Header·Request·HTTPException import 생략)
 @router.post("/chat", response_model=ChatResponse)
 @limiter.limit("N/minute")  # 적절한 횟수로 설정
 async def chat(
@@ -383,14 +384,17 @@ Railway에 `APP_TOKEN`, Vercel에 `VITE_APP_TOKEN`을 동일한 값으로 등록
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
+> 참고: `VITE_APP_TOKEN`도 프론트엔드 번들에 포함되므로 배포된 사이트의 JS를 열어보면 값을 확인할 수 있습니다. 이 토큰은 무작위 호출을 걸러내는 용도이고, 실질적인 방어선은 CORS 설정과 아래 Rate Limit입니다.
+
 ### 문제 3: Rate Limit 없음
 
-토큰을 탈취당한 최악의 상황에서도 크레딧을 무한 소비당하지 않도록 `slowapi`로 분당 30회 제한을 걸었습니다.
+토큰이 노출되더라도 크레딧을 무한 소비당하지 않도록 `slowapi`로 분당 30회 제한을 걸었습니다.
 
 ```python
 # main.py
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter

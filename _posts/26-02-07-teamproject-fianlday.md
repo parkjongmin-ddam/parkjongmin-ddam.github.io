@@ -3,7 +3,7 @@ layout: single
 title: "Generative AI 10기 팀 프로젝트 - 5일차: Streamlit 웹 대시보드 구현 및 배포"
 categories: ["Project", "주식 대시보드(팀)"]
 permalink: "/python/teamproject-fianlday/"
-tag: [python, streamlit, dashboard, deployment, streamlit-cloud, web-app]
+tags: [python, streamlit, dashboard, deployment, streamlit-cloud, web-app]
 toc: true
 author_profile: false
 sidebar:
@@ -132,12 +132,12 @@ pct_change = (change / prev_row['Close']) * 100
 # 4개의 컬럼으로 메트릭 표시
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.metric("종가 (Close)", f"{last_row['Close']:,} KRW", 
+    st.metric("종가 (Close)", f"{last_row['Close']:,.0f} KRW", 
               f"{change:+,} ({pct_change:+.2f}%)")
 with col2:
-    st.metric("시가 (Open)", f"{last_row['Open']:,} KRW")
+    st.metric("시가 (Open)", f"{last_row['Open']:,.0f} KRW")
 with col3:
-    st.metric("고가 (High)", f"{last_row['High']:,} KRW")
+    st.metric("고가 (High)", f"{last_row['High']:,.0f} KRW")
 with col4:
     st.metric("거래량 (Volume)", f"{last_row['Volume']:,}")
 ```
@@ -451,7 +451,7 @@ db_host = st.secrets["database"]["host"]
 
 ### 메모리 제한
 
-- Streamlit Cloud 무료 플랜: **1GB RAM**
+- Streamlit Community Cloud 무료 플랜: **최대 약 2.7GB RAM** (공식 문서 기준 근사치, 변동 가능)
 - 대용량 데이터 처리 시 메모리 최적화 필요
 
 **해결 방법:**
@@ -568,7 +568,7 @@ echo "finance-datareader" >> requirements.txt
 
 ### 문제 2: 메모리 초과 에러
 
-**원인**: 1GB RAM 제한 초과
+**원인**: 메모리 제한(최대 약 2.7GB) 초과
 
 **해결**:
 ```python

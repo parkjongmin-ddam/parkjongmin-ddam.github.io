@@ -136,6 +136,8 @@ AD 점검 도구는 공격자의 정찰 도구와 기능이 겹쳐서 이런 탐
 
 전체 85는 네 지표의 합이 아니라 가장 높은 Privileged Accounts 85와 같다. 보고서에도 "It is the maximum score of the 4 indicators"라고 적혀 있다. 지표별 점수는 그 지표에서 걸린 규칙 점수의 합(최대 100)이다. Anomalies의 경우 15+15+10+10+10+10+5+5+2+1 = 83이다.
 
+아래 지표별 규칙 표에는 점수가 있는 규칙만 적었다. 위 표의 매칭 규칙 수(13·7·19)에는 0점 규칙도 포함되어 있어 각 표의 행 수보다 많다.
+
 ### Risk model
 
 ![Risk model](/assets/images/2026-10-14-pingcastle-lab/13-risk-model.png)
@@ -335,7 +337,7 @@ Destination DSA     largest delta    fails/total %%   error
 | Privileged Accounts | 85 | 85 |
 | Anomalies | 83 | 83 |
 
-사라진 규칙은 `S-PwdLastSet-DC`(DC01 비밀번호가 오늘 날짜로 바뀜), `S-DC-Inactive`(DC01 lastLogon이 10-12로 반영됨), `S-PwdLastSet-90`(3개월 넘은 컴퓨터 1대, 복제로 최신 비밀번호 정보가 반영된 것으로 보임)이다. Stale Objects가 25점 내려갔지만, 최댓값인 Privileged가 그대로라 전체 점수는 바뀌지 않았다.
+사라진 규칙은 `S-PwdLastSet-DC`(DC01 비밀번호가 오늘 날짜로 바뀜), `S-DC-Inactive`(DC01 lastLogon이 10-12로 반영됨), `S-PwdLastSet-90`(3개월 넘은 컴퓨터 1대, 복제로 최신 비밀번호 정보가 반영된 것으로 보임)이다. 참고: 같은 날 [Purple Knight]({% post_url 26-10-14-purpleknight-lab %})는 90일 넘게 비밀번호를 바꾸지 않은 컴퓨터 2대(WIN10-CL01, AADC01)를 보고했다. 두 도구의 집계 기준(비활성 컴퓨터 제외 여부 등)이 다른 것으로 보이며, 이 차이는 따로 확인하지 않았다. Stale Objects가 25점 내려갔지만, 최댓값인 Privileged가 그대로라 전체 점수는 바뀌지 않았다.
 
 예상하지 못한 차이도 있었다.
 

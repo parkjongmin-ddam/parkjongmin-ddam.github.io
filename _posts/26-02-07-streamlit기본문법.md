@@ -3,7 +3,7 @@ layout: single
 title: "Streamlit 기본 문법 및 핵심 개념 - Data Flow, Session State, Callbacks"
 categories: ["Dev", "Streamlit"]
 permalink: "/python/streamlit기본문법/"
-tag: [python, streamlit, session-state, callbacks, forms, caching, data-flow]
+tags: [python, streamlit, session-state, callbacks, forms, caching, data-flow]
 toc: true
 author_profile: false
 sidebar:

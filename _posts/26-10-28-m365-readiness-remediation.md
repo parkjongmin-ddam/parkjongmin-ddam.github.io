@@ -195,6 +195,8 @@ SharePoint 관리 센터 → 설정 → OneDrive **Retention**. 사용자 계정
 
 세 정책 모두 제외 대상은 `breakglass01` 하나다. CA01의 역할 14개는 전역, 권한 있는 역할, 보안, 사용자, Exchange, SharePoint, Teams, 조건부 액세스, 청구, 애플리케이션, 클라우드 애플리케이션, 기술 지원팀, 인증, 권한 있는 인증 관리자다.
 
+참고: Microsoft 공통 정책 "관리자 MFA 필요"의 권장 역할 14개에는 암호 관리자가 있고 Teams 관리자는 없다([Microsoft Learn](https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-admin-mfa)). 위 목록은 이 구성과 한 개가 다르다.
+
 ![CA01 구성 화면](/assets/images/m365-readiness-remediation/r-ca-02.jpg)
 
 ![보고서 전용 정책 3개](/assets/images/m365-readiness-remediation/r-ca-03.jpg)

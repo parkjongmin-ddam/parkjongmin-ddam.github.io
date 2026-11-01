@@ -3,7 +3,7 @@ layout: single
 title: "[Node.js] 기초 웹 서버 구축 (http 모듈 vs Express 프레임워크)"
 categories: ["Dev", "Backend"]
 permalink: "/nodejs/nodejs-http-vs-express/"
-tag: [nodejs, express, web-server, backend]
+tags: [nodejs, express, web-server, backend]
 toc: true
 author_profile: false
 sidebar:
@@ -59,6 +59,8 @@ server.listen(port, host, () => {
     console.log(`Server running at http://localhost:3000`);
 });
 ```
+
+> 참고: `url.parse()`는 Node.js 공식 문서에서 deprecated(DEP0169) 처리된 legacy API임. 현행 방식은 WHATWG URL API로, `` const path = new URL(req.url, `http://${req.headers.host}`).pathname; `` 처럼 작성함.
 
 ### 특징
 - 라우팅(URL 경로 분기) 처리를 위해 `if-else` 문과 같은 조건문을 직접 작성해야 함.

@@ -3,7 +3,7 @@ layout: single
 title: "Streamlit vs Gradio 완벽 비교 분석 - 프로젝트에 맞는 도구 선택하기"
 categories: ["Dev", "Streamlit"]
 permalink: "/python/Streamlit-vs-Gradio-비교분석/"
-tag: [python, streamlit, gradio, ml-demo, dashboard, comparison, huggingface, web-app]
+tags: [python, streamlit, gradio, ml-demo, dashboard, comparison, huggingface, web-app]
 toc: true
 author_profile: false
 sidebar:
@@ -183,7 +183,7 @@ st.dataframe(df, use_container_width=True)
 
 4. **빠른 공유**
    - `share=True`로 공개 URL 즉시 생성
-   - 72시간 동안 유효한 링크
+   - 1주일 동안 유효한 링크 (Gradio 5.x 초기 버전까지는 72시간)
    - 팀원, 고객과 쉽게 공유
 
 5. **Jupyter Notebook 친화적**
@@ -232,7 +232,7 @@ import torch
 from torchvision import transforms, models
 
 # 모델 로드
-model = models.resnet50(pretrained=True)
+model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()
 
 def classify_image(image):
@@ -430,7 +430,7 @@ gr.Interface(
 
 #### Gradio 배포 옵션
 1. **share=True** (가장 간단)
-   - 72시간 유효 링크
+   - 1주일 유효 링크 (Gradio 5.x 초기 버전까지는 72시간)
    - 즉시 공유 가능
    - 임시 데모용
 
@@ -530,7 +530,7 @@ st.title('🖼️ 이미지 분류기')
 # 모델 로드
 @st.cache_resource
 def load_model():
-    model = models.resnet50(pretrained=True)
+    model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
     model.eval()
     return model
 
@@ -542,7 +542,7 @@ uploaded_file = st.file_uploader("이미지 선택", type=['jpg', 'png'])
 if uploaded_file:
     # 이미지 표시
     image = Image.open(uploaded_file)
-    st.image(image, caption='업로드된 이미지', use_column_width=True)
+    st.image(image, caption='업로드된 이미지', width="stretch")  # use_column_width는 제거됨
     
     # 예측 버튼
     if st.button('분류하기'):
@@ -578,7 +578,7 @@ import torch
 from torchvision import transforms, models
 
 # 모델 로드
-model = models.resnet50(pretrained=True)
+model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()
 
 def classify_image(image):

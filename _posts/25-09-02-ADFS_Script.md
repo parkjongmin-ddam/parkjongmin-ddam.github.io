@@ -20,7 +20,7 @@ ADFS(Active Directory Federation Services) 관리 작업을 자동화하기 위�
 
 ### 🎯 주요 특징
 - **기존 정보 완전 보존**: 모든 기존 설정이 유지됩니다
-- **중복 방지**: "이미 사용중입니다" 메시지로 중복 등록 차단
+- **중복 방지**: "이미 사용중입니다" 메시지로 중복 등록 차단 (대상 RP뿐 아니라 팜 전체 RP의 Identifier 확인)
 - **단일/다수 처리**: 하나씩 또는 여러 개를 한번에 추가 가능
 - **안전한 처리**: 오류 발생 시 적절한 롤백 및 메시지 제공
 - **사용자 친화적**: 작업 전후 상태를 명확히 표시
@@ -85,10 +85,17 @@ function Add-SingleIdentifier {
         
         Write-Host "기존 Identifier 개수: $($currentIdentifiers.Count)" -ForegroundColor Yellow
         
-        # 중복 확인
+        # 중복 확인 (대상 RP 내부)
         if ($currentIdentifiers -contains $NewIdentifier) {
             Write-Host "❌ 해당 Identifier는 이미 사용중입니다: $NewIdentifier" -ForegroundColor Red
             Write-Host "추가할 수 없습니다." -ForegroundColor Yellow
+            return $false
+        }
+
+        # 중복 확인 (팜 전체 - Identifier는 모든 RP 간 유일해야 함)
+        $owner = Get-AdfsRelyingPartyTrust -Identifier $NewIdentifier -ErrorAction SilentlyContinue
+        if ($owner) {
+            Write-Host "❌ 해당 Identifier는 다른 RP에서 이미 사용중입니다: $NewIdentifier (RP: $($owner.Name))" -ForegroundColor Red
             return $false
         }
         
@@ -133,7 +140,9 @@ function Add-MultipleIdentifiers {
         $uniqueIdentifiers = @()
         
         foreach ($newId in $NewIdentifiers) {
-            if ($currentIdentifiers -contains $newId) {
+            # 팜 전체에서 사용 중인지 확인 (대상 RP 포함)
+            $owner = Get-AdfsRelyingPartyTrust -Identifier $newId -ErrorAction SilentlyContinue
+            if (($currentIdentifiers -contains $newId) -or $owner) {
                 $duplicates += $newId
             } else {
                 $uniqueIdentifiers += $newId
@@ -365,9 +374,15 @@ Import-Module ADFS
 중요한 설정 변경 전에는 ADFS 구성을 백업하는 것을 권장합니다:
 
 ```powershell
-# ADFS 구성 백업
-Export-AdfsConfiguration -Path "C:\Backup\ADFS-Config-$(Get-Date -Format 'yyyyMMdd-HHmmss').xml"
+# ADFS 구성 백업 (AD FS Rapid Restore Tool 설치 필요)
+Import-Module 'C:\Program Files (x86)\ADFS Rapid Recreation Tool\ADFSRapidRecreationTool.dll'
+
+$pw = Read-Host "백업 암호화 비밀번호"
+Backup-ADFS -StorageType "FileSystem" -StoragePath "C:\Backup\" -EncryptionPassword $pw -BackupComment "Before RP change $(Get-Date -Format 'yyyyMMdd-HHmmss')" -BackupDKM
 ```
+
+- 참고: ADFS PowerShell 모듈에는 `Export-AdfsConfiguration` cmdlet이 없음. 구성 백업은 AD FS Rapid Restore Tool의 `Backup-ADFS`를 사용함. WID 팜은 주 서버에서 실행해야 함(`Get-AdfsSyncProperties`로 확인). 근거: [AD FS Rapid Restore tool](https://learn.microsoft.com/windows-server/identity/ad-fs/operations/ad-fs-rapid-restore-tool)
+- 단일 RP만 변경하는 경우 변경 전 `Get-AdfsRelyingPartyTrust -Name "MyApp" | Export-Clixml` 로 해당 RP 설정을 저장해 두는 방법도 있음.
 
 ---
 

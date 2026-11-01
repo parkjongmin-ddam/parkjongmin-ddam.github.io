@@ -203,7 +203,7 @@ SECRET_KEY=your-local-secret-key
 DEBUG=true
 ```
 
-> ⚠️ **주의:** Langfuse 키를 따옴표(`"`)로 감싸면 따옴표 자체가 키값으로 인식되어 `401 Invalid credentials` 에러가 발생한다. 반드시 따옴표 없이 입력한다.
+> ⚠️ **주의:** Langfuse 키는 따옴표(`"`) 없이 입력했다. 참고로 python-dotenv·pydantic-settings는 값 양쪽의 따옴표를 제거하고 읽으므로 따옴표 자체가 `401 Invalid credentials`의 원인일 가능성은 낮다. 이번 401은 아래 에러 ④처럼 키값이 잘못 입력된 것이 원인이었다.
 
 ---
 

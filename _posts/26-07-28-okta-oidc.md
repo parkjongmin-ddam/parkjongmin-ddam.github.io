@@ -98,7 +98,7 @@ Sign-out : http://localhost:5000/
 
 Native 앱은 client secret이 없고 PKCE가 강제된다. Client authentication이 `None`으로 고정되고 `Require PKCE as additional verification`이 체크된 상태로 생성된다.
 
-ADFS는 discovery에 `code_challenge_methods_supported`를 광고하지 않으면서 내부적으로만 PKCE를 검증했다. Okta는 같은 RFC 9700 권고를 따르면서도 UI에서 필수 여부를 명시적으로 드러낸다.
+ADFS는 discovery에 `code_challenge_methods_supported`를 광고하지 않으면서 내부적으로만 PKCE를 검증했다([ADFS PKCE 실측]({% post_url 26-07-14-pkce %})). Okta는 같은 RFC 9700 권고를 따르면서도 UI에서 필수 여부를 명시적으로 드러낸다.
 
 ![Client Credentials — PKCE 필수](/assets/images/okta/17-client-credentials-pkce.png)
 
@@ -291,7 +291,7 @@ Okta는 ADFS와 같다. 검증 실패만으로 code가 소진된다.
 
 표본이 셋이 되니 Entra가 예외적으로 관대한 쪽이라고 말할 근거가 생겼다.
 
-RFC 6749는 code 재사용 시 거부를 요구하지만, 검증 실패 시 code를 폐기할지는 명시하지 않는다. OAuth 2.0 Security BCP가 권고하는 보수적 처리를 ADFS와 Okta가 따르고 Entra는 따르지 않는 구조로 정리된다.
+RFC 6749는 code 재사용 시 거부를 요구하지만, 검증 실패 시 code를 폐기할지는 명시하지 않는다. OAuth 2.0 Security BCP(RFC 9700 §4.2.4)도 token endpoint에서 첫 사용 후 code를 무효화하라고만 할 뿐, PKCE 검증 실패를 직접 다루지는 않는다. 검증 실패 요청도 첫 사용으로 보는 보수적 해석을 ADFS와 Okta가 택하고 Entra는 택하지 않은 구조로 정리된다.
 
 오류 문구가 두 단계를 구분해준다는 점도 기록해둘 만하다. PKCE 불일치와 소진된 code 재사용이 서로 다른 `error_description`으로 나온다. ADFS가 양쪽을 MSIS9720으로 뭉뚱그리는 것과 대비된다. 진단은 쉬워지지만 공격자에게 "verifier만 틀렸다"는 정보를 주는 셈이라 트레이드오프가 있다.
 

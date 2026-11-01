@@ -15,7 +15,7 @@ tags: [python, fastapi, langgraph, langchain, docker, postgresql, 포트폴리�
 이 포스트에서는 그중 첫 번째 단계인 **Phase 1**을 로컬에서 실행하면서 겪은 시행착오를 기록한다. Python 3.13 환경에서 LangChain/LangGraph 계열 패키지를 설치하는 과정에서 생각보다 많은 문제가 발생했고, 이 기록이 같은 환경에서 시작하는 분들께 도움이 되길 바란다.
 
 **환경 정보**
-- OS: Windows 10 (10.0.26200)
+- OS: Windows 11 (10.0.26200)
 - Python: 3.13
 - Docker Desktop 설치됨
 - OpenAI API 키 보유

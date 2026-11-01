@@ -26,22 +26,23 @@ author_profile: false
 *   **최적화**: 스킬 시스템을 통해 **"필요한 순간에 필요한 정보만"** 제공함으로써, 토큰 비용을 절약하고 AI의 집중력을 높일 수 있음.
 
 ### 3. 모듈형 지식 (Modular Knowledge)
-*   복잡한 업무를 작은 단위의 **스킬(.md 파일)**로 분리하여 관리함.
-    *   `email_writer_skill.md`: 비즈니스 이메일 작성 전문가
-    *   `code_reviewer_skill.md`: 파이썬 코드 리팩토링 전문가
-    *   `meeting_summarizer_skill.md`: 회의록 요약 전문가
+*   복잡한 업무를 작은 단위의 **스킬(스킬 디렉터리 + `SKILL.md`)**로 분리하여 관리함.
+    *   `email-writer/SKILL.md`: 비즈니스 이메일 작성 전문가
+    *   `code-reviewer/SKILL.md`: 파이썬 코드 리팩토링 전문가
+    *   `meeting-summarizer/SKILL.md`: 회의록 요약 전문가
+*   참고: Agent Skills 규격에서 스킬은 디렉터리 단위이고, 그 안의 파일명은 `SKILL.md`로 고정됨. 디렉터리명(또는 front matter `name`)이 스킬 이름이 되며, `name`은 소문자·숫자·하이픈만 사용함. 임의 이름의 `.md` 파일 하나로는 스킬로 로드되지 않음.
 
 ## 활용 예시 (Use Cases)
 
 ### 상황 1: 복잡한 코딩 프로젝트
-1.  **기획 단계**: `architect_skill.md`를 불러와 전체 구조를 설계함.
-2.  **구현 단계**: `frontend_skill.md`와 `backend_skill.md`를 번갈아 호출하며 코드 작성.
-3.  **검수 단계**: `security_check_skill.md`를 사용하여 취약점 점검.
+1.  **기획 단계**: `architect` 스킬을 불러와 전체 구조를 설계함.
+2.  **구현 단계**: `frontend`와 `backend` 스킬을 번갈아 호출하며 코드 작성.
+3.  **검수 단계**: `security-check` 스킬을 사용하여 취약점 점검.
 
 ### 상황 2: 콘텐츠 제작
-1.  **초안 작성**: `blog_post_skill.md`를 사용하여 주제를 구조화함.
-2.  **교정**: `editor_skill.md`를 사용하여 맞춤법 및 문체 수정.
-3.  **이미지 생성**: `image_gen_prompt_skill.md`를 사용하여 삽화 프롬프트 생성.
+1.  **초안 작성**: `blog-post` 스킬을 사용하여 주제를 구조화함.
+2.  **교정**: `editor` 스킬을 사용하여 맞춤법 및 문체 수정.
+3.  **이미지 생성**: `image-gen-prompt` 스킬을 사용하여 삽화 프롬프트 생성.
 
 ## 결론
 강수진 박사의 설명처럼, Claude Skill은 AI를 단순한 챗봇이 아닌 **전문가 팀**으로 활용할 수 있게 해주는 열쇠임. 나만의 업무 노하우를 스킬 파일로 정리해두면, 언제든 나를 대신해 완벽하게 업무를 처리해주는AI 비서를 갖게 되는 것임.
@@ -52,18 +53,21 @@ author_profile: false
 
 다음은 실제 업무에서 바로 활용할 수 있는 Claude Skill 파일(`SKILL.md`)의 구체적인 예시임.
 
+참고: 규격상 front matter 필드는 `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools` 등임. `version`, `author`, `tags` 같은 임의 키는 Claude Code에서는 무시되고, claude.ai 업로드·Skills API에서는 오류가 나므로 아래 예시에서는 `metadata` 아래로 옮김.
+
 ![Skill Data Structure](/assets/images/26-02-11/skill_data_structure.png)
 
-### 1. Python 코딩 전문가 (`python_expert.md`)
+### 1. Python 코딩 전문가 (`python-expert/SKILL.md`)
 코딩 스타일을 일관되게 유지하고, 고품질의 코드를 작성하기 위한 스킬임.
 
-```markdown
+````markdown
 ---
-name: python_expert
+name: python-expert
 description: Python 프로그래밍, 코드 리뷰, 리팩토링 및 최적화를 수행하는 전문 스킬
-version: 1.0.0
-author: Antigravity Team
-tags: [python, coding, refactoring, review]
+metadata:
+  version: 1.0.0
+  author: Antigravity Team
+  tags: [python, coding, refactoring, review]
 ---
 
 # Python Expert Instructions
@@ -98,17 +102,18 @@ def calculate_statistics(data: list[float]) -> dict[str, float]:
         "std_dev": statistics.stdev(data) if len(data) > 1 else 0.0
     }
 ```
-```
+````
 
-### 2. 비즈니스 이메일 작성 전문가 (`email_writer.md`)
+### 2. 비즈니스 이메일 작성 전문가 (`email-writer/SKILL.md`)
 상황에 맞는 적절한 톤앤매너로 이메일을 작성해주는 스킬임.
 
 ```markdown
 ---
-name: email_writer
+name: email-writer
 description: 전문적이고 정중한 비즈니스 이메일 초안 작성 및 교정 스킬
-version: 1.0.0
-tags: [email, writing, business, communication]
+metadata:
+  version: 1.0.0
+  tags: [email, writing, business, communication]
 ---
 
 # Email Writer Instructions

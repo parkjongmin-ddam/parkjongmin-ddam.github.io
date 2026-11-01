@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Prompt Engineering 완전 가이드 (Google · 2025) — 한국어 번역본"
+title: "Prompt Engineering 완전 가이드 (Google · 2025) — 한국어 요약 정리"
 categories: ["AI", "프롬프트·컨텍스트"]
 permalink: "/llm/prompt-enginnering/"
 tags: [Prompt Engineering, Google, Gemini, LLM, AI]
@@ -12,12 +12,13 @@ sidebar:
 
 # Prompt Engineering 완전 가이드  
 ### Google · 2025  
-### 한국어 전체 번역본  
-**역자: parkjongmin-ddam — DDAMNOTE 블로그**
+### 한국어 요약 정리본  
+**정리: parkjongmin-ddam — DDAMNOTE 블로그**
 
 ---
 
-> ⚡ **이 문서는 Google이 2025년에 공개한 공식 Prompt Engineering Guide(68p)의 전체 한국어 번역본입니다.**  
+> ⚡ **이 문서는 Google이 2025년에 공개한 Prompt Engineering 백서(Lee Boonstra 저, 68p)를 섹션별로 요약 정리한 한국어 문서입니다.**  
+> 원문: [Prompt Engineering (Kaggle whitepaper)](https://www.kaggle.com/whitepaper-prompt-engineering)  
 
 
 ---
@@ -288,8 +289,8 @@ LLM을 이용한 코드 관련 작업:
 
 # 🔧 20. JSON Repair
 
-Google 모델은 JSON 출력 시  
-경미한 오류가 있어도 자동으로 복구할 수 있습니다.
+JSON 출력이 토큰 한도로 잘리거나 형식이 깨질 수 있습니다.  
+이런 경우 `json-repair` 같은 라이브러리로 깨진 JSON을 후처리해 복구합니다.
 
 ---
 
@@ -418,7 +419,7 @@ Google 모델은 JSON 출력 시
 - Human-in-the-loop 없이 고품질 프롬프트 자동 생성
 
 ### 실험 결과
-- 24개 NLP 작업 중 19개에서 사람이 작성한 instruction과 동등하거나 더 우수한 성능
+- 24개 NLP 작업 중 19개에서 사람이 작성한 instruction과 동등하거나 더 우수한 성능 (arXiv v1 초록 기준. ICLR 2023 페이지 초록은 21/24, arXiv 최종판은 Instruction Induction 24/24·BIG-Bench 17/21로 수치가 갱신됨)
 - **획기적 발견**: "Let's think step by step" 보다 더 나은 CoT 프롬프트 자동 발견
   - MultiArith: 78.7% → 82.0%
   - GSM8K: 40.7% → 43.0%

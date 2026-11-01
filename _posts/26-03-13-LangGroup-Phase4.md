@@ -105,6 +105,8 @@ MODEL_PRICING = {
 }
 ```
 
+> 참고: `gpt-4o`의 $5.00/$15.00은 초기 스냅샷(gpt-4o-2024-05-13) 단가다. OpenAI 모델 문서 기준 현재 `gpt-4o` 단가는 입력 $2.50 / 출력 $10.00 (1M 토큰당)이므로, 이 표로 계산한 비용은 Langfuse 대시보드 값과 다를 수 있다. ([GPT-4o 모델 문서](https://developers.openai.com/api/docs/models/gpt-4o))
+
 비용 계산 공식:
 
 ```python

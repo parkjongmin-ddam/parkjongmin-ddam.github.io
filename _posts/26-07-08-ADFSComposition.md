@@ -10,7 +10,7 @@ tags: [adfs, federation, gmsa, nlb, high-availability, sql-availabilitygroup, pk
 
 ## 들어가며
 
-지금까지 만든 랩을 돌아보면 [SQL Server AlwaysOn AG](/), [2-Tier PKI(CA)](/)가 각각 완성돼 있다. 이 두 개는 사실 **ADFS를 제대로 세우기 위한 밑작업**이었다. 이번 글에서 그 둘이 하나로 합쳐진다.
+지금까지 만든 랩을 돌아보면 [SQL Server AlwaysOn AG](/infra/sql%20server/DBCluster/), [2-Tier PKI(CA)](/infra/windows%20server/pki/CAServer/)가 각각 완성돼 있다. 이 두 개는 사실 **ADFS를 제대로 세우기 위한 밑작업**이었다. 이번 글에서 그 둘이 하나로 합쳐진다.
 
 - **CA** → ADFS의 SSL 인증서를 발급 (신원 증명)
 - **SQL AG** → ADFS 구성 데이터베이스 저장소 (구성 DB도 HA로)
@@ -67,7 +67,7 @@ IAM 엔지니어로서 실무에서 엔터프라이즈 ADFS 팜과 WAP를 다뤄
 각 요소의 역할을 명확히 구분하면 이렇다.
 
 - **ADFS 팜** = ADFS01 + ADFS02. 실제 토큰 발급을 담당하는 멤버.
-- **SQL AG** = 팜이 구성 데이터를 저장하는 DB. 멤버가 아니라 "창고" 역할. Listener를 쓰므로 SQL 노드 장애조치가 나도 ADFS는 투명하게 동작.
+- **SQL AG** = 팜이 구성 데이터를 저장하는 DB. 멤버가 아니라 "창고" 역할. Listener를 쓰므로, ADFS 구성 DB를 AG에 추가한 뒤에는 SQL 노드 장애조치가 나도 ADFS는 투명하게 동작. (ADFS가 만든 DB는 AG에 자동 포함되지 않음 — 마치며 참조)
 - **CA 인증서** = 팜의 SSL 신원. 멤버가 아니라 "사업자등록증" 역할. 모든 노드가 동일한 sts 인증서를 사용.
 - **NLB** = 앞단 부하분산. sts(VIP)로 오는 요청을 두 노드에 분산. SQL AG의 Listener와 비슷한 역할을 ADFS 앞에서 수행.
 - **gMSA** = 두 노드가 공유하는 서비스 계정. 암호를 사람이 관리하지 않고 AD가 자동 교체하며, 허가된 컴퓨터만 암호를 조회한다. (자세한 이유는 2장에서)
@@ -92,7 +92,7 @@ ADFS 팜은 공용 **서비스 계정**이 필요하다. 두 노드(ADFS01/ADFS0
 - **암호를 사람이 몰라도 된다**: gMSA의 암호는 AD가 자동 생성하고 **주기적으로 자동 교체**한다(기본 30일). 관리자도 그 암호를 모른다. 일반 계정은 암호를 사람이 정하고 관리해야 하는데, ADFS처럼 오래 운영되는 서비스에서 **암호 만료·유출·변경이 곧 팜 장애**로 이어진다. gMSA는 이 위험을 원천 제거한다.
 - **여러 노드가 안전하게 공유**: 팜의 모든 노드가 같은 서비스 계정을 써야 하는데, gMSA는 **허가된 컴퓨터(ADFS01$/ADFS02$)만 암호를 조회**하도록 AD가 통제한다. 일반 계정처럼 각 서버에 평문 암호를 넣어둘 필요가 없다.
 - **팜 확장이 쉽다**: 나중에 ADFS03을 추가해도, 그 컴퓨터 계정을 `PrincipalsAllowedToRetrieveManagedPassword`에 넣기만 하면 된다. 암호 재배포가 불필요하다.
-- **SPN 자동 관리**: 서비스 주체 이름(SPN, `http/sts.lab.local`)을 gMSA에 지정하면 Kerberos 인증이 매끄럽게 동작한다.
+- **SPN 자동 관리**: 도메인 클라이언트의 Kerberos(Windows 통합 인증)에 필요한 SPN은 `HOST/sts.lab.local`이며, 새 팜을 만들 때 AD FS가 권한이 충분하면 서비스 계정(gMSA)에 자동 등록한다. HOST/가 HTTP 서비스까지 포함하므로 `http/` SPN은 따로 필요하지 않다.
 
 한마디로, gMSA는 **"사람이 암호를 관리하지 않아도 되는, 여러 서버가 공유하는 서비스 계정"** 이다. ADFS 팜처럼 다중 노드가 장기 운영되는 서비스에 Microsoft가 공식 권장하는 방식이다. (단일 노드 랩이라면 일반 계정도 가능하지만, 팜이라면 gMSA가 정석이다.)
 
@@ -116,6 +116,8 @@ New-ADServiceAccount -Name "gmsa-adfs" `
     -ServicePrincipalNames "http/sts.lab.local" `
     -PrincipalsAllowedToRetrieveManagedPassword "ADFS01$","ADFS02$"
 ```
+
+> 참고: 이 랩에서는 `-ServicePrincipalNames "http/sts.lab.local"`을 지정해 생성했지만, AD FS에 필요한 SPN은 `HOST/sts.lab.local`이고 Install-AdfsFarm이 팜 생성 시 자동 등록한다. `http/` 지정은 생략해도 된다. WIA(Kerberos) 장애를 진단할 때는 `setspn -L gmsa-adfs`에 `host/sts.lab.local`이 있는지, `setspn -X -F`로 중복 SPN이 없는지를 확인한다.
 
 > **[트러블슈팅 #1] gMSA 생성 순서 — 컴퓨터 계정이 먼저**
 >
@@ -251,7 +253,9 @@ Install-AdfsFarm `
 ![Install-AdfsFarm 구성 완료](/assets/images/26-07-08-adfs/11-install-adfsfarm-complete.png)
 *그림 4-5. Install-AdfsFarm — "The configuration completed successfully" (KDS 복제/재부팅/UPN 관련 WARNING은 정상)*
 
-**핵심은 `-SQLConnectionString "Server=AGLISTENER"`** 이다. 구성 DB를 SQL AG Listener에 만든다. SQL 노드가 장애조치돼도 ADFS는 Listener만 보므로 투명하게 동작한다. gMSA 식별자 뒤의 `$`는 PowerShell에서 백틱으로 이스케이프한다.
+**핵심은 `-SQLConnectionString "Server=AGLISTENER"`** 이다. 구성 DB를 SQL AG Listener에 만든다. ADFS는 Listener만 보므로, 생성된 구성 DB를 AG에 추가하고 나면 SQL 노드가 장애조치돼도 투명하게 동작한다. 단 이 시점의 DB는 현재 주 복제본에만 있고 AG에는 자동으로 포함되지 않는다. gMSA 식별자 뒤의 `$`는 PowerShell에서 백틱으로 이스케이프한다.
+
+> 참고: Microsoft 예시의 연결 문자열은 `Data Source=<SQL 호스트>;Integrated Security=True`만 지정한다. DB 이름은 AD FS가 `AdfsConfigurationV4`/`AdfsArtifactStore`로 자체 생성하며(그림 4-6), 위 명령의 `Database=AdfsConfiguration` 값과 다르게 만들어진 것도 이 때문으로 보인다. 따라 할 때는 `Database=` 항목을 빼는 편이 혼동이 없다.
 
 성공하면 `The configuration completed successfully.`가 나온다. 단 몇 개의 WARNING이 함께 뜨는데 모두 정상이다(KDS 키 복제 대기 안내, 재부팅 필요 안내, UPN suffix 안내).
 
@@ -304,7 +308,7 @@ AD FS 관리 콘솔에서도 팜이 정상 구성됐는지 둘러본다.
 
 > **[트러블슈팅 #3] MSIS7012 — 에러처럼 보이지만 정상 신호**
 >
-> 위 주소에 접속하면 "AZLAB ADFS" 브랜딩과 함께 `MSIS7012: An error occurred` 페이지가 뜰 수 있다. **이건 ADFS가 정상 동작한다는 증거다** — 에러 페이지지만 ADFS 웹 서비스가 응답하고 있다는 뜻이다. MSIS7012는 **IdP-initiated 로그인 페이지가 기본 비활성**(ADFS 2019+ 보안 기본값)이라서 나는 것뿐이다.
+> 위 주소에 접속하면 "AZLAB ADFS" 브랜딩과 함께 `MSIS7012: An error occurred` 페이지가 뜰 수 있다. **이건 ADFS가 정상 동작한다는 증거다** — 에러 페이지지만 ADFS 웹 서비스가 응답하고 있다는 뜻이다. MSIS7012는 **IdP-initiated 로그인 페이지가 기본 비활성**(ADFS 2016+ 보안 기본값)이라서 나는 것뿐이다.
 >
 > **해결**: 페이지 활성화 (팜이라 한 노드에서 하면 전체 적용).
 > ```powershell
@@ -315,7 +319,7 @@ AD FS 관리 콘솔에서도 팜이 정상 구성됐는지 둘러본다.
 ![IdP-initiated 로그인 페이지 활성화](/assets/images/26-07-08-adfs/18-enable-idp-signon.png)
 *그림 4-12. `Set-AdfsProperties -EnableIdPInitiatedSignonPage $true` — 팜이라 한 노드에서 실행하면 전체 적용*
 
-> **참고 — PowerShell 5.1의 metadata 접속 실패**: `Invoke-WebRequest`로 federationmetadata.xml을 받으면 "The underlying connection was closed"로 실패할 수 있다. 이는 PowerShell 5.1의 TLS/SNI 처리 문제이며 ADFS 자체는 정상이다. **브라우저로는 잘 열리므로** 검증은 브라우저로 하면 된다.
+> **참고 — PowerShell 5.1의 metadata 접속 실패**: `Invoke-WebRequest`로 federationmetadata.xml을 받으면 "The underlying connection was closed"로 실패할 수 있다. ADFS 자체 문제는 아니고, PowerShell 5.1(.NET Framework)의 `ServicePointManager.SecurityProtocol` 기본값에 TLS 1.2가 빠져 있어 TLS 협상이 실패했을 가능성이 크다(SNI는 PS5.1에서도 지원된다). `[Net.ServicePointManager]::SecurityProtocol = 'Tls12'` 실행 후 재시도하면 원인을 확인할 수 있다. **브라우저로는 잘 열리므로** 검증은 브라우저로 하면 된다.
 
 ---
 

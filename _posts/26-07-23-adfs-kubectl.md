@@ -117,15 +117,17 @@ ADFS 인증서가 자체 PKI(ISCA01)로 발급된 것이라 API 서버가 기본
 
 ```bash
 echo | openssl s_client -connect sts.azlab.istn.co.kr:443 -showcerts 2>/dev/null | \
-  sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' > /etc/kubernetes/pki/adfs-ca.pem
+  sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' | sudo tee /etc/kubernetes/pki/adfs-ca.pem >/dev/null
 ```
+
+> 참고: `/etc/kubernetes/pki`는 root 소유라 일반 사용자 셸에서는 `>` 리다이렉트가 권한 오류로 실패하므로 `sudo tee`로 쓴다. 또 `-showcerts`로 뽑은 체인에는 leaf(sts) 인증서도 포함된다. `--oidc-ca-file`에는 ROOTCA(또는 발급 CA ISCA01) 인증서만 넣는 것이 정석이며, leaf를 신뢰 대상으로 넣어두면 ADFS SSL 인증서 교체 후 혼동의 원인이 된다.
 
 ## 4. kubelogin(kubectl oidc-login) 설정
 
 Windows에 krew, kubelogin 플러그인을 설치하고 kubeconfig에 OIDC exec credential을 등록했다.
 
 ```powershell
-kubectl config set-credentials jongmin-oidc `
+kubectl config set-credentials <user>-oidc `
   --exec-api-version=client.authentication.k8s.io/v1beta1 `
   --exec-command=kubectl `
   --exec-arg=oidc-login `
@@ -144,7 +146,7 @@ kubectl config set-credentials jongmin-oidc `
 인증 자체는 성공했다. 로그인하면 `Authenticated` 화면이 뜨고, API 서버도 사용자를 정상적으로 식별했다.
 
 ```
-Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.co.kr/adfs#jongmin.park@azlab.istn.co.kr" cannot list resource "pods"
+Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.co.kr/adfs#<user>@azlab.istn.co.kr" cannot list resource "pods"
 ```
 
 문제는 발급된 ID Token의 payload에 `group` 필드 자체가 없었다는 것이다.
@@ -154,8 +156,8 @@ Error from server (Forbidden): pods is forbidden: User "https://sts.azlab.istn.c
   "aud": "f7e390fb-...",
   "iss": "https://sts.azlab.istn.co.kr/adfs",
   "sub": "...",
-  "upn": "jongmin.park@azlab.istn.co.kr",
-  "unique_name": "AZLAB\\jongmin.park"
+  "upn": "<user>@azlab.istn.co.kr",
+  "unique_name": "AZLAB\\<user>"
 }
 ```
 
@@ -201,7 +203,7 @@ kubelogin에 `resource` 파라미터를 강제로 추가했다.
 {
   "aud": "f7e390fb-...",
   "iss": "https://sts.azlab.istn.co.kr/adfs",
-  "upn": "jongmin.park",
+  "upn": "<user>",
   "group": ["Domain Users", "k8s-admins"],
   "appid": "f7e390fb-...",
   "apptype": "Public",
@@ -221,7 +223,7 @@ kubelogin에 `resource` 파라미터를 강제로 추가했다.
 
 ![새 개체 - 그룹 — k8s-admins, 전역/보안 그룹으로 생성](/assets/images/26-07-23-adfs-kubectl/15-aduc-new-group-k8s-admins.png)
 
-![k8s-admins 속성 — 멤버 탭에 jongmin park 추가](/assets/images/26-07-23-adfs-kubectl/16-k8s-admins-group-members.png)
+![k8s-admins 속성 — 멤버 탭에 테스트 사용자 추가](/assets/images/26-07-23-adfs-kubectl/16-k8s-admins-group-members.png)
 
 ```bash
 kubectl create -f - <<EOF

@@ -14,9 +14,7 @@ author_profile: false
 ---
 
 ## 개요
-이 문서는 YouTube 영상 **[꼭 알아야하는 클로드 코드 필수 꿀팁 60가지](https://www.youtube.com/watch?v=a1a9wV88MSM)**의 내용을 바탕으로, Claude Code를 200% 활용하기 위한 핵심 전략과 팁을 상세히 정리한 것임. 단순한 코딩 도구를 넘어, 진정한 'AI 페어 프로그래머'로서 Claude Code를 마스터해보는 것을 추천함.
-
-![Claude Code Guide Header](/assets/images/26-02-11/claude_code_tips_header.png)
+이 문서는 YouTube 영상 **[꼭 알아야하는 클로드 코드 필수 꿀팁 60가지](https://www.youtube.com/watch?v=a1a9wV88MSM)**의 내용을 바탕으로, Claude Code를 200% 활용하기 위한 핵심 전략과 팁을 상세히 정리한 것임. 단순한 코딩 도구를 넘어, 진정한 'AI 페어 프로그래머'로서 Claude Code를 마스터해보는 것을 추천함. 영상의 60가지 항목을 모두 옮긴 것이 아니라 주제별로 묶어 핵심만 요약했음.
 
 ---
 
@@ -34,7 +32,7 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
     *   `claude --continue` (또는 `-c`): 가장 최근에 종료된 세션을 즉시 불러와서 대화를 이어감. 컨텍스트가 유지되므로 연속적인 작업에 필수적임.
     *   `claude -r`: 최근 세션 목록을 인터랙티브하게 보여줌. 화살표 키로 과거 세션을 선택하여 진입할 수 있음.
 *   **모델 지정 (Model Selection)**
-    *   `claude --model claude-3-opus-20240229`
+    *   `claude --model opus` (또는 `sonnet`, `haiku` 같은 별칭, 전체 모델 이름도 가능)
     *   기본 모델 외에 특정 모델(Opus, Sonnet 등)을 지정하여 실행할 수 있음. 비용 절감이 필요하거나 최고 성능이 필요할 때 구분하여 사용함.
 *   **데이터 파이핑 (Data Piping)**
     *   `cat error_logs.txt | claude "이 로그에서 에러 원인 분석해줘"`
@@ -43,12 +41,12 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
 ### 1-2. 환경 설정 및 고급 옵션
 *   **자동 업데이트**: `claude update` 명령어로 항상 최신 버전을 유지할 것. AI 도구는 업데이트 주기가 매우 빠름.
 *   **JSON 출력 모드**:
-    *   `claude -p "질문" --print-json`
+    *   `claude -p "질문" --output-format json`
     *   Claude의 응답을 JSON 형식으로 받아 다른 스크립트나 프로그램에서 파싱하여 사용할 수 있음. 자동화 파이프라인 구축 시 유용함.
 *   **Headless Mode**:
     *   UI 없이 백그라운드 봇처럼 실행해야 할 때 사용함. 멀티 에이전트 시스템을 구축하거나 CI/CD 파이프라인 내에서 활용할 수 있음.
 *   **Verbose Mode**:
-    *   `claude --verbose` (또는 `-v`)
+    *   `claude --verbose` (단축 플래그 없음. `-v`는 `--version`임)
     *   Claude가 수행하는 내부 동작, API 호출 내역 등을 상세히 출력함. 디버깅이나 Claude의 사고 과정을 분석할 때 유용함.
 
 ---
@@ -60,18 +58,19 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
 ### 2-1. 파일 유형별 관리 (File Types)
 프로젝트 규모가 커질수록 컨텍스트 관리가 중요해짐. `CLAUDE.md`를 역할에 따라 나누어 관리하는 것이 좋음.
 
-1.  **엔터프라이즈 파일 (Enterprise)**
-    *   **위치**: 회사 공용 저장소 또는 홈 디렉토리
+1.  **엔터프라이즈 파일 (Enterprise, 관리형 정책)**
+    *   **위치**: OS별 시스템 경로 (macOS `/Library/Application Support/ClaudeCode/CLAUDE.md`, Linux·WSL `/etc/claude-code/CLAUDE.md`, Windows `C:\Program Files\ClaudeCode\CLAUDE.md`). IT/DevOps가 배포함
     *   **내용**: 전사적 코딩 컨벤션, 보안 가이드라인, 라이선스 헤더 규칙 등 모든 프로젝트에 공통적으로 적용되는 규칙.
 2.  **프로젝트 메모리 파일 (Project Memory)**
     *   **위치**: 프로젝트 루트 (`./CLAUDE.md`)
     *   **내용**: 아키텍처 다이어그램 설명, 핵심 비즈니스 로직, 주요 라이브러리 사용법, 폴더 구조 설명.
 3.  **사용자 메모리 파일 (User Preference)**
-    *   **위치**: 로컬 설정 폴더
+    *   **위치**: 홈 디렉토리의 `~/.claude/CLAUDE.md` (모든 프로젝트에 적용)
     *   **내용**: "나는 간결한 코드를 선호함", "주석은 한글로 달 것" 등 개인적인 취향.
-4.  **로컬 메모리 파일 (Local Context)**
+4.  **하위 디렉토리 메모리 파일 (Subdirectory Context)**
     *   **위치**: 특정 하위 디렉토리 (`./frontend/CLAUDE.md`, `./backend/CLAUDE.md`)
-    *   **내용**: 해당 모듈이나 기능에 특화된 컨텍스트. Claude가 해당 폴더에 진입했을 때만 활성화되어 토큰을 절약함.
+    *   **내용**: 해당 모듈이나 기능에 특화된 컨텍스트. 시작 시 로드되지 않고 Claude가 해당 폴더의 파일을 읽거나 수정할 때 로드되어 토큰을 절약함.
+    *   참고: 공식 문서에서 "로컬(Local)" 메모리는 프로젝트 루트의 `./CLAUDE.local.md`를 가리킴. 나만 쓰는 프로젝트별 설정용이며 `.gitignore`에 추가함.
 
 ### 2-2. 작성 꿀팁 및 문법
 *   **명시적 파일 참조 (@ 태그)**
@@ -102,7 +101,7 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
 *   `/clear`:
     *   **상황**: 한 가지 작업을 마치고 다른 기능을 구현하려 할 때.
     *   **기능**: 이전 대화 세션의 컨텍스트를 비움. 이전 작업 내용이 섞여서 오작동(Hallucination)하는 것을 방지함.
-*   `/review`:
+*   `/review` (현재는 `/code-review`의 별칭):
     *   **상황**: 코드를 작성한 후 커밋하기 전.
     *   **기능**: 변경된 코드(DIff)를 분석하여 잠재적 버그, 스타일상의 문제, 개선점을 제안받음. "셀프 코드 리뷰" 효과가 있음.
 *   `/compact`:
@@ -114,6 +113,7 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
 ### 3-2. 프롬프트 엔지니어링 전략
 *   **Thinking Token 유도**:
     *   복잡한 로직을 질문할 때는 "단계별로 생각해서 답해줘 (Search step-by-step)" 또는 `thinking` 키워드를 포함시킬 것. Claude가 내부적으로 사고 과정(Chain of Thought)을 거치며 훨씬 논리적인 답을 내놓음.
+    *   참고: `think`/`ultrathink` 같은 키워드로 사고량을 늘리는 방식은 레거시임. 현행 공식 문서는 plan mode와 effort 수준(`/effort`, `--effort`) 조절을 안내함.
 *   **이미지 멀티모달 활용**:
     *   터미널에 이미지 파일 경로를 입력하거나 드래그앤드롭하여 이미지 분석을 요청할 수 있음.
     *   **활용**: "이 UI 스크린샷처럼 CSS 수정해줘", "이 아키텍처 다이어그램대로 폴더 구조 잡아줘".
@@ -137,7 +137,7 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
     *   하나의 로컬 폴더에서 여러 브랜치를 왔다 갔다 하면 빌드 파일 꼬임 등이 발생할 수 있음.
     *   `git worktree`를 사용하여 별도의 디렉토리로 브랜치를 분리하고, 각 디렉토리마다 Claude를 실행시키면 충돌 없이 완벽한 병렬 작업이 가능함.
 *   **GitHub CLI (`gh`) 연동**:
-    *   `claude allow gh` 명령어로 권한을 부여할 것.
+    *   `gh` CLI를 설치·로그인한 뒤, `/permissions`나 `settings.json`의 `permissions.allow`에 `Bash(gh *)` 같은 규칙을 추가해 권한을 부여할 것. (`claude allow` 라는 서브커맨드는 없음)
     *   **활용**: "방금 작업한 내용으로 PR 올려줘", "이슈 #42번 내용 읽어보고 코드 수정해줘" 같은 자연어 명령으로 GitHub 워크플로우를 제어할 수 있음.
 
 ### 4-2. Agent Teams (팀 협업 시뮬레이션)
@@ -161,7 +161,8 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
     *   `claude "빌드랑 테스트 다 끝나면 시스템 알림 보내줘"`
     *   오래 걸리는 작업을 시켜놓고 딴짓을 하다가, 작업이 끝나면 OS 알림을 받아 바로 복귀할 수 있음.
 *   **프롬프트 캐싱 (Prompt Caching)**:
-    *   Claude는 최근에 읽은 큰 파일(코드베이스)을 캐싱함. 같은 세션 내에서는 동일한 코드를 다시 읽어도 비용이 훨씬 저렴함. 가능한 한 세션을 길게 유지하거나 `/compact`하며 쓰는 것이 경제적임.
+    *   Claude Code는 시스템 프롬프트와 대화 이력 같은 반복 내용을 프롬프트 캐시로 재사용함. 캐시 수명(TTL) 안에서 이어지는 요청은 캐시 읽기 요금이 적용되어 저렴함.
+    *   다만 세션이 길어질수록 매 요청마다 전체 대화가 전송되어 사용량이 커지고, 컨텍스트가 찰수록 품질도 떨어짐. 관련 없는 작업으로 넘어갈 때는 `/clear`로 새로 시작하는 것이 공식 권장 사항임.
 *   **롤백 (Safety Rollback)**:
     *   Claude가 코드를 망쳤을 때 당황하지 말 것.
     *   `git checkout .` 같은 명령어를 직접 칠 필요 없이, "방금한거 취소해", "아까 상태로 되돌려"라고 말하면 Claude가 알아서 Git을 이용해 복구함.
@@ -169,7 +170,8 @@ Claude Code는 터미널 기반 도구이므로 CLI(Command Line Interface) 활�
     *   자주 쓰는 긴 명령어는 `.zshrc`나 `.bashrc`에 alias로 등록하는 것을 추천.
     *   예: `alias c="claude"` 또는 `alias cres="claude --continue"`
 *   **장애 대응 도구**:
-    *   에러 메시지를 복사할 필요 없이 `!! | claude "이 에러 왜 났어?"` (zsh 기준) 처럼 직전 명령어의 출력을 바로 넘겨서 원인을 분석할 수 있음.
+    *   에러 메시지를 복사할 필요 없이 `!! 2>&1 | claude -p "이 에러 왜 났어?"` (zsh 기준) 처럼 직전 명령어의 출력을 바로 넘겨서 원인을 분석할 수 있음.
+    *   참고: `!!`는 직전 명령어 문자열로 치환되어 그 명령을 다시 실행함(이전 출력을 재사용하는 것이 아님). 에러 메시지는 보통 stderr로 나오므로 `2>&1`로 합쳐서 넘김.
 
 ## 결론
 Claude Code는 단순한 CLI 도구가 아님. 이는 학습하고, 기억하고, 사용자와 함께 성장하는 **"파트너"**임. 위에서 소개한 60가지 꿀팁의 핵심 철학은 **"명확한 컨텍스트 제공"**과 **"도구의 적절한 조합"**임. 이 가이드를 옆에 두고 하나씩 실무에 적용해보며 나만의 최적화된 워크플로우를 완성해보길 바람.

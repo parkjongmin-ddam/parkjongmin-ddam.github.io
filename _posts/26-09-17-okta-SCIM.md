@@ -31,7 +31,7 @@ SCIM(System for Cross-domain Identity Management)은 서로 다른 도메인 사
 
 그럼 왜 SCIM이 필요한가. SSO는 인증만 해결한다. 사용자가 로그인할 수 있으려면 앱에 계정이 먼저 존재해야 하고, 퇴사하면 그 계정이 비활성화되어야 한다. 로그인 시점에 계정을 만들어주는 JIT(Just-In-Time) 프로비저닝도 있지만, JIT는 태생적으로 **떠난 사람을 처리하지 못한다** — 로그인하지 않는 사용자에게는 아무 일도 일어나지 않기 때문이다. 입사(Joiner)·이동(Mover)·퇴사(Leaver) 전체 수명주기, 특히 보안상 가장 중요한 deprovisioning을 자동화하려면 IdP가 능동적으로 앱에 요청을 보내는 SCIM 방식이 필요하다.
 
-여기까지가 명세다. 그런데 명세가 정의하는 것과 Okta가 실제로 보내는 요청 사이에는 간극이 있다. `/ServiceProviderConfig`로 capability를 선언하게 되어 있지만 Okta는 읽지 않고, PATCH가 명세에 있지만 Okta는 PUT만 쓴다. 그 간극을 요청 단위로 확인하는 것이 이번 실측이다.
+여기까지가 명세다. 그런데 명세가 정의하는 것과 Okta가 실제로 보내는 요청 사이에는 간극이 있다. `/ServiceProviderConfig`로 capability를 선언하게 되어 있지만 Okta는 읽지 않고, PATCH가 명세에 있지만 AIW로 만든 커스텀 SCIM 앱에서는 Okta가 PUT만 쓴다(OIN 앱은 활성/비활성·그룹 갱신에 PATCH를 쓴다). 그 간극을 요청 단위로 확인하는 것이 이번 실측이다.
 
 ## 2. 랩 구성
 
@@ -41,7 +41,7 @@ SCIM(System for Cross-domain Identity Management)은 서로 다른 도메인 사
 | 앱 | SCIM-SAML-sp — AIW로 만든 커스텀 SAML 앱, General → Provisioning: SCIM |
 | SCIM 서버 | 자체 Flask SCIM 2.0 서버 (scim_server.py) |
 | 노출 경로 | cloudflared 터널 (`https://{tunnel-host}`) |
-| 대상 계정 | seonjung.jeon, jaehong.yoo — 둘 다 AD-sourced |
+| 대상 계정 | `<user1>`, `<user2>` — 둘 다 AD-sourced |
 | 대상 그룹 | okta-lab-users — AD-sourced |
 
 계정과 그룹은 [랩 4]({% post_url 26-07-29-okta-ad-agent %})에서 AD Agent로 Import한 AD-sourced 리소스를 그대로 쓴다. AD → Okta → SCIM 앱으로 이어지는 전체 체인에서 Okta가 중계자 역할을 하는 구성이다. org 서브도메인·터널 호스트·토큰·앱 ID는 치환(마스킹)해 표기한다.
@@ -127,7 +127,7 @@ Groups 조회는 앱 쪽 그룹 목록을 캐시하기 위한 것이다. 이후 
 
 ## 5. 사용자 할당 — Push New Users
 
-seonjung.jeon을 앱에 할당하면 다음 순서로 요청이 나간다.
+`<user1>`을 앱에 할당하면 다음 순서로 요청이 나간다.
 
 ![Assignments에서 azlab 계정 할당](/assets/images/26-09-17/24-assign-azlab.png)
 
@@ -230,7 +230,7 @@ PUT /Groups/{id}    ← 동일 내용 재동기화
 
 본문에서 확인한 중요한 사실 두 가지:
 
-**첫째, members에는 앱에 할당된 사용자만 들어간다.** AD 그룹 okta-lab-users에는 멤버가 셋(seonjung.jeon, jaehong.yoo, guyong.lee)이지만, 푸시된 members에는 앱에 할당된 seonjung.jeon 한 명뿐이었다. 나머지 멤버에 대한 `POST /Users`도 나가지 않는다.
+**첫째, members에는 앱에 할당된 사용자만 들어간다.** AD 그룹 okta-lab-users에는 멤버가 셋(`<user1>`, `<user2>`, `<user3>`)이지만, 푸시된 members에는 앱에 할당된 `<user1>` 한 명뿐이었다. 나머지 멤버에 대한 `POST /Users`도 나가지 않는다.
 
 **둘째, Group Push는 앱 접근 권한을 부여하지 않는다.** 할당(계정 생성)과 푸시(그룹 소속 동기화)는 완전히 별개의 축이다. Okta가 "Assign에 쓰는 그룹과 Push하는 그룹을 분리하라"고 권고하는 근거가 바로 이 구조다.
 
@@ -238,7 +238,7 @@ PUT /Groups/{id}    ← 동일 내용 재동기화
 
 ## 10. 멤버십 변경 전파 — 그리고 비대칭
 
-jaehong.yoo를 앱에 할당하자 사용자 생성과 그룹 갱신이 연달아 나갔다.
+`<user2>`를 앱에 할당하자 사용자 생성과 그룹 갱신이 연달아 나갔다.
 
 ![두 사용자 할당 상태](/assets/images/26-09-17/36-assignments-two-users.png)
 
@@ -253,13 +253,13 @@ PUT /Groups/{id}           ← 동일 내용, 순서만 다름
 
 앱에 할당되는 순간, 그 사용자가 속한 푸시 그룹의 members에 자동으로 편입된다. 그리고 **그룹 PUT은 항상 전체 members 목록이다.** PATCH의 add/remove 연산이 아니라 매번 전체 교체다. 멤버가 수천 명인 그룹이라면 멤버 한 명의 변경마다 전체 목록이 왕복한다는 뜻이다.
 
-반면 seonjung.jeon을 Unassign했을 때는 사용자 `PUT active:false`만 발생하고 **그룹 PUT은 나가지 않았다.** 비활성 계정이 앱 그룹 members에 그대로 남는다. 할당은 그룹 갱신을 동반하지만 해제는 동반하지 않는 비대칭이다. 앱 쪽에서 그룹 멤버십으로 권한을 판정한다면, 비활성 계정이 권한 그룹에 남아 있는 상태를 앱이 스스로 걸러야 한다.
+반면 `<user1>`을 Unassign했을 때는 사용자 `PUT active:false`만 발생하고 **그룹 PUT은 나가지 않았다.** 비활성 계정이 앱 그룹 members에 그대로 남는다. 할당은 그룹 갱신을 동반하지만 해제는 동반하지 않는 비대칭이다. 앱 쪽에서 그룹 멤버십으로 권한을 판정한다면, 비활성 계정이 권한 그룹에 남아 있는 상태를 앱이 스스로 걸러야 한다.
 
 ![멤버십 전파 로그 — 할당 시 그룹 PUT 동반, 해제 시 사용자 PUT만](/assets/images/26-09-17/37-membership-propagation.png)
 
 ## 11. 재할당은 재활성화다 — 그리고 password의 출처
 
-seonjung.jeon을 다시 할당하자 이번에는 filter가 기존 계정 1건(active: false)을 찾았다.
+`<user1>`을 다시 할당하자 이번에는 filter가 기존 계정 1건(active: false)을 찾았다.
 
 ```
 GET /Users?filter=…                → 1건 (active: false)
@@ -298,7 +298,7 @@ POST는 나가지 않는다. **재할당은 재생성이 아니라 재활성화�
 이 랩은 비밀번호가 오가는 실측이라 정리 항목에 보안 사항이 포함된다.
 
 - **Okta**: Push Groups에서 okta-lab-users를 Unlink(Delete the group in target app) → Assignments 전원 Unassign → Provisioning → Integration에서 Enable API integration 해제 또는 General → Provisioning: None
-- **AD**: 실험으로 바꿨던 seonjung.jeon의 title을 원복
+- **AD**: 실험으로 바꿨던 `<user1>`의 title을 원복
 - **로컬**: cloudflared 종료, SCIM 토큰 폐기. 그리고 요청 로그(`scim_requests.jsonl`)에 **평문 password가 남아 있는 구간을 삭제 또는 마스킹**해야 한다. 11절에서 확인했듯 서버가 writeOnly를 지키기 전까지의 로그에는 password가 그대로 담겨 있다
 - **서버 코드**: 초기 버전은 POST 본문을 통째로 저장·반환해 password를 응답에 노출했다. 응답 직전에 민감 속성을 제거하는 수정본으로 교체했다
 
@@ -309,6 +309,7 @@ POST는 나가지 않는다. **재할당은 재생성이 아니라 재활성화�
 ## 14. 미실측 항목
 
 - **PATCH 방식** — Okta가 AIW 앱에 PATCH를 쓰는 조건이 있는지. 이번 실측에서는 전부 PUT이었다
+  - 참고: Okta KB는 AIW SCIM 앱의 사용자·그룹 갱신이 전부 PUT으로 나가고, OIN 앱은 일반 속성은 PUT, 활성/비활성·그룹 갱신은 PATCH로 나간다고 설명한다 — <https://support.okta.com/help/s/article/differentiate-scim-update-methods-for-okta-app-integration-wizard-and-okta-integration-network-applications>
 - **Import(To Okta)** — 앱 사용자를 Okta로 가져오는 반대 방향(GET 페이지네이션)
 - **Push now 강제 동기화** — 비활성 멤버가 그룹 members에서 빠지는지(10절의 비대칭이 해소되는지)
 - **서버 5xx·타임아웃 시 Okta의 재시도 간격**

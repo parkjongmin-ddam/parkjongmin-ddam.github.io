@@ -20,7 +20,7 @@ description: "홈랩 온프레미스 AD를 Microsoft 365 테넌트에 하이브�
 
 ## 1. 온프레미스 UPN 정리 — 라우팅 불가 도메인 대응
 
-온프레미스 사용자 UPN은 `user01@azlab.istn.co.kr`이다. 그런데 `azlab.istn.co.kr`은 공용 인터넷에 등록된 도메인이 아니라 테넌트에 검증 등록이 불가능한 라우팅 불가(non-routable) 도메인이다. 하위 도메인이라 `istn.co.kr`의 공용 DNS를 제어할 수도 없다.
+온프레미스 사용자 UPN은 `user01@azlab.istn.co.kr`이다. 그런데 `azlab.istn.co.kr`은 공용 인터넷에 등록된 도메인이 아니라 테넌트에 검증 등록이 불가능한 라우팅 불가(non-routable) 도메인이다. `istn.co.kr`의 공용 DNS 관리 권한이 없어서 검증용 TXT 레코드를 넣을 수도 없다.
 
 이 상태로 동기화하면 UPN 접미사가 검증된 도메인(`____.onmicrosoft.com`)으로 자동 대체되어 온-클라우드 로그인 이름이 달라진다. 해결은 온프레미스에 `onmicrosoft.com`을 대체 UPN 접미사로 추가하고, 사용자 UPN을 거기 맞추는 것이다.
 
@@ -68,7 +68,9 @@ Get started의 Manage 탭 하단에서 **"Download Connect Sync Agent"**를 받�
 
 ## 3. 동기화 전용 관리자 계정 만들기
 
-개인 MSA(#EXT# 게스트) 계정으로는 Entra Connect 설치가 안 된다. 동기화 구성에는 테넌트 내부(Member) 전역 관리자가 필요하므로, 새로 만든다.
+개인 MSA(#EXT# 게스트) 계정으로는 Entra Connect 설치가 안 된다. 동기화 구성에는 테넌트 내부(Member) 관리자 계정(전역 관리자 또는 하이브리드 ID 관리자)이 필요하므로, 새로 만든다.
+
+> 참고: Microsoft 문서 기준 Entra Connect 설치·구성에 필요한 최소 역할은 Hybrid Identity Administrator이며, 초기 설정 이후에는 이 역할도 필요하지 않다. 이 랩에서는 Global Administrator를 부여했지만 최소 권한 원칙상 Hybrid Identity Administrator가 권장된다.
 
 Basics — UPN과 비밀번호 설정 (UPN: `syncadmin@peyzddamoutlook.onmicrosoft.com`)
 
@@ -131,7 +133,7 @@ FOREST에 `azlab.istn.co.kr`을 확인하고 Add Directory.
 
 ![Connect Directories — 온프레미스 포리스트 추가](/assets/images/entra-connect-hybrid/connect-directories-forest.png)
 
-AD forest account — "Create new AD account"를 선택하고 온프레미스 Enterprise Admin(`AZLAB\adm-jmpark`)을 입력한다. 여기는 클라우드 계정이 아니라 온프레미스 관리자다. 동기화 전용 서비스 계정(`MSOL_`)이 자동 생성된다.
+AD forest account — "Create new AD account"를 선택하고 온프레미스 Enterprise Admin(`AZLAB\adm-<user>`)을 입력한다. 여기는 클라우드 계정이 아니라 온프레미스 관리자다. 동기화 전용 서비스 계정(`MSOL_`)이 자동 생성된다.
 
 ![AD forest account — 온프레미스 관리자 계정 입력](/assets/images/entra-connect-hybrid/connect-directories-onprem-admin.png)
 
@@ -153,7 +155,7 @@ UPN 접미사 표에서 `azlab.istn.co.kr`은 영구히 검증 불가이므로, 
 
 ![Domain/OU Filtering — LabAccounts OU 선택](/assets/images/entra-connect-hybrid/ou-filtering.png)
 
-> **주의** — LabAccounts OU 하위에는 Admins / Service / Users 서브 OU가 있고, 상위 OU를 체크하면 하위가 전부 포함된다. 그래서 이 구성으로 동기화하면 의도한 user01~05 외에 adm-jmpark(관리자), svc-* (서비스) 계정까지 클라우드로 올라간다. user 계정만 원한다면 LabAccounts가 아니라 그 안의 Users 서브 OU만 체크해야 한다. 필요 이상의 계정(특히 관리자·서비스 계정)이 클라우드로 올라가는 건 공격 표면 확대이므로, 실무에서는 범위를 최소로 잡는 게 원칙이다.
+> **주의** — LabAccounts OU 하위에는 Admins / Service / Users 서브 OU가 있고, 상위 OU를 체크하면 하위가 전부 포함된다. 그래서 이 구성으로 동기화하면 의도한 user01~05 외에 `adm-<user>`(관리자), svc-* (서비스) 계정까지 클라우드로 올라간다. user 계정만 원한다면 LabAccounts가 아니라 그 안의 Users 서브 OU만 체크해야 한다. 필요 이상의 계정(특히 관리자·서비스 계정)이 클라우드로 올라가는 건 공격 표면 확대이므로, 실무에서는 범위를 최소로 잡는 게 원칙이다.
 
 ## 8. 나머지 화면과 설치
 
@@ -187,7 +189,7 @@ Get-ADSyncScheduler
 Start-ADSyncSyncCycle -PolicyType Delta   # 즉시 동기화 (Result: Success)
 ```
 
-② 포털에서 계정 확인 — Entra ID → Users에 user01~05가 나타나고 "Directory synced: Yes"로 표시된다. (앞서 OU 필터에서 LabAccounts를 통째로 잡았기 때문에 adm-jmpark, svc-* 계정도 함께 보인다 — 7장의 함정 그대로다.)
+② 포털에서 계정 확인 — Entra ID → Users에 user01~05가 나타나고 "Directory synced: Yes"로 표시된다. (앞서 OU 필터에서 LabAccounts를 통째로 잡았기 때문에 `adm-<user>`, svc-* 계정도 함께 보인다 — 7장의 함정 그대로다.)
 
 ③ 결승선 — PHS 로그인 테스트:
 

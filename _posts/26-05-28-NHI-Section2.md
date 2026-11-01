@@ -8,9 +8,9 @@ description: "지난 편의 Role 사다리는 '자격증명을 어떻게 보관�
 ---
 
 > **이 글을 읽기 전에 — NHI Top 10이 처음이라면**
-> NHI(Non-Human Identity, 비인간 식별자)는 사람이 아닌 주체 — 애플리케이션·서비스·봇·AI 에이전트 — 가 시스템에 인증할 때 쓰는 정체성이다. API 키·토큰·서비스 계정·인증서가 모두 NHI다. OWASP는 2024년 말 이 영역의 대표 위험 10가지를 [NHI Top 10 (2025)](https://owasp.org/www-project-non-human-identities-top-10/2025/)으로 정리했다. 이 글에 자주 나오는 항목만 추리면: **NHI2**(시크릿 유출), **NHI5**(과대권한 — 필요 이상의 권한), **NHI8**(환경 격리 실패 — dev/prod 자격증명 공유), **NHI9**(NHI 재사용 — 여러 곳이 같은 자격증명 공유), **NHI10**(NHI의 인간 사용 — 사람이 서비스 계정으로 직접 로그인). 더 깊은 배경은 [지난 편](/nhi-top10-role-based-guide/)에 있다. ASI는 뒤에서 설명한다.
+> NHI(Non-Human Identity, 비인간 식별자)는 사람이 아닌 주체 — 애플리케이션·서비스·봇·AI 에이전트 — 가 시스템에 인증할 때 쓰는 정체성이다. API 키·토큰·서비스 계정·인증서가 모두 NHI다. OWASP는 2024년 말 이 영역의 대표 위험 10가지를 [NHI Top 10 (2025)](https://owasp.org/www-project-non-human-identities-top-10/2025/)으로 정리했다. 이 글에 자주 나오는 항목만 추리면: **NHI2**(시크릿 유출), **NHI5**(과대권한 — 필요 이상의 권한), **NHI8**(환경 격리 실패 — dev/prod 자격증명 공유), **NHI9**(NHI 재사용 — 여러 곳이 같은 자격증명 공유), **NHI10**(NHI의 인간 사용 — 사람이 서비스 계정으로 직접 로그인). 더 깊은 배경은 [지난 편](/security/iam/NHI/)에 있다. ASI는 뒤에서 설명한다.
 
-[지난 편](/nhi-top10-role-based-guide/)에서 OWASP NHI Top 10을 8개 Role 타입별로 재배치하고, 그걸 *Legacy SA → gMSA → Managed Identity → Federation/SPIFFE* 라는 4단계 마이그레이션 사다리로 정리했다. 핵심은 "한 단계 위로 올라가면 통제로 막던 위험 1~2개가 구조적으로 사라진다"는 것이었다.
+[지난 편](/security/iam/NHI/)에서 OWASP NHI Top 10을 8개 Role 타입별로 재배치하고, 그걸 *Legacy SA → gMSA → Managed Identity → Federation/SPIFFE* 라는 4단계 마이그레이션 사다리로 정리했다. 핵심은 "한 단계 위로 올라가면 통제로 막던 위험 1~2개가 구조적으로 사라진다"는 것이었다.
 
 그런데 2025년 말, 그 사다리 위에 완전히 새로운 워크로드 유형이 올라왔다 — **AI 에이전트**다. 이 글은 OWASP가 발표한 [Top 10 for Agentic Applications (2026)](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)을 지난 편의 사다리 위에 얹어, 세 가지를 다룬다: ① 에이전트가 사다리에 추가하는 새 축, ② ASI 위험이 Stage별로 어떻게 달라지는지, ③ 권한 인식 RAG가 그 교집합을 어떻게 푸는지.
 

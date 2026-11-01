@@ -110,6 +110,8 @@ AlternateSignatureAlgorithm=1
 '@ | Set-Content -Path C:\Windows\CAPolicy.inf -Encoding ASCII
 ```
 
+> 참고: `AlternateSignatureAlgorithm=1`은 루트 CA 인증서를 PKCS#1 v2.1(RSASSA-PSS) 서명 형식으로 만든다. Microsoft 문서는 Windows XP/Server 2003 클라이언트 미지원만 명시하지만, 비Windows 장비·라이브러리 중에도 PSS 서명 체인을 처리하지 못하는 경우가 있어 Linux 클라이언트 등이 섞이는 환경이면 호환성을 먼저 확인하거나 0으로 두는 편이 안전하다. CAPolicy.inf는 CA 설치·갱신 시에만 읽히므로 나중에 바꾸려면 CA 인증서를 새 키로 갱신해야 한다.
+
 > `LoadDefaultTemplates=0` — 루트 CA는 직접 인증서를 발급하지 않으므로 템플릿을 로드하지 않는다.
 
 ### 역할 설치 + 독립형 루트 CA 구성
@@ -252,6 +254,13 @@ certutil -installcert "C:\ISCA01-signed.cer"
 Start-Service CertSvc
 ```
 
+> 참고: 2-Tier에서 Enterprise 하위 CA를 붙일 때 표준 절차에는 루트 인증서와 루트 CRL을 AD에 게시하는 단계가 있다(Enterprise Admins 권한으로 도메인 멤버에서 실행).
+> ```cmd
+> certutil -dspublish -f ROOTCA_lab-ROOTCA-CA.crt RootCA
+> certutil -dspublish -f lab-ROOTCA-CA.crl ROOTCA
+> ```
+> 첫 줄은 루트 인증서를 AD Configuration 컨테이너에 올려 도메인 멤버가 별도 GPO 배포 없이 ROOTCA를 신뢰 루트로 자동 신뢰하게 하고, 둘째 줄은 루트 CRL을 AD(LDAP)에 게시한다(발급된 인증서의 CDP에 LDAP 경로가 있어야 클라이언트가 이 위치를 쓴다). 이 랩에서는 이 단계를 생략하고 ISCA01의 로컬 Root 저장소에만 루트 인증서를 넣었다. 그래서 다른 도메인 멤버는 ROOTCA를 자동 신뢰하지 않으며, 이후 ADFS 글의 클라이언트 인증서 경고와 Kubernetes 글에서 GPO로 ROOTCA를 배포한 작업이 이 영향과 관련된 것으로 보인다.
+
 그런데 여기서 서비스 시작이 실패한다.
 
 > **[트러블슈팅 #3] CRYPT_E_REVOCATION_OFFLINE — 2-Tier의 대표 관문**
@@ -318,6 +327,7 @@ certutil -setreg CA\CRLPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll
 
 net stop certsvc && net start certsvc
 :: 서비스 안정화 위해 10초 대기 후 게시 (초기화 전 게시하면 실패)
+timeout /t 10 /nobreak
 certutil -CRL
 ```
 
@@ -328,7 +338,7 @@ certutil -CRL
 # 200
 ```
 
-> **참고 — 루트 인증서의 file:// 경고**: `certutil -verify`를 돌리면 ROOTCA 레벨의 CDP/AIA가 `file://ROOTCA/...`로 잡혀 Failed가 뜰 수 있다. 이는 ROOTCA 구성 시 CDP/AIA를 HTTP로 설정하지 않았을 때 발생하는데, 루트는 신뢰 앵커로 이미 신뢰 저장소에 설치돼 있으므로 발급 목적에는 지장이 없다. 완벽을 기하려면 ROOTCA CDP/AIA도 HTTP로 재설정하고 루트 인증서를 재발급하면 된다.
+> **참고 — 루트 인증서의 file:// 경고**: `certutil -verify`를 돌리면 ROOTCA 레벨의 CDP/AIA가 `file://ROOTCA/...`로 잡혀 Failed가 뜰 수 있다. 이는 ROOTCA 구성 시 CDP/AIA를 HTTP로 설정하지 않았을 때 발생한다. 루트 인증서 자체는 신뢰 앵커라 폐기검증 대상이 아니지만, 여기서 문제가 되는 것은 ISCA01 인증서에 박힌 ROOTCA CDP다. 체인 검증은 중간 CA(ISCA01)의 폐기 여부를 ROOTCA CRL로 확인하므로, ROOTCA CDP가 `file://`뿐이고 루트 CRL을 `pki.lab.local` 같은 HTTP 배포지점에 게시하지 않으면 도메인 미가입·격리 클라이언트에서는 중간 CA 폐기검증이 실패해 체인 검증이 깨진다(이후 [WAP 글](/infra/pki/WAP구성/)에서 실제로 발생). 근본 해결은 ROOTCA의 CDP/AIA를 HTTP로 재설정하고 ISCA01 인증서를 다시 발급받은 뒤, 루트 CRL을 HTTP 배포지점에 올려두는 것이다.
 
 ---
 

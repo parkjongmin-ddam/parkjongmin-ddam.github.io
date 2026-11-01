@@ -506,6 +506,7 @@ def resolve_user(
 ### database/connection.py — asyncpg 풀 + PGVector
 
 ```python
+from contextlib import asynccontextmanager
 import asyncpg
 from langchain_postgres.vectorstores import PGVector
 from sqlalchemy import create_engine
@@ -568,6 +569,7 @@ return sorted(combined.values(), key=lambda x: x["score"], reverse=True)[:limit]
 ### server.py — FastAPI 앱 진입점
 
 ```python
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langconnect.api import auth_router, collections_router, documents_router
@@ -624,6 +626,8 @@ mcpserver/
 FastMCP 라이브러리로 `@mcp.tool` 데코레이터만 붙이면 도구로 등록됨. LangConnect API를 httpx로 호출하는 구조임.
 
 ```python
+# 핵심 부분 발췌: client, prompt, LineListOutputParser, OPENAI_API_KEY 정의와
+# ChatOpenAI, json import는 생략함
 from fastmcp import FastMCP
 import httpx
 

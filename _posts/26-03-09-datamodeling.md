@@ -84,7 +84,7 @@ tags: [ERD, Database, Modeling, 데이터베이스설계, TIL]
 
 ```
 ┌──────────┐       ┌──────────┐       ┌──────────┐
-│  Author  │──────<│   Book   │>──────│Publisher │
+│  Author  │>─────<│   Book   │>──────│Publisher │
 └──────────┘  N:M  └────┬─────┘  N:1  └──────────┘
                          │
                      N:1 │
@@ -384,7 +384,7 @@ CREATE INDEX idx_loan_status  ON loan (status);
 
 ### ③ 감사(Audit) 컬럼
 
-- `created_at`, `updated_at` 컬럼을 핵심 테이블에 추가하여 데이터 변경 이력 추적
+- `created_at`, `updated_at` 컬럼을 핵심 테이블에 추가하여 최종 생성·수정 시각 기록 (변경 이력 전체를 추적하려면 별도 history/audit 테이블이 필요함)
 
 ---
 

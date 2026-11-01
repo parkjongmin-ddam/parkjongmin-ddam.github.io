@@ -10,6 +10,8 @@ tags: [Okta, SCIM, Provisioning, Lifecycle, Active-Directory, Deprovisioning, �
 
 ## 1. 배경
 
+이 글은 [랩 6]({% post_url 26-09-17-okta-SCIM %})·[랩 7]({% post_url 26-09-18-okta-id %})의 실측을 주제별로 재정리한 글이다.
+
 [1편]({% post_url 26-09-22-okta-scim-provisioning %})에서 Okta가 SCIM 서버에 보내는 요청의 형태를 봤다. 이 글은 그 요청이 **실패했을 때**, 그리고 AD에서 시작된 변경(비활성화·복귀·그룹 멤버십)이 Okta를 거쳐 앱까지 어떻게 도달하는지를 본다.
 
 구성·마스킹 규칙은 1편과 동일하다. AD 쪽은 Okta AD Agent로 연결된 랩 도메인(마스킹)이고, 사용자·그룹 모두 AD-sourced다.

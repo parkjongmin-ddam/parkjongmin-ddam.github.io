@@ -90,7 +90,7 @@ Directory → Groups에서 역할별 그룹을 만든다. `agent-builder`, 그�
 
 ID 토큰에 그룹을 담는 것이 이 연동의 핵심인데, 여기가 가장 헷갈렸다.
 
-- 클라이언트 scope에 `groups`를 추가하면 **`invalid_scope` 400**이 났다 — default 인가 서버에 `groups`라는 커스텀 스코프가 없기 때문이다
+- 클라이언트 scope에 `groups`를 추가하면 **`invalid_scope` 400**이 났다 — default 인가 서버에 `groups`라는 커스텀 스코프가 없기 때문이다. 참고로 Org Authorization Server(`/oauth2/v1`)에서는 `openid groups`를 scope로 요청하는 방식이 문서화돼 있어, 이 제약은 커스텀 인가 서버(default 포함) 기준이다
 - Security → API → default 서버의 Scopes 탭에서 커스텀 스코프를 직접 추가하는 경로가 있다 (아래 캡처)
 - 하지만 스코프를 만들지 않아도 된다 — **Claims 탭에서 groups 클레임을 ID Token / Always(Any scope)로 추가**하면 `openid profile email` 3개 스코프만으로 ID 토큰에 groups가 담긴다. 필터는 정규식 `agent-.*`로 걸어 이 앱과 무관한 그룹은 토큰에 싣지 않았다
 

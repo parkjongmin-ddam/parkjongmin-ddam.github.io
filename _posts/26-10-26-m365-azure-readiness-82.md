@@ -390,7 +390,7 @@ M365 관리 센터의 에이전트 메뉴에는 마켓플레이스 카탈로그 
 
 ![액세스 검토 없음](/assets/images/m365-readiness-82/e-x32-01.jpg)
 
-Identity Governance의 액세스 검토가 0건이다. 게스트에 역할이 들어가 있는 테넌트(x01)에서 액세스 검토가 없다는 건, 그 권한이 적절한지 주기적으로 묻는 장치가 없다는 뜻이다. P2에 포함된 기능이므로 게스트·관리자 역할 대상 분기 검토부터 만드는 게 적절하다. 화면의 공지대로 2026년 1월 15일부터 게스트 대상 Governance 기능에 Azure 구독 연결이 필요해진 점도 전환 계획에 반영해야 한다.
+Identity Governance의 액세스 검토가 0건이다. 게스트에 역할이 들어가 있는 테넌트(x01)에서 액세스 검토가 없다는 건, 그 권한이 적절한지 주기적으로 묻는 장치가 없다는 뜻이다. P2에 포함된 기능이므로 게스트·관리자 역할 대상 분기 검토부터 만드는 게 적절하다. 화면의 공지대로 2026년 1월 15일부터 게스트 대상 Governance 기능에 Azure 구독 연결이 필요해진 점도 전환 계획에 반영해야 한다([Microsoft Learn — 게스트 사용자용 ID Governance 라이선스](https://learn.microsoft.com/en-us/entra/id-governance/microsoft-entra-id-governance-licensing-for-guest-users)).
 
 ## 10. 점검 자동화 앱 상태
 

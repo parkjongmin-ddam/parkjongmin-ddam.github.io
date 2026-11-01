@@ -177,6 +177,8 @@ Entra ID가 OIDC 앱(앱 등록)과 SAML 앱(엔터프라이즈 애플리케이�
 
 ![Add expression — groups](/assets/images/okta_02/23-add-expression-groups.png)
 
+참고: 이 표현식은 결과를 확인하지 않은 채 아래 Group attribute statements로 옮겼다. Okta Expression Language 문서상 `user.getGroups`의 `group.profile.name`은 `EXACT`/`STARTS_WITH` 연산자만 지원하고(생략 시 `STARTS_WITH`) 정규식은 지원 목록에 없다. `'.*'`는 문자열 그대로 접두어 비교되므로 의도대로 동작하지 않을 가능성이 크다. 그룹 이름 목록을 얻으려면 `user.getGroups({'group.profile.name': 'dept-', 'operator': 'STARTS_WITH'}).![name]`처럼 연산자와 `.![name]` 프로젝션을 쓴다.
+
 `email`, `firstName`, `lastName`, `groups` 네 개를 구성했다.
 
 ![Attribute statements 구성 완료](/assets/images/okta_02/24-attribute-statements-done.png)
@@ -185,7 +187,7 @@ Entra ID가 OIDC 앱(앱 등록)과 SAML 앱(엔터프라이즈 애플리케이�
 
 ![Group attribute statements 재설정](/assets/images/okta_02/25-group-attribute-statements.png)
 
-두 블록에 같은 이름을 넣으면 assertion에 동일 이름 Attribute가 중복으로 실릴 수 있다. 그룹은 한쪽에만 두는 편이 안전하다. 전편에서 OIDC `groups` 클레임을 만들 때 정규식 필터에 걸렸던 것과 같은 함정이 SAML 쪽에도 그대로 있는 셈이다.
+두 블록에 같은 이름을 넣으면 assertion에 동일 이름 Attribute가 중복으로 실릴 수 있다. 그룹은 한쪽에만 두는 편이 안전하다. 전편에서 OIDC `groups` 클레임을 만들 때 정규식 필터에 걸렸던 것과 같은 함정이 SAML Group attribute statements의 `Matches regex` 필터에도 그대로 있는 셈이다. 표현식(`user.getGroups`) 쪽은 정규식이 아니라 연산자 기반 필터라 성격이 다른 문제다.
 
 ## 7. AuthnContextClassRef 고정 문제와 amr 우회
 

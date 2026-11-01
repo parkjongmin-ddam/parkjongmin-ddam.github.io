@@ -263,6 +263,8 @@ react_agent = create_react_agent(
 )
 ```
 
+> 참고: LangGraph v1에서 `create_react_agent`는 deprecated이며, 대체 API는 `langchain.agents.create_agent(model, tools, system_prompt=...)`이다. ([LangGraph v1 마이그레이션 가이드](https://docs.langchain.com/oss/python/migrate/langgraph-v1))
+
 ---
 
 ## 에러 ④ — `agents.py` 응답 중첩: `output.output` 구조

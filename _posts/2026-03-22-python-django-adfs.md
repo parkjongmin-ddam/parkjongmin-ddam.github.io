@@ -15,6 +15,10 @@ tags: [Python, Django, ADFS, OAuth2, OpenIDConnect, SSO, 인증]
 > **인증 방식**: 순수 OAuth 2.0 Authorization Code Flow (openid scope 미사용)  
 > **ADFS 등록 방식**: Native Application (Client Secret 없음)
 
+> 참고: 이 글은 Access Token을 로그인 증거로 사용함. 이 구성은 Web API Identifier(`ADFS_RESOURCE`)가 이 앱 자신이고, 토큰 서명·`aud`·`iss`를 검증할 때만 성립함. 일반적인 로그인 구현은 `scope=openid`로 ID Token을 받아 검증하는 OIDC 방식이 정석임.
+
+> 2026-11 갱신: 토큰 서명 검증(JWKS, RS256, `aud`/`iss`)과 TLS 검증(CA 번들)을 기본 코드에 반영함. 작성 당시 테스트는 `verify=False`, `verify_signature=False`로 진행했으며 이 설정은 운영에 사용할 수 없음.
+
 ---
 
 ## 목차
@@ -46,7 +50,7 @@ OAuth 2.0
 ```
 
 OIDC 는 OAuth 2.0 을 대체하는 게 아니라 **그 위에 얹은 것**임.  
-쉽게 말하면 OIDC 는 OAuth 2.0 의 일종이라고 보면 됨.
+쉽게 말하면 OIDC 는 OAuth 2.0 을 확장한 인증 레이어(신원 계층)로 보면 됨.
 
 ### scope=openid 의 의미
 
@@ -68,7 +72,7 @@ OIDC       =  출입증 + 신분증 발급
 ```
 
 > 이 가이드는 **순수 OAuth 2.0 방식**을 사용함.  
-> ADFS Application Permissions 에서 **openid 체크 해제** 필수!
+> 이 가이드에서는 ADFS Application Permissions 에서 **openid 체크를 해제**함. 단, Application Permissions 의 scope 체크는 허용 범위일 뿐이라 클라이언트가 `scope=openid` 를 요청하지 않으면 ID Token 은 발급되지 않음. 체크 해제는 필수가 아니라 선택임.
 
 ### OAuth 2.0 인증 흐름
 
@@ -79,7 +83,7 @@ OIDC       =  출입증 + 신분증 발급
 ② ADFS 로그인 페이지        → 사내 AD 계정 입력
 ③ Authorization Code 발급  → /oauth2/callback/
 ④ Code → Access Token 교환
-⑤ Access Token (JWT) 디코딩 → Claims 추출
+⑤ Access Token (JWT) 서명·aud·iss 검증 → Claims 추출
 ⑥ Django User 생성/업데이트 → 로그인
 ⑦ /profile/ 이동
 ```
@@ -143,9 +147,11 @@ mkcert -install
 # 인증서 생성
 mkcert localhost 127.0.0.1
 
-# 서버 실행
+# 서버 실행 (django-extensions 의 runserver_plus 사용)
 python manage.py runserver_plus --cert-file localhost+1.pem --key-file localhost+1-key.pem 44367
 ```
+
+> 참고: `runserver_plus` 는 django-extensions 패키지 명령이라 아래 requirements.txt 에 없음. Python 3.12 이상에서는 `pip install django-extensions Werkzeug` 후 `INSTALLED_APPS` 에 `'django_extensions'` 를 추가해야 함. Python 3.11 + django-sslserver 환경에서는 10장의 `runsslserver --certificate ... --key ...` 를 사용함.
 
 ### 가상환경 생성
 
@@ -227,10 +233,10 @@ Secret 을 별도로 요청하거나 생성할 필요 없음.
 |---|---|
 | Relying Party Identifiers | `https://localhost:44367` |
 | Access Control Policy | Permit everyone (테스트용) |
-| Application Permissions | profile, email (**openid 반드시 체크 해제**) |
+| Application Permissions | profile, email (이 가이드에서는 openid 체크 해제) |
 
-여기서 **openid 체크 해제가 핵심**임.  
-openid 가 체크되어 있으면 OIDC 방식으로 동작해서 이 가이드의 OAuth 2.0 구현과 충돌하게 됨.
+이 가이드에서는 openid 체크를 해제했음.  
+다만 Application Permissions 는 허용 범위일 뿐이고, 이 코드는 `scope=openid` 를 요청하지 않으므로 openid 를 허용해 둬도 ID Token 은 발급되지 않고 동작에 영향 없음.
 
 ### 4-4. ADFS 등록 항목 → .env 매핑표
 
@@ -247,6 +253,8 @@ openid 가 체크되어 있으면 OIDC 방식으로 동작해서 이 가이드�
 ```
 ADFS_RESOURCE     → OAuth 2.0 인증 요청 시 resource 파라미터로 전송
                     "이 토큰은 어떤 서비스용인지" ADFS 에 알려주는 역할
+                    (resource 는 RFC 6749 표준이 아닌 ADFS 전용 파라미터.
+                     ADFS 2019+ 는 scope=<resource>/<scope> 형식도 지원)
 
 ADFS_REDIRECT_URI → 인증 완료 후 ADFS 가 code 를 전달하는 주소
                     "인증 끝나면 여기로 돌아와라" 는 역할
@@ -295,11 +303,16 @@ ADFS_REDIRECT_URI=https://localhost:44367/oauth2/callback/
 ADFS_RESOURCE=https://localhost:44367
 
 # Django User.username 에 매핑할 AD 클레임
-# winaccountname = sAMAccountName (사번/영문ID)
+# winaccountname = Windows account name (기본 형식 DOMAIN\sam, 코드에서 DOMAIN\ 제거)
 ADFS_USERNAME_CLAIM=winaccountname
 
-# SSL 검증 (테스트: False / 운영: /path/to/ca-bundle.crt)
-ADFS_CA_BUNDLE=False
+# Access Token 의 iss 값 (프로필 화면 Claims 의 iss 로 확인 후 지정)
+# 일반적으로 ADFS Federation Service Identifier 와 같음
+ADFS_ISSUER=http://adfs.company.com/adfs/services/trust
+
+# SSL 검증: ADFS 서버 인증서를 발급한 CA 번들 경로 (필수)
+# False 는 TLS 검증 생략이라 사용 금지 (작성 당시 테스트는 False 로 진행)
+ADFS_CA_BUNDLE=C:\certs\company-ca-bundle.pem
 
 # ※ Native Application → Client Secret 없음
 ```
@@ -313,6 +326,8 @@ ADFS_CA_BUNDLE=False
 | ADFS_CLIENT_ID | Application Group 등록 시 자동 발급 GUID |
 | ADFS_REDIRECT_URI | Native Application Redirect URI 에 직접 입력한 값 |
 | ADFS_RESOURCE | Web API Relying Party Identifiers 에 직접 입력한 값 |
+| ADFS_ISSUER | Access Token 의 iss 클레임 값 (`Get-AdfsProperties` 의 Identifier 와 대조) |
+| ADFS_CA_BUNDLE | ADFS 서버 인증서를 발급한 CA 인증서(PEM) 경로 |
 
 ---
 
@@ -362,9 +377,10 @@ LOGIN_REDIRECT_URL = '/profile/'     # 로그인 성공 후 이동할 URL
 LOGOUT_REDIRECT_URL = '/'            # 로그아웃 후 이동할 URL
 
 # ── ADFS OAuth 2.0 설정 ───────────────────────────────────
-# .env 의 'False' 문자열을 Python False 로 변환
-ca_raw    = os.environ.get('ADFS_CA_BUNDLE', 'False')
-ca_bundle = False if ca_raw.lower() == 'false' else ca_raw
+# CA 번들 경로 필수. False(검증 생략)는 허용하지 않음
+ca_bundle = os.environ.get('ADFS_CA_BUNDLE')
+if not ca_bundle or ca_bundle.lower() == 'false':
+    raise RuntimeError('ADFS_CA_BUNDLE 에 CA 번들 경로를 지정해야 함 (TLS 검증 생략 금지)')
 
 ADFS_CONFIG = {
     # ADFS 서버 도메인 (https:// 제외)
@@ -386,8 +402,12 @@ ADFS_CONFIG = {
     # 출처: .env → ADFS_RESOURCE
     'RESOURCE': os.environ.get('ADFS_RESOURCE'),
 
+    # Access Token 의 iss 값 (서명 검증 시 함께 확인)
+    # 출처: .env → ADFS_ISSUER
+    'ISSUER': os.environ.get('ADFS_ISSUER'),
+
     # Django User.username 에 매핑할 AD 클레임
-    # winaccountname = sAMAccountName (사번/영문ID)
+    # winaccountname = Windows account name (DOMAIN\sam 형식이면 코드에서 DOMAIN\ 제거)
     # 출처: .env → ADFS_USERNAME_CLAIM
     'USERNAME_CLAIM': os.environ.get('ADFS_USERNAME_CLAIM', 'winaccountname'),
 
@@ -400,8 +420,8 @@ ADFS_CONFIG = {
         'email':      'email',         # AD 이메일 → User.email
     },
 
-    # SSL 인증서 검증
-    # False: 검증 안 함 (사내 사설 인증서 환경, 테스트용)
+    # SSL 인증서 검증 (CA 번들 경로, 필수)
+    # 사내 사설 인증서 환경이면 사내 루트 CA 인증서를 PEM 으로 내보내 지정
     # 출처: .env → ADFS_CA_BUNDLE
     'CA_BUNDLE': ca_bundle,
 }
@@ -457,7 +477,26 @@ def get_adfs_urls():
     return {
         'authorize': f"https://{server}/adfs/oauth2/authorize",
         'token':     f"https://{server}/adfs/oauth2/token",
+        'jwks':      f"https://{server}/adfs/discovery/keys",
     }
+
+
+def get_signing_key(access_token):
+    """
+    ADFS JWKS 에서 토큰 헤더의 kid(x5t) 와 일치하는 서명 키 반환
+    - JWKS 조회도 CA 번들로 TLS 검증
+    """
+    header = jwt.get_unverified_header(access_token)
+    jwks = requests.get(
+        get_adfs_urls()['jwks'],
+        verify=ADFS['CA_BUNDLE'],
+        timeout=10,
+    ).json()
+    for key in jwks.get('keys', []):
+        if (header.get('kid') and key.get('kid') == header.get('kid')) or \
+           (header.get('x5t') and key.get('x5t') == header.get('x5t')):
+            return jwt.PyJWK(key).key
+    raise jwt.InvalidTokenError('일치하는 서명 키 없음')
 
 
 def oauth_login(request):
@@ -479,7 +518,7 @@ def oauth_login(request):
         'response_type': 'code',
         'client_id':     ADFS['CLIENT_ID'],
         'redirect_uri':  ADFS['REDIRECT_URI'],
-        'resource':      ADFS['RESOURCE'],   # OAuth 2.0 핵심 파라미터
+        'resource':      ADFS['RESOURCE'],   # ADFS 전용 파라미터 (RFC 6749 표준 아님)
         'state':         state,
     }
 
@@ -553,25 +592,32 @@ def oauth_callback(request):
             'error_description': 'Access Token 을 받지 못했습니다.',
         })
 
-    # Access Token (JWT) 디코딩 → Claims 추출
+    # Access Token (JWT) 서명·aud·iss·exp 검증 → Claims 추출
+    # ※ options={"verify_signature": False} 로 디코딩만 하면 위조 토큰으로
+    #   임의 사용자 로그인이 가능하므로 운영에 사용 불가
     try:
         claims = jwt.decode(
             access_token,
-            options={"verify_signature": False},
+            key=get_signing_key(access_token),
             algorithms=["RS256"],
+            audience=ADFS['RESOURCE'],    # 이 앱 자신이 resource 일 때만 성립
+            issuer=ADFS['ISSUER'],
         )
         # 세션에 Claims 저장 (프로필 페이지에서 확인용)
         # 운영 배포 전 제거 필요
         request.session['access_token_claims'] = claims
-    except jwt.DecodeError as e:
+    except (jwt.InvalidTokenError, requests.exceptions.RequestException) as e:
+        logger.warning("Access Token 검증 실패: %s", e)
         return render(request, 'accounts/error.html', {
-            'error': 'token_decode_failed',
-            'error_description': 'Access Token 파싱에 실패했습니다.',
+            'error': 'token_validation_failed',
+            'error_description': 'Access Token 검증에 실패했습니다.',
         })
 
     # Django User 생성 또는 업데이트
     username_claim = ADFS['USERNAME_CLAIM']
     username = claims.get(username_claim) or claims.get('sub')
+    if username and '\\' in username:
+        username = username.split('\\', 1)[1]   # DOMAIN\sam → sam
     if not username:
         return render(request, 'accounts/error.html', {
             'error': 'no_username',
@@ -605,6 +651,24 @@ def oauth_logout(request):
     logout(request)
     return redirect(settings.LOGOUT_REDIRECT_URL)
 ```
+
+> 참고: `audience` 는 토큰의 `aud` 와 정확히 같아야 함. 9장 Claims 화면에서 `aud`, `iss` 값을 확인해 `.env` 에 맞출 것.
+
+> 참고: Native Application 은 public client 라 code 탈취 방어가 없음. ADFS 2019 이상은 PKCE 를 지원하므로 아래처럼 추가하는 것을 권장함(RFC 9700 기준 public client 는 PKCE 필수). ADFS 2016 이하는 미지원.
+>
+> ```python
+> import base64, hashlib
+> # oauth_login
+> verifier = secrets.token_urlsafe(64)
+> request.session['pkce_verifier'] = verifier
+> params['code_challenge'] = base64.urlsafe_b64encode(
+>     hashlib.sha256(verifier.encode()).digest()).rstrip(b'=').decode()
+> params['code_challenge_method'] = 'S256'
+> # oauth_callback (token_data)
+> token_data['code_verifier'] = request.session.pop('pkce_verifier', '')
+> ```
+
+> 참고: ADFS 기본 Windows account name 클레임은 `DOMAIN\sam` 형식임. 위 코드는 `DOMAIN\` 을 제거함. 9장 예시처럼 sAMAccountName 만 오도록 클레임 규칙을 구성했다면 그대로 사용됨.
 
 ---
 
@@ -961,7 +1025,7 @@ Ctrl + Shift + P
 
 ### ⑪ ca_bundle is not defined
 
-변수명 오타가 원인임.
+변수명 오타가 원인임. (아래는 작성 당시 코드. 현재 6장 코드는 CA 번들 경로를 필수로 받음)
 
 ```python
 # 올바른 변수명 확인

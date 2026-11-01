@@ -97,7 +97,7 @@ resource "aws_eip" "nat_eip" {
   domain = "vpc"
 
   lifecycle {
-    create_before_destroy = ture
+    create_before_destroy = true
   }
 }
 
@@ -110,6 +110,9 @@ resource "aws_nat_gateway" "nat_gw" {
   tags = {
     Name = "terraform-test-vpc-nat-gw"
   }
+
+  # 인터넷 게이트웨이가 먼저 생성되도록 명시적 의존성 지정(공식 문서 권장)
+  depends_on = [aws_internet_gateway.igw]
 }
 ```
 
@@ -146,6 +149,11 @@ resource "aws_route_table_association" "route_table_association_public" {
 ```hcl
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
 
   tags = {
     Name = "terraform-test-vpc-private-rt"
@@ -204,7 +212,11 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = "vpc"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_nat_gateway" "nat_gw" {
@@ -212,11 +224,13 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id     = aws_subnet.public_subnet.id
 
   tags = {
-    Name = "terraform-test-vpc-NATGW"
+    Name = "terraform-test-vpc-nat-gw"
   }
+
+  depends_on = [aws_internet_gateway.igw]
 }
 
-resource "aws_route_table" "public_rt" {
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -231,14 +245,19 @@ resource "aws_route_table" "public_rt" {
 
 resource "aws_route_table_association" "route_table_association_public" {
   subnet_id      = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
+
   tags = {
-    Name = "terraform-test-vpc-rt-private"
+    Name = "terraform-test-vpc-private-rt"
   }
 }
 
@@ -248,9 +267,8 @@ resource "aws_route_table_association" "route_table_association_private" {
 }
 ```
 
-```
-참고 자료
-Terraform 공식 문서(https://developer.hashicorp.com/terraform)
-AWS VPC 소개(https://aws.amazon.com/ko/vpc/)
-AWS Subnet 구성 가이드(https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
-```
+### 참고 자료
+
+- [Terraform 공식 문서](https://developer.hashicorp.com/terraform)
+- [AWS VPC 소개](https://aws.amazon.com/ko/vpc/)
+- [AWS Subnet 구성 가이드](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)

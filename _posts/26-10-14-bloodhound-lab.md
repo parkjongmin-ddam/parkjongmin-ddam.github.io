@@ -126,6 +126,8 @@ BOB → (MemberOf) → DOMAIN USERS
 
 이번에는 **AD 인증서 서비스(AD CS)의 설정 약점**을 이용한 경로다. `ADCSESC3`/`ADCSESC6b`는 인증서 템플릿·CA 설정 약점을 이용해 다른 계정을 사칭할 수 있는 경로의 이름이다.
 
+참고: 두 경로의 기전은 다르다. ESC3은 등록 에이전트(Enrollment Agent) 템플릿으로 다른 사용자 대신 인증서를 요청하는 방식이고, ESC6b는 CA의 `EDITF_ATTRIBUTESUBJECTALTNAME2` 플래그로 SAN에 다른 주체를 지정하고 DC의 약한 인증서 매핑 허용 조건까지 갖춰져야 성립한다.
+
 **여기서 배운 점**: "병목이 어디인가"는 어떤 에지를 보느냐에 따라 달라진다. 이 샘플 환경에서는
 - 세션 탈취 경로(AdminTo + HasSession)가 더 짧아서 기본 화면에 먼저 나오고,
 - 그것을 제외해야 AD CS 경로가 보인다.
@@ -164,7 +166,7 @@ Get-MpThreatDetection | Sort InitialDetectionTime -Desc | Select -First 1 Initia
 
 SharpHound는 내장 구성 요소(SharpHoundRPC 등)를 메모리에서 로드하는데, .NET은 이때 AMSI로 내용을 검사한다. Defender가 이 단계에서 로드를 막은 것이다.
 
-**폴더 예외가 통하지 않은 이유**: 폴더 예외는 디스크에 있는 파일 검사에만 적용된다. 메모리에서 일어나는 AMSI 검사는 디스크 예외와 무관하다. `Add-MpPreference`로 탐지 ID를 허용하려 했으나 권한 문제(0xc0000142)로 실패했다.
+**폴더 예외가 통하지 않은 이유**: 폴더 예외는 디스크에 있는 파일 검사에만 적용된다. 메모리에서 일어나는 AMSI 검사는 디스크 예외와 무관하다. `Add-MpPreference`로 탐지 ID를 허용하려 했으나 0xc0000142 오류로 실패했다. 참고: 0xC0000142는 NTSTATUS `STATUS_DLL_INIT_FAILED`(DLL 로드·초기화 실패)로, 권한 거부 코드는 아니다.
 
 여기서 azlab 실데이터 수집은 보류했다. 랩 VM의 보호 설정을 조정하면 진행할 수 있지만, 이 글의 목적은 도구 사용법과 경로 분석 개념을 익히는 것이라 공식 샘플 기준으로 마무리했다.
 

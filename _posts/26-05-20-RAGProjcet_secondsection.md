@@ -1,5 +1,5 @@
 ---
-title: "권한 인식 RAG 만들기 Select 2_reranker, audit log 버그, schema drift"
+title: "권한 인식 RAG 만들기 Section 2_reranker, audit log 버그, schema drift"
 categories: ["Project", "권한 인식 RAG"]
 permalink: "/rag/iam/RAGProjcet_secondsection/"
 tags: [permission-aware-rag, BGE-Reranker, RAGAS, audit-log, schema-drift, compliance]

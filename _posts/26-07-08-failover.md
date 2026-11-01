@@ -10,7 +10,7 @@ tags: [sql-server, alwayson, availability-group, failover, wsfc, listener, high-
 
 ## 들어가며
 
-[지난 글](/)에서 Hyper-V 랩에 2노드 AlwaysOn AG를 구축했음. 아홉 개의 트러블슈팅을 뚫고 AG-TEST + Listener까지 완성했지만, 거기까지는 **"구성이 됐고 동기화가 건강하다"**까지였음. 정작 중요한 질문 — **"진짜 서버가 죽으면 자동으로 넘어가느냐, 데이터는 안 잃느냐"** — 는 아직 확인 전이었음.
+[지난 글](/infra/sql%20server/DBCluster/)에서 Hyper-V 랩에 2노드 AlwaysOn AG를 구축했음. 아홉 개의 트러블슈팅을 뚫고 AG-TEST + Listener까지 완성했지만, 거기까지는 **"구성이 됐고 동기화가 건강하다"**까지였음. 정작 중요한 질문 — **"진짜 서버가 죽으면 자동으로 넘어가느냐, 데이터는 안 잃느냐"** — 는 아직 확인 전이었음.
 
 이 글은 그 검증 기록임. AG의 가치는 결국 장애 상황에서 드러나기 때문에, 아래 3가지를 순서대로 확인했음.
 
@@ -126,7 +126,7 @@ Object Explorer → SQL01 → Always On High Availability → Availability Group
 *그림 2-5. 보조(SQL02)에 연결 — Trust Server Certificate 체크 후 Connect*
 
 ![Connect to Replica — 연결 완료](/assets/images/26-07-08-failover/09-connect-replica-done.png)
-*그림 2-6. SQL02 연결 완료(Connected As: AZLAB\adm-jmpark)*
+*그림 2-6. SQL02 연결 완료(Connected As: `AZLAB\adm-<user>`)*
 
 ![수동 장애조치 Summary — No data loss](/assets/images/26-07-08-failover/10-manual-failover-summary.png)
 *그림 2-7. Summary — Current Primary: SQL01 → New Primary: SQL02, Failover Actions: No data loss*
@@ -269,7 +269,7 @@ WSFC 자동 감지 → 다른 노드를 주로 자동 승격
 자동 장애조치 후 SQL02는 죽은 채로 남아있음. 이걸 되살려서 **보조로 복귀하며 그동안의 변경을 자동으로 따라잡는지** 확인함. (이 단계를 해야 랩이 양 노드 HEALTHY 정상 상태로 돌아감)
 
 ```powershell
--- SQL01에서 원격으로 SQL02 서비스 재시작
+# SQL01에서 원격으로 SQL02 서비스 재시작
 Invoke-Command -ComputerName SQL02 -ScriptBlock { Start-Service MSSQLSERVER }
 ```
 
