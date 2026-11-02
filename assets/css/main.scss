@@ -165,3 +165,104 @@ search: false
     }
   }
 }
+
+/* 본문 이미지 확대 보기 (assets/js/image-zoom.js) */
+.page__content img.iz-zoomable {
+  cursor: zoom-in;
+}
+
+html.iz-lock,
+html.iz-lock body {
+  overflow: hidden;
+}
+
+.iz-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.92);
+
+  &.iz-open {
+    display: block;
+  }
+
+  .iz-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 48px;
+    display: flex;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* margin:auto로 가운데 정렬 — 원본 크기에서 왼쪽·위쪽이 잘리지 않음 */
+  .iz-img {
+    margin: auto;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    background: $background-color; /* 투명 이미지도 본문과 같은 배경에서 보이도록 */
+    cursor: zoom-in;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  &.iz-full .iz-img {
+    max-width: none;
+    max-height: none;
+    cursor: zoom-out;
+  }
+
+  .iz-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 0 16px;
+    color: #ddd;
+    font-size: 0.8rem;
+  }
+
+  .iz-caption {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .iz-counter {
+    flex-shrink: 0;
+    color: #aaa;
+  }
+
+  .iz-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #eee;
+    font-size: 1.6rem;
+    line-height: 40px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  &.iz-single .iz-prev,
+  &.iz-single .iz-next {
+    display: none;
+  }
+}
