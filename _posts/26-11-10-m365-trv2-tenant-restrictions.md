@@ -213,7 +213,7 @@ Chrome 화면은 메일 목록이 보여 상단만 잘랐다. 주소창의 outlo
 ### 하지 않은 것
 
 - WDAC와 방화벽 보호로 Chrome까지 막는 시험
-- 프록시 헤더 방식, Global Secure Access 방식
+- 프록시 헤더 방식, Global Secure Access 방식 (Global Secure Access 방식은 [2편](/iam/m365-trv2-universal-gsa/)에서 진행)
 - 차단된 로그인이 홈랩 테넌트 로그인 로그에 어떻게 남는지 확인
 
 ### 원복 방법
@@ -223,6 +223,8 @@ Chrome 화면은 메일 목록이 보여 상단만 잘랐다. 주소창의 outlo
 | VM 로컬 GPO | 클라우드 정책 세부 정보를 "사용 안 함"으로 바꾸고 `gpupdate /force`, 재부팅 | 사용 안 함 |
 | 샌드박스 조직 설정 | Default Directory 행 삭제 | 회사 테넌트 1건 |
 | TRv2 기본 정책 | 원복 불필요 | 이번에 변경하지 않음 |
+
+> 정정 (2026-11-11): VM 로컬 GPO는 이 글 작성 시점에 실제로 원복하지 않았다. 다음 날 2편 시험 중 값이 남아 있는 것을 발견해 "사용 안 함"으로 바꾸고 재부팅했다. 조직 설정의 Default Directory 행은 2편에서도 그대로 사용했다.
 
 ## 참고
 
